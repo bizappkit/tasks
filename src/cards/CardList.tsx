@@ -58,7 +58,7 @@ function groupBy<T, G>(
 		}
 
 		if (itemGroupKey !== lastGroupKey) {
-			groups.push(createGroup(itemGroupKey, lastGroupTitle, items.slice(groupStartIndex, i)));
+			groups.push(createGroup(lastGroupKey, lastGroupTitle, items.slice(groupStartIndex, i)));
 			lastGroupTitle = getGroupTitle(item);
 			lastGroupKey = itemGroupKey;
 			groupStartIndex = i;
