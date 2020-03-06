@@ -6,7 +6,7 @@ interface ReminderCardProps {
 	data: {
 		title: string
 		time?: Date
-		subtile?: string
+		subtitle?: string
 	}
 }
 
@@ -27,7 +27,7 @@ export function ReminderCard(props: ReminderCardProps) {
 							{props.data.title}
 						</h6>
 					</a>
-					<span className="text-small">{props.data.subtile || ""}</span>
+					<span className="text-small">{props.data.subtitle || ""}</span>
 				</div>
 			</Card.Body>
 		</Card>
