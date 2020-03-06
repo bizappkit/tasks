@@ -1,19 +1,19 @@
-import { ReactNode } from "react";
+import React from "react";
 
 export interface ContentContainerProps {
-	children: ReactNode
+	children: React.ReactNode
 }
 
 export function ContentContainer(props: ContentContainerProps) {
 	return (
 		<div className="container">
-		<div className="row justify-content-center">
-		  <div className="col-lg-9">
-			<div className="text-center d-flex align-items-center justify-content-center pt-5">
-				{props.children}
+			<div className="row justify-content-center">
+				<div className="col-lg-9">
+					<div className="text-center d-flex align-items-center justify-content-center pt-5">
+						{props.children}
+					</div>
+				</div>
 			</div>
-		  </div>
 		</div>
-	  </div>
 	)
 }
