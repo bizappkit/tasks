@@ -50,8 +50,6 @@ function groupBy<T, G>(
 		let item = items[i];
 		let itemGroupKey = getGroupKey(item);
 
-		console.log("Group Key:" + itemGroupKey);
-
 		if (lastGroupKey === undefined) {
 			lastGroupKey = itemGroupKey;
 			lastGroupTitle = getGroupTitle(item);
