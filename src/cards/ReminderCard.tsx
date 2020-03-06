@@ -1,5 +1,5 @@
-import { Card } from 'react-bootstrap';
 import React from 'react';
+import { Card } from 'react-bootstrap';
 import { toShortTimeStr } from "../utils/dateTimeUtils";
 
 interface ReminderCardProps {

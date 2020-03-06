@@ -15,12 +15,18 @@ function App() {
       <Container>
         <Row>
           <Col>
-            <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
-            <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
-            <ReminderCard
-              time={new Date()}
-              title="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-              subtile="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."/>
+
+            <div className="card-list">
+              <div className="card-list-head"><h6>Overdue</h6></div>
+
+              <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
+              <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
+              <ReminderCard
+                time={new Date()}
+                title="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+                subtile="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."/>
+
+            </div>
           </Col>
         </Row>
       </Container>
