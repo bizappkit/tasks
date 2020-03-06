@@ -1,33 +1,31 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { toShortTimeStr } from "../utils/dateTimeUtils";
+import { Reminder } from "../model/reminder";
 
 interface ReminderCardProps {
-	data: {
-		title: string
-		time?: Date
-		subtitle?: string
-	}
+	reminder: Reminder
+
+	onClick: (reminder: Reminder) => void
 }
 
 export function ReminderCard(props: ReminderCardProps) {
+
 	return (
-		<Card className="card-task">
+		<Card className="card-task" style={{ cursor: "pointer" }} onClick={() => props.onClick(props.reminder)}>
 			<Card.Body>
-				<div className="card-title">
-					<a href='/'>
-						<h6>
-							{
-								props.data.time && (
-									<span style={{ fontWeight: 'bold' }}>
-										{toShortTimeStr(props.data.time) + ":"}
-									</span>
-								)
-							}
-							{props.data.title}
-						</h6>
-					</a>
-					<span className="text-small">{props.data.subtitle || ""}</span>
+				<div className="card-title" >
+					<h6>
+						{
+							props.reminder.time && (
+								<span style={{ fontWeight: 'bold' }}>
+									{toShortTimeStr(props.reminder.time) + ":"}
+								</span>
+							)
+						}
+						{props.reminder.title}
+					</h6>
+					<span className="text-small">{props.reminder.subtitle || ""}</span>
 				</div>
 			</Card.Body>
 		</Card>

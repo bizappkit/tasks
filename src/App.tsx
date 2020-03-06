@@ -2,13 +2,8 @@ import React from 'react';
 import { Navbar, NavDropdown, Nav, Container, Row, Col } from 'react-bootstrap';
 import { ReminderCard } from './cards/ReminderCard';
 import { CardList } from './cards/CardList';
+import { Reminder } from './model/reminder';
 
-interface Reminder {
-	id: string
-	time?: Date
-	title: string
-	subtitle?: string
-}
 
 const reminders: Reminder[] = [
 	{ id: "1", time: undefined, title: "Test task title", subtitle: "Test task subtile with text" },
@@ -32,7 +27,8 @@ function renderReminder(reminder: Reminder): JSX.Element {
 	return (
 		<ReminderCard
 			key={reminder.id}
-			data={reminder}
+			reminder={reminder}
+			onClick={(r) => console.log("Reminder clicked: " + r.id)}
 		/>
 	)
 }
