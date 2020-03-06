@@ -1,10 +1,9 @@
 import React from 'react';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
-
-
+import { Navbar, NavDropdown, Nav, Container, Row, Col } from 'react-bootstrap';
+import { ReminderCard } from './cards/ReminderCard';
 function App() {
   return (
-    <div>
+    <div className="layout layout-nav-top">
       <Navbar bg="light" expand='sm' >
         <Nav className="mr-auto">
           <NavDropdown title="Schedule" id="basic-nav-dropdown">
@@ -13,33 +12,19 @@ function App() {
         </Nav>
       </Navbar>
 
-      <div className="card card-task">
-        <div className="card-body">
-          <div className="card-title">
-            <a href="#task=6"><h6>Task Name</h6></a>
-            <span className="text-small">Due Tomorrow</span>
-          </div>
-          <div className="card-meta">
-            <ul className="avatars">
-              <li>
-                <img alt="..." className="avatar" src="..." />
-              </li>
-            </ul>
-            <div className="d-flex align-items-center">
-              <i className="material-icons">playlist_add_check</i>
-              <span>0/3</span>
-            </div>
-            <div className="dropdown card-options">
-              <button className="btn-options" type="button" id="task-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i className="material-icons">more_vert</i>
-              </button>
-              <div className="dropdown-menu dropdown-menu-right">
-                ...
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Container>
+        <Row>
+          <Col>
+            <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
+            <ReminderCard time={new Date()} title="Test task title" subtile="Test task subtile with text"/>
+            <ReminderCard
+              time={new Date()}
+              title="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+              subtile="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."/>
+          </Col>
+        </Row>
+      </Container>
+
     </div>
   )
 }
