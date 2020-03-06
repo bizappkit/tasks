@@ -2,13 +2,13 @@ import React from 'react';
 import { Navbar, NavDropdown, Nav, Container, Row, Col } from 'react-bootstrap';
 import { ReminderCard } from './cards/ReminderCard';
 import { CardList } from './cards/CardList';
-import { Reminder } from './model/reminder';
+import { ScheduleItem } from './model/task';
 
 
-const reminders: Reminder[] = [
-	{ id: "1", time: undefined, title: "Test task title", subtitle: "Test task subtile with text" },
-	{ id: "2", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" },
-	{ id: "3", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" }
+const reminders: ScheduleItem[] = [
+	{ taskId: "1", time: undefined, title: "Test task title", subtitle: "Test task subtile with text" },
+	{ taskId: "2", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" },
+	{ taskId: "3", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" }
 ]
 
 function getDate(dateTime?: Date) {
@@ -19,16 +19,16 @@ function getDate(dateTime?: Date) {
 	return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate()).valueOf();
 }
 
-function getReminderGroupTitle(reminder: Reminder): string {
+function getReminderGroupTitle(reminder: ScheduleItem): string {
 	return reminder.time?.toLocaleDateString() || "Unscheduled";
 }
 
-function renderReminder(reminder: Reminder): JSX.Element {
+function renderReminder(reminder: ScheduleItem): JSX.Element {
 	return (
 		<ReminderCard
-			key={reminder.id}
-			reminder={reminder}
-			onClick={(r) => console.log("Reminder clicked: " + r.id)}
+			key={reminder.taskId}
+			data={reminder}
+			onClick={(r) => console.log("Reminder clicked: " + r.taskId)}
 		/>
 	)
 }
@@ -49,7 +49,7 @@ function App() {
 					<Col>
 						<CardList
 							items={reminders}
-							getItemKey={r => r.id}
+							getItemKey={r => r.taskId}
 							getGroupKey={r => getDate(r.time)}
 							getGroupTitle={getReminderGroupTitle}
 							renderItem={renderReminder}

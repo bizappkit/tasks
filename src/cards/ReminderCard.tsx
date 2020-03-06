@@ -1,32 +1,32 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { toShortTimeStr } from "../utils/dateTimeUtils";
-import { Reminder } from "../model/reminder";
+import { ScheduleItem } from "../model/task";
 import "./CardActive.css"
 
 interface ReminderCardProps {
-	reminder: Reminder
+	data: ScheduleItem
 
-	onClick: (reminder: Reminder) => void
+	onClick: (reminder: ScheduleItem) => void
 }
 
 export function ReminderCard(props: ReminderCardProps) {
 
 	return (
-		<Card className="card-task card-active" onClick={() => props.onClick(props.reminder)}>
+		<Card className="card-task card-active" onClick={() => props.onClick(props.data)}>
 			<Card.Body>
 				<div className="card-title" >
 					<h6>
 						{
-							props.reminder.time && (
+							props.data.time && (
 								<span style={{ fontWeight: 'bold' }}>
-									{toShortTimeStr(props.reminder.time) + ":"}
+									{toShortTimeStr(props.data.time) + ":"}
 								</span>
 							)
 						}
-						{props.reminder.title}
+						{props.data.title}
 					</h6>
-					<span className="text-small">{props.reminder.subtitle || ""}</span>
+					<span className="text-small">{props.data.subtitle || ""}</span>
 				</div>
 			</Card.Body>
 		</Card>
