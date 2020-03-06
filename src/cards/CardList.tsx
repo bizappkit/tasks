@@ -4,8 +4,8 @@ interface CardListProps<T> {
 
 	items: T[]
 
-	getItemKey: (item: T) => any
-	getGroupKey: (item: T) => any
+	getItemKey: (item: T) => React.Key
+	getGroupKey: (item: T) => React.Key
 	getGroupTitle: (item: T) => string
 
 	renderItem: (item: T) => JSX.Element | null
@@ -13,11 +13,11 @@ interface CardListProps<T> {
 
 export function CardList<T>(props: CardListProps<T>) {
 
-	const groups = groupBy(props.items, props.getGroupKey, (groupItems) => {
-		const groupName = props.getGroupTitle(groupItems[0]);
+	const groups = groupBy(props.items, props.getGroupKey, props.getGroupTitle, (key, title, groupItems) => {
+
 		return (
-			<div className="card-list">
-				<div className="card-list-head"><h6>{groupName}</h6></div>
+			<div key={key} className="card-list">
+				<div className="card-list-head"><h6>{title}</h6></div>
 				{groupItems.map(item => props.renderItem(item))}
 			</div>
 		)
@@ -30,13 +30,19 @@ export function CardList<T>(props: CardListProps<T>) {
 	)
 }
 
-function groupBy<T, G>(items: T[], getGroupKey: (item: T) => any, createGroup: (groupItems: T[]) => G): G[] {
+function groupBy<T, G>(
+	items: T[],
+	getGroupKey: (item: T) => React.Key,
+	getGroupTitle: (item: T) => string,
+	createGroup: (key: React.Key, title: string, groupItems: T[]) => G
+): G[] {
 
-	if (items.length == 0)
+	if (items.length === 0)
 		return [];
 
 	let groups: G[] = [];
 	let lastGroupKey = undefined;
+	let lastGroupTitle = "";
 	let groupStartIndex = 0;
 
 	for (let i = 0; i < items.length; i++) {
@@ -44,16 +50,23 @@ function groupBy<T, G>(items: T[], getGroupKey: (item: T) => any, createGroup: (
 		let item = items[i];
 		let itemGroupKey = getGroupKey(item);
 
+		console.log("Group Key:" + itemGroupKey);
+
 		if (lastGroupKey === undefined) {
-			itemGroupKey = getGroupKey(item);
-		} else {
-			groups.push(createGroup(items.slice(groupStartIndex, i)));
+			lastGroupKey = itemGroupKey;
+			lastGroupTitle = getGroupTitle(item);
+		}
+
+		if (itemGroupKey !== lastGroupKey) {
+			groups.push(createGroup(itemGroupKey, lastGroupTitle, items.slice(groupStartIndex, i)));
+			lastGroupTitle = getGroupTitle(item);
 			lastGroupKey = itemGroupKey;
 			groupStartIndex = i;
 		}
 	}
 
-	groups.push(createGroup(items.slice(groupStartIndex, items.length)));
+	if (lastGroupKey)
+		groups.push(createGroup(lastGroupKey, lastGroupTitle, items.slice(groupStartIndex, items.length)));
 
 	return groups;
 }

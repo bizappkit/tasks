@@ -17,10 +17,11 @@ const reminders: Reminder[] = [
 ]
 
 function getDate(dateTime?: Date) {
-	if (!dateTime)
-		return dateTime;
 
-	return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate());
+	if (dateTime === undefined)
+		return -1;
+
+	return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate()).valueOf();
 }
 
 function getReminderGroupTitle(reminder: Reminder): string {
@@ -30,6 +31,7 @@ function getReminderGroupTitle(reminder: Reminder): string {
 function renderReminder(reminder: Reminder): JSX.Element {
 	return (
 		<ReminderCard
+			key={reminder.id}
 			data={reminder}
 		/>
 	)
