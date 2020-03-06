@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import { toShortTimeStr } from "../utils/dateTimeUtils";
 import { Reminder } from "../model/reminder";
+import "./CardActive.css"
 
 interface ReminderCardProps {
 	reminder: Reminder
@@ -12,7 +13,7 @@ interface ReminderCardProps {
 export function ReminderCard(props: ReminderCardProps) {
 
 	return (
-		<Card className="card-task" style={{ cursor: "pointer" }} onClick={() => props.onClick(props.reminder)}>
+		<Card className="card-task card-active" onClick={() => props.onClick(props.reminder)}>
 			<Card.Body>
 				<div className="card-title" >
 					<h6>
