@@ -1,8 +1,9 @@
 export interface ScheduleItem {
     taskId: string
-    time?: Date
     title: string
     subtitle?: string
+    reminderId?: string
+    time?: Date
 }
 
 export interface Task {
@@ -13,6 +14,7 @@ export interface Task {
 }
 
 export interface Reminder {
+    id: string
     time: Date
     notes: string
     repeat?: {
