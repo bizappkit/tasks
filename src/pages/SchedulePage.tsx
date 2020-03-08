@@ -3,6 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { CardList } from '../cards/CardList';
 import { ScheduleItem } from '../model/task';
 import { ReminderCard } from '../cards/ReminderCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 
 const reminders: ScheduleItem[] = [
@@ -34,12 +36,15 @@ function renderReminder(reminder: ScheduleItem): JSX.Element {
 }
 
 export function SchedulePage() {
+
+	const scheduleItems = useSelector((state: RootState) => state.tasks.scheduleItems)
+
 	return (
 		<Container>
 			<Row>
 				<Col>
 					<CardList
-						items={reminders}
+						items={scheduleItems || []}
 						getItemKey={r => r.taskId}
 						getGroupKey={r => getDate(r.time)}
 						getGroupTitle={getReminderGroupTitle}
