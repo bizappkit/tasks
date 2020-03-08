@@ -1,4 +1,5 @@
 import { Task, ScheduleItem, getScheduleItems, orderTasksByName } from "../model/task";
+import { Action } from 'redux'
 
 export interface TasksStoreState {
 	loading: boolean
@@ -11,10 +12,18 @@ const initialState: TasksStoreState = {
 	loading: true
 }
 
-export type TasksStoreAction = {
+export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'
 	tasks: Task[]
 }
+
+export interface TaskUpdatedAction extends Action {
+	type: 'tasks-updated'
+	taskId: string
+	payload: Partial<Task>
+}
+
+export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction;
 
 export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
