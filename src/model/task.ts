@@ -10,13 +10,13 @@ export interface Task {
     id: string
     title: string
     notes?: string
-    reminders: Reminder[]
+    reminders?: Reminder[]
 }
 
 export interface Reminder {
     id: string
     time: Date
-    notes: string
+    notes?: string
     repeat?: {
         type: 'dally'
         days: WeekDay[]
@@ -36,10 +36,10 @@ export type WeekDay = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
 
 export function findTask(tasks?: Task[], taskId?: string): Task | undefined {
 
-	if(!tasks || !taskId)
-		return undefined;
+    if (!tasks || !taskId)
+        return undefined;
 
-	return tasks.find(t => t.id === taskId);
+    return tasks.find(t => t.id === taskId);
 }
 
 export function orderTasksByName(tasks: Task[]): Task[] {
@@ -49,11 +49,11 @@ export function orderTasksByName(tasks: Task[]): Task[] {
 }
 
 export function getScheduleItems(now: Date, tasks: Task[]): ScheduleItem[] {
-    
+
     let scheduleItems: ScheduleItem[] = []
 
     tasks.forEach(t => {
-        if(t.reminders) {
+        if (t.reminders) {
             t.reminders.forEach(r => scheduleItems.push({
                 taskId: t.id,
                 time: r.time,
@@ -79,16 +79,16 @@ function compareScheduleItems(now: Date, a: ScheduleItem, b: ScheduleItem): numb
     const timeA = getScheduleTime(now, a.time);
     const timeB = getScheduleTime(now, b.time);
 
-    if(timeA !== timeB)
+    if (timeA !== timeB)
         return timeA - timeB;
-    
+
     return a.title.localeCompare(b.title);
 }
 
 function getScheduleTime(now: Date, time?: Date): number {
-    if(time === undefined)
+    if (time === undefined)
         return -2;
-    if(time < now)
+    if (time < now)
         return -1;
     return time.valueOf();
 }

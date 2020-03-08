@@ -4,8 +4,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { configureStore } from "./store";
+import testTasks from "./model/testTasks";
 
 const store = configureStore();
+
+store.dispatch({ type: "tasks-loaded", tasks: testTasks })
 
 const Root = () => (
 	<Provider store={store}>
