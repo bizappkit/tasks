@@ -48,11 +48,11 @@ export function orderTasksByName(tasks: Task[]): Task[] {
     return orderedTasks
 }
 
-export function getScheduleItems(now: Date, tasks: Task[]): ScheduleItem[] {
+export function getScheduleItems(now: Date, tasks: IterableIterator<Task>): ScheduleItem[] {
 
     let scheduleItems: ScheduleItem[] = []
 
-    tasks.forEach(t => {
+    for (let t of tasks) {
         if (t.reminders) {
             t.reminders.forEach(r => scheduleItems.push({
                 taskId: t.id,
@@ -68,7 +68,7 @@ export function getScheduleItems(now: Date, tasks: Task[]): ScheduleItem[] {
                 subtitle: t.notes,
             })
         }
-    })
+    }
 
     scheduleItems.sort((a, b) => compareScheduleItems(now, a, b))
 

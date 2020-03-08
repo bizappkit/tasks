@@ -1,10 +1,11 @@
 import { Task, ScheduleItem, getScheduleItems, orderTasksByName } from "../model/task";
 import { Action } from 'redux'
+import Immutable from "immutable";
 
 export interface TasksStoreState {
 	loading: boolean
 	allTasks?: Task[]
-	idToTask?: Map<string, Task>
+	idToTask?: Immutable.Map<string, Task>
 	scheduleItems?: ScheduleItem[]
 }
 
@@ -32,9 +33,24 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 				...state,
 				loading: false,
 				allTasks: orderTasksByName(action.tasks),
-				idToTask: new Map(action.tasks.map(t => [t.id, t])),
-				scheduleItems: getScheduleItems(new Date(), action.tasks)
+				idToTask: Immutable.Map(action.tasks.map(t => [t.id, t])),
+				scheduleItems: getScheduleItems(new Date(), action.tasks.values())
 			}
+
+		case 'tasks-updated':
+			if (state.idToTask) {
+				let task = state.idToTask.get(action.taskId)
+				if (task) {
+					task = { ...task, ...action.payload }
+					let idToTasks = state.idToTask?.set(action.taskId, task);
+					return {
+						...state,
+						idToTask: idToTasks,
+						scheduleItems: getScheduleItems(new Date(), idToTasks.values())
+					}
+				}
+			}
+			return state
 
 		default:
 			return state

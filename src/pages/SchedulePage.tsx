@@ -6,13 +6,6 @@ import { ReminderCard } from '../cards/ReminderCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
-
-const reminders: ScheduleItem[] = [
-	{ taskId: "1", time: undefined, title: "Test task title", subtitle: "Test task subtile with text" },
-	{ taskId: "2", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" },
-	{ taskId: "3", time: new Date(), title: "Test task title", subtitle: "Test task subtile with text" }
-]
-
 function getDate(dateTime?: Date) {
 
 	if (dateTime === undefined)
