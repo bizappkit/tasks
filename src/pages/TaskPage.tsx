@@ -2,19 +2,19 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useParams } from 'react-router-dom';
-import { Task, findTask } from '../model/task';
+import { Task } from '../model/task';
 import { RootState } from '../store';
 import { connect } from 'react-redux';
 
 interface TaskPageProps {
-	tasks?: Task[]
+	tasks?: Map<string, Task>
 }
 
 function TaskPage(props: TaskPageProps) {
 
-	const { taskId } = useParams();
+	const { taskId } = useParams()
 
-	const task = findTask(props.tasks, taskId);
+	const task = (taskId && props.tasks ? props.tasks.get(taskId) : undefined)
 
 	return (
 		<Container>
@@ -24,7 +24,7 @@ function TaskPage(props: TaskPageProps) {
 						disabled={task === undefined}
 						placeholder="Task Title"
 						className="form-control"
-						style={{fontSize: "2rem"}}
+						style={{ fontSize: "2rem" }}
 					/>
 				</div>
 				<div className="form-group">
@@ -40,8 +40,8 @@ function TaskPage(props: TaskPageProps) {
 	)
 }
 
-const mapRootStateToProp = (state: RootState) => ({
-	tasks: state.tasks.allTasks
+const mapRootStateToProp = (state: RootState): TaskPageProps => ({
+	tasks: state.tasks.idToTask
 });
 
 export default connect(mapRootStateToProp)(TaskPage)

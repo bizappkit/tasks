@@ -3,9 +3,8 @@ import { Task, ScheduleItem, getScheduleItems, orderTasksByName } from "../model
 export interface TasksStoreState {
 	loading: boolean
 	allTasks?: Task[]
+	idToTask?: Map<string, Task>
 	scheduleItems?: ScheduleItem[]
-	//selectedTaskId?: string
-	//selectedTask?: Task
 }
 
 const initialState: TasksStoreState = {
@@ -15,27 +14,17 @@ const initialState: TasksStoreState = {
 export type TasksStoreAction = {
 	type: 'tasks-loaded'
 	tasks: Task[]
-} | {
-	type: 'tasks-select'
-	taskId?: string
 }
 
 export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
-	switch(action.type) {
+	switch (action.type) {
 		case 'tasks-loaded':
 			return {
 				...state,
 				loading: false,
 				allTasks: orderTasksByName(action.tasks),
-				scheduleItems: getScheduleItems(new Date(), action.tasks),
-				//selectedTask: findTask(state.allTasks, state.selectedTaskId)
-			}
-
-		case 'tasks-select':
-			return {
-				...state,
-				//selectedTaskId: action.taskId,
-				//selectedTask: findTask(state.allTasks, action.taskId)
+				idToTask: new Map(action.tasks.map(t => [t.id, t])),
+				scheduleItems: getScheduleItems(new Date(), action.tasks)
 			}
 
 		default:
