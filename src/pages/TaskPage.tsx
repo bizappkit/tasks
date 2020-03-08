@@ -7,11 +7,8 @@ import { RootState } from '../store';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { TasksStoreAction } from '../store/tasksStore';
 
-interface TaskPageProps {
-	tasks?: Map<string, Task>
-}
 
-function TaskPage(props: TaskPageProps) {
+function TaskPage() {
 
 	const { taskId } = useParams()
 
@@ -54,8 +51,4 @@ function TaskPage(props: TaskPageProps) {
 	)
 }
 
-const mapRootStateToProp = (state: RootState): TaskPageProps => ({
-	tasks: state.tasks.idToTask
-});
-
-export default connect(mapRootStateToProp)(TaskPage)
+export default connect()(TaskPage)
