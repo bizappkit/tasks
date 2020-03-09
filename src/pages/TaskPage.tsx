@@ -6,6 +6,7 @@ import { Task } from '../model/task';
 import { RootState } from '../store';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { TasksStoreAction } from '../store/tasksStore';
+import { toShortTimeStr } from '../utils/dateTimeUtils';
 
 
 function TaskPage() {
@@ -46,6 +47,22 @@ function TaskPage() {
 						onChange={(e) => updateTask({ notes: e.currentTarget.value })}
 					/>
 				</div>
+
+				{task && task.reminders && task.reminders.length > 0 &&
+					<div className="form-group">
+						<label>Reminders</label>
+						<ol className="list-group">
+							{task.reminders.map(reminder => (
+								<a href="/" className="list-group-item list-group-item-action justify-content-between align-items-center">
+									<span className="badge badge-secondary">{toShortTimeStr(reminder.time)}</span>
+									&nbsp;
+									<span>{reminder.notes || ""}</span>
+								</a>
+							))}
+						</ol>
+					</div>
+				}
+
 			</form>
 		</Container>
 	)

@@ -22,7 +22,7 @@ export function ReminderCard(props: ReminderCardProps) {
 							{
 								props.data.time && (
 									<span style={{ fontWeight: 'bold' }}>
-										{toShortTimeStr(props.data.time) + ":"}
+										{toShortTimeStr(props.data.time) + ": "}
 									</span>
 								)
 							}
