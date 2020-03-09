@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useParams } from 'react-router-dom';
 import { Task } from '../model/task';
@@ -48,20 +48,19 @@ function TaskPage() {
 					/>
 				</div>
 
-				{task && task.reminders && task.reminders.length > 0 &&
-					<div className="form-group">
-						<label>Reminders</label>
-						<ol className="list-group">
-							{task.reminders.map(reminder => (
-								<a href="/" className="list-group-item list-group-item-action justify-content-between align-items-center">
-									<span className="badge badge-secondary">{toShortTimeStr(reminder.time)}</span>
-									&nbsp;
-									<span>{reminder.notes || ""}</span>
-								</a>
-							))}
-						</ol>
-					</div>
-				}
+				<div className="form-group">
+					<label>Reminders</label>
+					<ol className="list-group">
+						{task && task.reminders && task.reminders.length > 0 && task.reminders.map(reminder => (
+							<a href="/" className="list-group-item list-group-item-action justify-content-between align-items-center">
+								<span className="badge badge-pill badge-light">{toShortTimeStr(reminder.time)}</span>
+								&nbsp;
+								<span>{reminder.notes || ""}</span>
+							</a>
+						))}
+					</ol>
+					<a href="/">Add Reminder</a>
+				</div>
 
 			</form>
 		</Container>
