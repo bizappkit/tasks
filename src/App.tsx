@@ -3,6 +3,7 @@ import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { SchedulePage } from "./pages/SchedulePage";
 import TaskPage from "./pages/TaskPage";
+import './assets/css/theme.css';
 
 class App extends React.Component {
 
