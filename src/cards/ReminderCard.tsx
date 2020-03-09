@@ -5,13 +5,13 @@ import { ScheduleItem } from "../model/task";
 import { Link } from "react-router-dom";
 //import "./CardActive.css"
 
-interface ReminderCardProps {
+interface ScheduleItemProps {
 	data: ScheduleItem
 
 	onClick: (reminder: ScheduleItem) => void
 }
 
-export function ReminderCard(props: ReminderCardProps) {
+export function ScheduleItemCard(props: ScheduleItemProps) {
 
 	return (
 		<Card className="card-task" onClick={() => props.onClick(props.data)}>

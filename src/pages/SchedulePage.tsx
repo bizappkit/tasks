@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { CardList } from '../cards/CardList';
 import { ScheduleItem } from '../model/task';
-import { ReminderCard } from '../cards/ReminderCard';
+import { ScheduleItemCard } from '../cards/ReminderCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -18,11 +18,11 @@ function getReminderGroupTitle(reminder: ScheduleItem): string {
 	return reminder.time?.toLocaleDateString() || "Unscheduled";
 }
 
-function renderReminder(reminder: ScheduleItem): JSX.Element {
+function renderReminder(scheduleItem: ScheduleItem): JSX.Element {
 	return (
-		<ReminderCard
-			key={reminder.taskId}
-			data={reminder}
+		<ScheduleItemCard
+			key={scheduleItem.taskId}
+			data={scheduleItem}
 			onClick={(r) => console.log("Reminder clicked: " + r.taskId)}
 		/>
 	)
