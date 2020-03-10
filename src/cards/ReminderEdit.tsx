@@ -38,7 +38,6 @@ interface ReminderEditProps {
     data: Reminder
     onSave: (changes: Partial<Reminder>) => void
     onDelete?: () => void
-    onClose?: () => void
 }
 
 export function ReminderEdit(props: ReminderEditProps) {
@@ -79,7 +78,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             label={currentDay.text}
                             value={currentDay.value}
                             checked={state.repeat?.type === 'dally' && state.repeat.days.includes(currentDay.value)}
-                            onChange={(e) => setState({ ...state, repeat: updateWeekDays(state.repeat as DallyReminderRepeatSettings, currentDay.value, e.currentTarget.checked) })} />
+                            onChange={() => setState({ ...state, repeat: updateWeekDays(state.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
                     ))}
                 </div>
             )}
@@ -92,7 +91,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             label={currentDate}
                             value={currentDate}
                             checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
-                            onChange={(e) => setState({ ...state, repeat: updateMonthlyDates(state.repeat as MonthlyReminderRepeatSettings, currentDate, e.currentTarget.checked) })} />
+                            onChange={() => setState({ ...state, repeat: updateMonthlyDates(state.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
                     ))}
                 </div>
             )}
@@ -102,10 +101,11 @@ export function ReminderEdit(props: ReminderEditProps) {
                     <label>Months</label>
                     {months.map(currentMonth => (
                         <Form.Check
+                            type="checkbox"
                             label={currentMonth.text}
                             value={currentMonth.value}
                             checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
-                            onChange={(e) => setState({ ...state, repeat: updateYearlyMonths(state.repeat as YearlyReminderRepeatSettings, currentMonth.value, e.currentTarget.checked) })} />
+                            onChange={() => setState({ ...state, repeat: updateYearlyMonths(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
                     ))}
                 </div>
             )}
@@ -118,7 +118,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             label={currentMonth.text}
                             value={currentMonth.value}
                             checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
-                            onChange={(e) => setState({ ...state, repeat: updateYearlyDays(state.repeat as YearlyReminderRepeatSettings, currentMonth.value, e.currentTarget.checked) })} />
+                            onChange={() => setState({ ...state, repeat: updateYearlyDays(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
                     ))}
                 </div>
             )}
@@ -126,43 +126,40 @@ export function ReminderEdit(props: ReminderEditProps) {
     )
 }
 
-function updateYearlyDays(settings: YearlyReminderRepeatSettings, day: DateNumber, selected: boolean): YearlyReminderRepeatSettings {
+function updateYearlyDays(settings: YearlyReminderRepeatSettings, day: DateNumber): YearlyReminderRepeatSettings {
     return {
         ...settings,
         dates: {
             ...settings.dates,
-            days: updateFlagsArray(settings.dates.days, day, selected)
+            days: updateFlagsArray(settings.dates.days, day)
         }
     }
 }
 
-function updateYearlyMonths(settings: YearlyReminderRepeatSettings, day: MonthNumber, selected: boolean): YearlyReminderRepeatSettings {
+function updateYearlyMonths(settings: YearlyReminderRepeatSettings, day: MonthNumber): YearlyReminderRepeatSettings {
     return {
         ...settings,
         dates: {
             ...settings.dates,
-            months: updateFlagsArray(settings.dates.months, day, selected)
+            months: updateFlagsArray(settings.dates.months, day)
         }
     }
 }
 
-function updateWeekDays(settings: DallyReminderRepeatSettings, day: WeekDay, selected: boolean): DallyReminderRepeatSettings {
-    return { ...settings, days: updateFlagsArray(settings.days, day, selected) }
+function updateWeekDays(settings: DallyReminderRepeatSettings, day: WeekDay): DallyReminderRepeatSettings {
+    return { ...settings, days: updateFlagsArray(settings.days, day) }
 }
 
-function updateMonthlyDates(settings: MonthlyReminderRepeatSettings, day: DateNumber, selected: boolean): MonthlyReminderRepeatSettings {
-    return { ...settings, days: updateFlagsArray(settings.days, day, selected) }
+function updateMonthlyDates(settings: MonthlyReminderRepeatSettings, day: DateNumber): MonthlyReminderRepeatSettings {
+    return { ...settings, days: updateFlagsArray(settings.days, day) }
 }
 
-function updateFlagsArray<T>(current: T[], flag: T, selected: boolean): T[] {
+function updateFlagsArray<T>(current: T[], flag: T): T[] {
 
-    if (selected && !current.includes(flag))
-        current = [...current, flag]
-
-    if (!selected)
-        current = current.filter(d => d === flag)
-
-    return current;
+    if (current.includes(flag))
+        return current.filter(d => d === flag)
+    else
+        return [...current, flag]
 }
 
 function createRepeatSettings(value: string): ReminderRepeatSettings | undefined {
