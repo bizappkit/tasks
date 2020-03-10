@@ -17,20 +17,36 @@ export interface Reminder {
     id: string
     time: Date
     notes?: string
-    repeat?: {
-        type: 'dally'
-        days: WeekDay[]
-    } | {
-        type: 'monthly'
-        day: number
-    } | {
-        type: 'yearly'
-        dates: {
-            month: number
-            date: number
-        }
+    repeat?: ReminderRepeatSettings
+}
+
+export type ReminderRepeatSettings = DallyReminderRepeatSettings | MonthlyReminderRepeatSettings | YearlyReminderRepeatSettings
+
+export interface DallyReminderRepeatSettings {
+    type: 'dally'
+    days: WeekDay[]
+}
+
+export interface MonthlyReminderRepeatSettings {
+    type: 'monthly'
+    days: number[]
+}
+
+export interface YearlyReminderRepeatSettings {
+    type: 'yearly'
+    dates: {
+        months: MonthNumber[]
+        days: DateNumber[]
     }
 }
+
+export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+export type DateNumber =
+    1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+    11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+    21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 |
+    31;
 
 export type WeekDay = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
 
