@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Task, Reminder } from "../model/task";
 import TextareaAutosize from "react-textarea-autosize";
-import { toShortTimeStr } from '../utils/dateTimeUtils';
+import { toShortDateAndTime } from '../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { v4 as uuid } from 'uuid';
@@ -27,7 +27,9 @@ export function TaskEdit(props: TaskEditProps) {
 
         let selectedReminder: Reminder
 
-        if (index && index >= 0 && props.task?.reminders) {
+        console.log("editReminder:", index, props.task?.reminders)
+
+        if (index !== undefined && index >= 0 && props.task?.reminders) {
             selectedReminder = props.task.reminders[index]
         } else {
             const now = new Date()
@@ -59,12 +61,14 @@ export function TaskEdit(props: TaskEditProps) {
 
             const reminders = props.task?.reminders?.slice(0);
 
-            if (state.selectedReminderIndex)
+            if (state.selectedReminderIndex !== undefined)
                 reminders[state.selectedReminderIndex] = state.selectedReminder;
             else
                 reminders.push(state.selectedReminder);
 
             props.updateTask({ reminders: reminders })
+
+            cancelEditReminder()
         }
     }
 
@@ -99,11 +103,13 @@ export function TaskEdit(props: TaskEditProps) {
                 <label>Reminders</label>
                 <ol className="list-group">
                     {props.task && props.task.reminders && props.task.reminders.length > 0 && props.task.reminders.map((reminder, index) => (
-                        <a href="/"
+                        <a
+                            key={index}
+                            href="/"
                             className="list-group-item list-group-item-action justify-content-between align-items-center"
                             onClick={(e) => editReminder(e, index)}
                         >
-                            <span className="badge badge-pill badge-light">{toShortTimeStr(reminder.time)}</span>
+                            <span className="badge badge-pill badge-light">{toShortDateAndTime(reminder.time)}</span>
                             &nbsp;
 							<span>{reminder.notes || ""}</span>
                         </a>

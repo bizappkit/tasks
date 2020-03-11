@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { Reminder, ReminderRepeatSettings, DallyReminderRepeatSettings, WeekDay, MonthlyReminderRepeatSettings, DateNumber, MonthNumber, YearlyReminderRepeatSettings } from "../model/task";
+import { toYYYYMMDD, toHHMM } from "../utils/dateTimeUtils";
 
 
 const RepeatNoneValue = 'none';
@@ -44,7 +45,7 @@ export function ReminderEdit(props: ReminderEditProps) {
 
     const [state, setState] = React.useState(props.data)
 
-    console.log(`ReminderEdit`, state.repeat?.type)
+    console.log(`ReminderEdit`, state)
 
     return (
         <form>
@@ -56,6 +57,17 @@ export function ReminderEdit(props: ReminderEditProps) {
                     value={state.notes}
                     onChange={(e) => setState({ ...state, notes: e.currentTarget.value })}
                 />
+            </div>
+            <div className="form-group">
+                <label>Remind me on</label>
+                <Row>
+                    <Col>
+                        <Form.Control type="date" placeholder="Date" value={toYYYYMMDD(state.time)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="time" placeholder="Time" value={toHHMM(state.time)} />
+                    </Col>
+                </Row>
             </div>
             <div className="form-group">
                 <label>Repeat</label>
