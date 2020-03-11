@@ -13,7 +13,6 @@ interface TaskEditProps {
 }
 
 interface TaskEditState {
-    isNew?: boolean
     selectedReminderIndex?: number
     selectedReminder?: Reminder
 }
@@ -22,25 +21,22 @@ export function TaskEdit(props: TaskEditProps) {
 
     const [state, setState] = useState<TaskEditState>({})
 
-    const editReminder = (e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, index?: number) => {
-        
-        e?.preventDefault()
+    const editReminder = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, index?: number) => {
 
-        if(!props.task?.reminders)
-            return;
+        e.preventDefault()
 
-        let isNew = false
+        let selectedReminder: Reminder
 
-        //todo 
-
-        if (!index || index < 0) {
+        if (index && index >= 0 && props.task?.reminders) {
+            selectedReminder = props.task.reminders[index]
+        } else {
             const now = new Date()
             const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
-            index = props.task?.reminders?.push({id: uuid(), time: tomorrowMorning})
-            isNew = true
+            selectedReminder = { id: uuid(), time: tomorrowMorning };
+            index = undefined;
         }
 
-        setState({...state, isNew, selectedReminderIndex: index, selectedReminder: props.task?.reminders[index]})
+        setState({ ...state, selectedReminderIndex: index, selectedReminder })
     }
 
     const deleteReminder = () => {
@@ -59,18 +55,21 @@ export function TaskEdit(props: TaskEditProps) {
     }
 
     const saveReminderChanges = () => {
-        if(props.task?.reminders && state.selectedReminder && state.selectedReminderIndex) {
+        if (props.task?.reminders && state.selectedReminder) {
+
             const reminders = props.task?.reminders?.slice(0);
-            reminders[state.selectedReminderIndex] = state.selectedReminder;
-            props.updateTask({reminders: reminders})
+
+            if (state.selectedReminderIndex)
+                reminders[state.selectedReminderIndex] = state.selectedReminder;
+            else
+                reminders.push(state.selectedReminder);
+
+            props.updateTask({ reminders: reminders })
         }
     }
 
     const cancelEditReminder = () => {
-        if(state.isNew) {
-
-        }
-        setState({ selectedReminder: undefined, selectedReminderIndex: undefined, isNew: undefined });
+        setState({ selectedReminder: undefined, selectedReminderIndex: undefined });
     }
 
     return (
@@ -100,7 +99,7 @@ export function TaskEdit(props: TaskEditProps) {
                 <label>Reminders</label>
                 <ol className="list-group">
                     {props.task && props.task.reminders && props.task.reminders.length > 0 && props.task.reminders.map((reminder, index) => (
-                        <a ref="/"
+                        <a href="/"
                             className="list-group-item list-group-item-action justify-content-between align-items-center"
                             onClick={(e) => editReminder(e, index)}
                         >
@@ -110,11 +109,11 @@ export function TaskEdit(props: TaskEditProps) {
                         </a>
                     ))}
                 </ol>
-                <a href="/">Add Reminder</a>
+                <a href="/" onClick={(e) => editReminder(e)}>Add Reminder</a>
             </div>
 
             {state.selectedReminder &&
-                <Modal show={state.selectedReminder !== undefined} size="lg">
+                <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
                     <Modal.Header closeButton>
                         <Modal.Title>Reminder</Modal.Title>
                     </Modal.Header>
@@ -128,7 +127,7 @@ export function TaskEdit(props: TaskEditProps) {
                     <Modal.Footer>
                         <Button variant="secondary" onClick={cancelEditReminder}>Cancel</Button>
                         <Button variant="primary" onClick={saveReminderChanges}>Save</Button>
-                    </Modal.Footer>                    
+                    </Modal.Footer>
                 </Modal>
             }
         </form>

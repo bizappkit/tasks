@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { Reminder, ReminderRepeatSettings, DallyReminderRepeatSettings, WeekDay, MonthlyReminderRepeatSettings, DateNumber, MonthNumber, YearlyReminderRepeatSettings } from "../model/task";
 
 
@@ -44,6 +44,8 @@ export function ReminderEdit(props: ReminderEditProps) {
 
     const [state, setState] = React.useState(props.data)
 
+    console.log(`ReminderEdit`, state.repeat?.type)
+
     return (
         <form>
             <div className="form-group">
@@ -70,56 +72,72 @@ export function ReminderEdit(props: ReminderEditProps) {
                 </select>
             </div>
 
-            {props.data.repeat?.type === 'dally' && (
+            {state.repeat?.type === 'dally' && (
                 <div className="form-group">
                     <label>Weekdays</label>
-                    {weekDays.map(currentDay => (
-                        <Form.Check
-                            label={currentDay.text}
-                            value={currentDay.value}
-                            checked={state.repeat?.type === 'dally' && state.repeat.days.includes(currentDay.value)}
-                            onChange={() => setState({ ...state, repeat: updateWeekDays(state.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
-                    ))}
+                    <Row>
+                        {weekDays.map(currentDay => (
+                            <Col key={currentDay.value} xs={4}>
+                                <Form.Check
+                                    label={currentDay.text}
+                                    value={currentDay.value}
+                                    checked={state.repeat?.type === 'dally' && state.repeat.days.includes(currentDay.value)}
+                                    onChange={() => setState({ ...state, repeat: updateWeekDays(state.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             )}
 
-            {props.data.repeat?.type === 'monthly' && (
+            {state.repeat?.type === 'monthly' && (
                 <div className="form-group">
                     <label>Days</label>
-                    {dates.map(currentDate => (
-                        <Form.Check
-                            label={currentDate}
-                            value={currentDate}
-                            checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
-                            onChange={() => setState({ ...state, repeat: updateMonthlyDates(state.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
-                    ))}
+                    <Row>
+                        {dates.map(currentDate => (
+                            <Col key={currentDate} xs={2}>
+                                <Form.Check
+                                    label={currentDate}
+                                    value={currentDate}
+                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
+                                    onChange={() => setState({ ...state, repeat: updateMonthlyDates(state.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             )}
 
-            {props.data.repeat?.type === 'yearly' && (
+            {state.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Months</label>
-                    {months.map(currentMonth => (
-                        <Form.Check
-                            type="checkbox"
-                            label={currentMonth.text}
-                            value={currentMonth.value}
-                            checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
-                            onChange={() => setState({ ...state, repeat: updateYearlyMonths(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
-                    ))}
+                    <Row>
+                        {months.map(currentMonth => (
+                            <Col key={currentMonth.value} xs={4}>
+                                <Form.Check
+                                    type="checkbox"
+                                    label={currentMonth.text}
+                                    value={currentMonth.value}
+                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
+                                    onChange={() => setState({ ...state, repeat: updateYearlyMonths(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             )}
 
-            {props.data.repeat?.type === 'yearly' && (
+            {state.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Days</label>
-                    {months.map(currentMonth => (
-                        <Form.Check
-                            label={currentMonth.text}
-                            value={currentMonth.value}
-                            checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
-                            onChange={() => setState({ ...state, repeat: updateYearlyDays(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
-                    ))}
+                    <Row>
+                        {dates.map(currentDate => (
+                            <Col key={currentDate} xs={2}>
+                                <Form.Check
+                                    label={currentDate}
+                                    value={currentDate}
+                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
+                                    onChange={() => setState({ ...state, repeat: updateYearlyDays(state.repeat as YearlyReminderRepeatSettings, currentDate) })} />
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             )}
         </form>
