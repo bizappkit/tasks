@@ -1,3 +1,4 @@
+import moment, { Moment } from "moment";
 
 const OneSecondValue = 1000;
 const OneMinuteValue = 60 * OneSecondValue;
@@ -18,36 +19,22 @@ export function getDate(source: Date) {
 
 export function setDate(source: Date, date: Date | string) {
 
-	console.log(source, date)
+	let dateMoment = moment(date)
+	let timeMoment = moment(source)
 
-	if (typeof date === "string")
-		date = new Date(date);
-
-	const result = new Date(
-		date.getFullYear(), date.getMonth(), date.getDate(),
-		source.getHours(), source.getMinutes(), source.getSeconds(), source.getMilliseconds()
-	);
-
-	console.log(result)
-
-	return result
+	return combineMoments(dateMoment, timeMoment).toDate()
 }
 
 export function setTime(source: Date, time: string | Date): Date {
 
-	console.log(source)
+	let dateMoment = moment(source)
+	let timeMoment = moment(time, "HH:mm")
 
-	if (typeof time === "string")
-		time = new Date(time);
+	return combineMoments(dateMoment, timeMoment).toDate()
+}
 
-	const result = new Date(
-		source.getFullYear(), source.getMonth(), source.getDate() + 1,
-		time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()
-	)
-
-	console.log(result)
-
-	return result
+function combineMoments(dateMoment: moment.Moment, timeMoment: moment.Moment): Moment {
+	return dateMoment.set({ hour: timeMoment.hour(), minute: timeMoment.minute(), second: timeMoment.second() });
 }
 
 export function addDays(source: Date, days: number): Date {
