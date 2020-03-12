@@ -98,6 +98,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                         {weekDays.map(currentDay => (
                             <Col key={currentDay.value} xs={4}>
                                 <Form.Check
+                                    id={"weekday:" + currentDay.value}
                                     label={currentDay.text}
                                     value={currentDay.value}
                                     checked={props.reminder.repeat?.type === 'dally' && props.reminder.repeat.days.includes(currentDay.value)}
@@ -115,6 +116,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                         {dates.map(currentDate => (
                             <Col key={currentDate} xs={2}>
                                 <Form.Check
+                                    id={"day:" + currentDate}
                                     label={currentDate}
                                     value={currentDate}
                                     checked={props.reminder.repeat?.type === 'monthly' && props.reminder.repeat.days.includes(currentDate)}
@@ -132,6 +134,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                         {months.map(currentMonth => (
                             <Col key={currentMonth.value} xs={4}>
                                 <Form.Check
+                                    id={"month:" + currentMonth.value}
                                     type="checkbox"
                                     label={currentMonth.text}
                                     value={currentMonth.value}
@@ -150,6 +153,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                         {dates.map(currentDate => (
                             <Col key={currentDate} xs={2}>
                                 <Form.Check
+                                    id={"day:" + currentDate}
                                     label={currentDate}
                                     value={currentDate}
                                     checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.days.includes(currentDate)}
