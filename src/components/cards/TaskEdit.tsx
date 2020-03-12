@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Task, Reminder } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
 import { toShortDateAndTime } from '../../utils/dateTimeUtils';
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Badge } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { v4 as uuid } from 'uuid';
 import { FormListSection } from "./FormListSection";
@@ -111,6 +111,16 @@ export function TaskEdit(props: TaskEditProps) {
             >
                 {(reminder) => (
                     <span><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</span>
+                )}
+            </FormListSection>
+
+            <FormListSection
+                items={["Sub Steps", "Previous Steps", "Next Steps"]}
+                sectionTitle="Related Tasks"
+                onItemClick={(_, index) => editReminder(index)}
+            >
+                {(item) => (
+                    <div><span>{item} </span><Badge variant="primary">2/5</Badge></div>
                 )}
             </FormListSection>
 
