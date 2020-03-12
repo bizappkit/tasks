@@ -68,6 +68,8 @@ export function TaskEdit(props: TaskEditProps) {
             else
                 reminders.push(state.selectedReminder);
 
+            reminders.sort((a, b) => a.on.valueOf() - b.on.valueOf());
+
             props.updateTask({ reminders: reminders })
 
             cancelEditReminder()
