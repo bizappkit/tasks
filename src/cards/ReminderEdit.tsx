@@ -61,8 +61,8 @@ export function ReminderEdit(props: ReminderEditProps) {
                         <Form.Control
                             type="date"
                             placeholder="Date"
-                            value={moment(props.reminder.time).format("YYYY-MM-DD")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, time: setTime(props.reminder.time, e.currentTarget.value) })}
+                            value={moment(props.reminder.on).format("YYYY-MM-DD")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, on: setDate(props.reminder.on, e.currentTarget.value) })}
                         />
                     </Col>
                     <Col>
@@ -70,8 +70,8 @@ export function ReminderEdit(props: ReminderEditProps) {
                             type="time"
                             step={15}
                             placeholder="Time"
-                            value={moment(props.reminder.time).format("HH:mm")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, time: setDate(props.reminder.time, e.currentTarget.value) })}
+                            value={moment(props.reminder.on).format("HH:mm")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, on: setTime(props.reminder.on, e.currentTarget.value) })}
                         />
                     </Col>
                 </Row>

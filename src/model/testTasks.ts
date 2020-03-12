@@ -7,14 +7,14 @@ const testTasks: Task[] = [
         notes: 'Some text for task notes'
     },
     {
-        id: "2",
+        id: "t:2",
         title: 'Test Task 2',
         notes: 'Some text for task notes',
         reminders: [
             {
                 id: "r:1",
                 notes: "Don't forgot about this task",
-                time: new Date()
+                on: new Date()
             }
         ]
     }

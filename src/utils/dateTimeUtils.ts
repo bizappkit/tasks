@@ -18,24 +18,36 @@ export function getDate(source: Date) {
 
 export function setDate(source: Date, date: Date | string) {
 
+	console.log(source, date)
+
 	if (typeof date === "string")
 		date = new Date(date);
 
-	return new Date(
+	const result = new Date(
 		date.getFullYear(), date.getMonth(), date.getDate(),
 		source.getHours(), source.getMinutes(), source.getSeconds(), source.getMilliseconds()
 	);
+
+	console.log(result)
+
+	return result
 }
 
 export function setTime(source: Date, time: string | Date): Date {
 
+	console.log(source)
+
 	if (typeof time === "string")
 		time = new Date(time);
 
-	return new Date(
-		source.getFullYear(), source.getMonth(), source.getDate(),
+	const result = new Date(
+		source.getFullYear(), source.getMonth(), source.getDate() + 1,
 		time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()
 	)
+
+	console.log(result)
+
+	return result
 }
 
 export function addDays(source: Date, days: number): Date {

@@ -15,7 +15,7 @@ export interface Task {
 
 export interface Reminder {
     id: string
-    time: Date
+    on: Date
     notes?: string
     repeat?: ReminderRepeatSettings
 }
@@ -73,7 +73,7 @@ export function getScheduleItems(now: Date, tasks: IterableIterator<Task>): Sche
         if (t.reminders) {
             t.reminders.forEach(r => scheduleItems.push({
                 taskId: t.id,
-                time: r.time,
+                time: r.on,
                 title: r.notes || t.title,
                 subtitle: (r.notes ? t.title : t.notes),
                 reminderId: r.id

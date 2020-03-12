@@ -34,7 +34,7 @@ export function TaskEdit(props: TaskEditProps) {
         } else {
             const now = new Date()
             const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
-            selectedReminder = { id: uuid(), time: tomorrowMorning };
+            selectedReminder = { id: uuid(), on: tomorrowMorning };
             index = undefined;
         }
 
@@ -111,7 +111,7 @@ export function TaskEdit(props: TaskEditProps) {
                             className="list-group-item list-group-item-action justify-content-between align-items-center"
                             onClick={(e) => editReminder(e, index)}
                         >
-                            <span className="badge badge-pill badge-light">{toShortDateAndTime(reminder.time)}</span>
+                            <span className="badge badge-pill badge-light">{toShortDateAndTime(reminder.on)}</span>
                             &nbsp;
                             <span>{reminder.notes || ""}</span>
                         </a>
