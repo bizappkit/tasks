@@ -5,6 +5,7 @@ import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { v4 as uuid } from 'uuid';
+import { FormListSection } from "./FormListSection";
 
 interface TaskEditProps {
     task?: Task
@@ -21,9 +22,7 @@ export function TaskEdit(props: TaskEditProps) {
 
     const [state, setState] = useState<TaskEditState>({})
 
-    const editReminder = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, index?: number) => {
-
-        e.preventDefault()
+    const editReminder = (index?: number) => {
 
         let selectedReminder: Reminder
 
@@ -103,22 +102,17 @@ export function TaskEdit(props: TaskEditProps) {
                 />
             </div>
 
-            <div className="form-group">
-                <label>Reminders</label>
-                <ol className="list-group">
-                    {props.task && props.task.reminders && props.task.reminders.length > 0 && props.task.reminders.map((reminder, index) => (
-                        <a
-                            key={index}
-                            href="/"
-                            className="list-group-item list-group-item-action justify-content-between align-items-center"
-                            onClick={(e) => editReminder(e, index)}
-                        >
-                            <strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong><span>{reminder.notes || ""}</span>
-                        </a>
-                    ))}
-                </ol>
-                <a href="/" onClick={(e) => editReminder(e)}>Add Reminder</a>
-            </div>
+            <FormListSection
+                items={props.task?.reminders}
+                sectionTitle="Reminders"
+                addItemText="Add Reminder"
+                onItemClick={(_, index) => editReminder(index)}
+                onAddItem={() => editReminder()}
+            >
+                {(reminder) => (
+                    <span><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</span>
+                )}
+            </FormListSection>
 
             {state.selectedReminder &&
                 <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
