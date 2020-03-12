@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { CardList } from '../cards/CardList';
-import { ScheduleItem } from '../model/task';
+import { ScheduleItem } from '../../model/task';
 import { ScheduleItemCard } from '../cards/ReminderCard';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 
 function getDate(dateTime?: Date) {
 

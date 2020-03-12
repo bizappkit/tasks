@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Task, Reminder } from "../model/task";
+import { Task, Reminder } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
-import { toShortDateAndTime } from '../utils/dateTimeUtils';
+import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { v4 as uuid } from 'uuid';

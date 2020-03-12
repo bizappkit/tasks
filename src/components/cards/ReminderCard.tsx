@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import { toShortTimeStr } from "../utils/dateTimeUtils";
-import { ScheduleItem } from "../model/task";
+import { toShortTimeStr } from "../../utils/dateTimeUtils";
+import { ScheduleItem } from "../../model/task";
 import { Link } from "react-router-dom";
 //import "./CardActive.css"
 

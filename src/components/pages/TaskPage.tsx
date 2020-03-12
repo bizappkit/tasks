@@ -1,10 +1,10 @@
 import React, { Dispatch } from 'react';
 import { Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { Task } from '../model/task';
-import { RootState } from '../store';
+import { Task } from '../../model/task';
+import { RootState } from '../../store';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { TasksStoreAction } from '../store/tasksStore';
+import { TasksStoreAction } from '../../store/tasksStore';
 import { TaskEdit } from "../cards/TaskEdit";
 
 function TaskPage() {
