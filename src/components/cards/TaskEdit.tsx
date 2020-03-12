@@ -111,9 +111,7 @@ export function TaskEdit(props: TaskEditProps) {
                             className="list-group-item list-group-item-action justify-content-between align-items-center"
                             onClick={(e) => editReminder(e, index)}
                         >
-                            <span className="badge badge-pill badge-light">{toShortDateAndTime(reminder.on)}</span>
-                            &nbsp;
-                            <span>{reminder.notes || ""}</span>
+                            <strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong><span>{reminder.notes || ""}</span>
                         </a>
                     ))}
                 </ol>
