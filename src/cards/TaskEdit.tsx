@@ -53,11 +53,13 @@ export function TaskEdit(props: TaskEditProps) {
 
     const updateSelectedReminder = (payload: Partial<Reminder>) => {
         if (state.selectedReminder)
-            setState({ selectedReminder: { ...state.selectedReminder, ...payload } });
+            setState({ ...state, selectedReminder: { ...state.selectedReminder, ...payload } })
     }
 
     const saveReminderChanges = () => {
         if (props.task?.reminders && state.selectedReminder) {
+
+            console.log("saveReminderChanges", state)
 
             const reminders = props.task?.reminders?.slice(0);
 
@@ -111,7 +113,7 @@ export function TaskEdit(props: TaskEditProps) {
                         >
                             <span className="badge badge-pill badge-light">{toShortDateAndTime(reminder.time)}</span>
                             &nbsp;
-							<span>{reminder.notes || ""}</span>
+                            <span>{reminder.notes || ""}</span>
                         </a>
                     ))}
                 </ol>
@@ -125,7 +127,7 @@ export function TaskEdit(props: TaskEditProps) {
                     </Modal.Header>
                     <Modal.Body>
                         <ReminderEdit
-                            data={state.selectedReminder}
+                            reminder={state.selectedReminder}
                             onSave={(r) => updateSelectedReminder(r)}
                             onDelete={deleteReminder}
                         />

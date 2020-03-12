@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { Reminder, ReminderRepeatSettings, DallyReminderRepeatSettings, WeekDay, MonthlyReminderRepeatSettings, DateNumber, MonthNumber, YearlyReminderRepeatSettings } from "../model/task";
-import { toYYYYMMDD, toHHMM } from "../utils/dateTimeUtils";
-
+import { setTime, setDate } from "../utils/dateTimeUtils";
+import moment from "moment";
 
 const RepeatNoneValue = 'none';
 const RepeatDallyValue: ReminderRepeatSettings['type'] = 'dally'
@@ -10,13 +10,13 @@ const RepeatMonthlyValue: ReminderRepeatSettings['type'] = 'monthly'
 const RepeatYearlyValue: ReminderRepeatSettings['type'] = 'yearly'
 
 const weekDays: { value: WeekDay, text: string }[] = [
-    { value: 'sunday', text: 'Sunday' },
     { value: 'monday', text: 'Monday' },
     { value: 'tuesday', text: 'Tuesday' },
     { value: 'wednesday', text: 'Wednesday' },
     { value: 'thursday', text: 'Thursday' },
     { value: 'friday', text: 'Friday' },
-    { value: 'saturday', text: 'Saturday' }
+    { value: 'saturday', text: 'Saturday' },
+    { value: 'sunday', text: 'Sunday' }
 ]
 const dates = Array(31).fill(0).map((_, index) => index + 1) as DateNumber[];
 
@@ -36,16 +36,12 @@ const months: { value: MonthNumber, text: string }[] = [
 ]
 
 interface ReminderEditProps {
-    data: Reminder
+    reminder: Reminder
     onSave: (changes: Partial<Reminder>) => void
     onDelete?: () => void
 }
 
 export function ReminderEdit(props: ReminderEditProps) {
-
-    const [state, setState] = React.useState(props.data)
-
-    console.log(`ReminderEdit`, state)
 
     return (
         <form>
@@ -54,18 +50,29 @@ export function ReminderEdit(props: ReminderEditProps) {
                 <input
                     placeholder="Notes"
                     className="form-control"
-                    value={state.notes}
-                    onChange={(e) => setState({ ...state, notes: e.currentTarget.value })}
+                    value={props.reminder.notes}
+                    onChange={(e) => props.onSave({ ...props.reminder, notes: e.currentTarget.value })}
                 />
             </div>
             <div className="form-group">
                 <label>Remind me on</label>
                 <Row>
                     <Col>
-                        <Form.Control type="date" placeholder="Date" value={toYYYYMMDD(state.time)} />
+                        <Form.Control
+                            type="date"
+                            placeholder="Date"
+                            value={moment(props.reminder.time).format("YYYY-MM-DD")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, time: setTime(props.reminder.time, e.currentTarget.value) })}
+                        />
                     </Col>
                     <Col>
-                        <Form.Control type="time" placeholder="Time" value={toHHMM(state.time)} />
+                        <Form.Control
+                            type="time"
+                            step={15}
+                            placeholder="Time"
+                            value={moment(props.reminder.time).format("HH:mm")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, time: setDate(props.reminder.time, e.currentTarget.value) })}
+                        />
                     </Col>
                 </Row>
             </div>
@@ -74,8 +81,8 @@ export function ReminderEdit(props: ReminderEditProps) {
                 <select
                     placeholder="Notes"
                     className="form-control"
-                    value={state.repeat?.type ?? 'none'}
-                    onChange={(e) => setState({ ...state, repeat: createRepeatSettings(e.currentTarget.value) })}
+                    value={props.reminder.repeat?.type ?? 'none'}
+                    onChange={(e) => props.onSave({ ...props.reminder, repeat: createRepeatSettings(e.currentTarget.value) })}
                 >
                     <option value={RepeatNoneValue}>None</option>
                     <option value={RepeatDallyValue}>Dally</option>
@@ -84,7 +91,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                 </select>
             </div>
 
-            {state.repeat?.type === 'dally' && (
+            {props.reminder.repeat?.type === 'dally' && (
                 <div className="form-group">
                     <label>Weekdays</label>
                     <Row>
@@ -93,15 +100,15 @@ export function ReminderEdit(props: ReminderEditProps) {
                                 <Form.Check
                                     label={currentDay.text}
                                     value={currentDay.value}
-                                    checked={state.repeat?.type === 'dally' && state.repeat.days.includes(currentDay.value)}
-                                    onChange={() => setState({ ...state, repeat: updateWeekDays(state.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
+                                    checked={props.reminder.repeat?.type === 'dally' && props.reminder.repeat.days.includes(currentDay.value)}
+                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateWeekDays(props.reminder.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
                             </Col>
                         ))}
                     </Row>
                 </div>
             )}
 
-            {state.repeat?.type === 'monthly' && (
+            {props.reminder.repeat?.type === 'monthly' && (
                 <div className="form-group">
                     <label>Days</label>
                     <Row>
@@ -110,15 +117,15 @@ export function ReminderEdit(props: ReminderEditProps) {
                                 <Form.Check
                                     label={currentDate}
                                     value={currentDate}
-                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
-                                    onChange={() => setState({ ...state, repeat: updateMonthlyDates(state.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
+                                    checked={props.reminder.repeat?.type === 'monthly' && props.reminder.repeat.days.includes(currentDate)}
+                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateMonthlyDates(props.reminder.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
                             </Col>
                         ))}
                     </Row>
                 </div>
             )}
 
-            {state.repeat?.type === 'yearly' && (
+            {props.reminder.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Months</label>
                     <Row>
@@ -128,15 +135,15 @@ export function ReminderEdit(props: ReminderEditProps) {
                                     type="checkbox"
                                     label={currentMonth.text}
                                     value={currentMonth.value}
-                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentMonth.value)}
-                                    onChange={() => setState({ ...state, repeat: updateYearlyMonths(state.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
+                                    checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.months.includes(currentMonth.value)}
+                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyMonths(props.reminder.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
                             </Col>
                         ))}
                     </Row>
                 </div>
             )}
 
-            {state.repeat?.type === 'yearly' && (
+            {props.reminder.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Days</label>
                     <Row>
@@ -145,8 +152,8 @@ export function ReminderEdit(props: ReminderEditProps) {
                                 <Form.Check
                                     label={currentDate}
                                     value={currentDate}
-                                    checked={state.repeat?.type === 'monthly' && state.repeat.days.includes(currentDate)}
-                                    onChange={() => setState({ ...state, repeat: updateYearlyDays(state.repeat as YearlyReminderRepeatSettings, currentDate) })} />
+                                    checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.days.includes(currentDate)}
+                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyDays(props.reminder.repeat as YearlyReminderRepeatSettings, currentDate) })} />
                             </Col>
                         ))}
                     </Row>
@@ -186,10 +193,18 @@ function updateMonthlyDates(settings: MonthlyReminderRepeatSettings, day: DateNu
 
 function updateFlagsArray<T>(current: T[], flag: T): T[] {
 
+    console.log("updateFlagsArray - current", current);
+
+    let result: T[]
+
     if (current.includes(flag))
-        return current.filter(d => d === flag)
+        result = current.filter(d => d !== flag)
     else
-        return [...current, flag]
+        result = [...current, flag];
+
+    console.log("updateFlagsArray - result", result);
+
+    return result
 }
 
 function createRepeatSettings(value: string): ReminderRepeatSettings | undefined {

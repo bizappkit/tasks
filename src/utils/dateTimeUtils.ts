@@ -16,11 +16,26 @@ export function getDate(source: Date) {
 	return new Date(source.getFullYear(), source.getMonth(), source.getDate());
 }
 
-export function setDate(source: Date, date: Date) {
+export function setDate(source: Date, date: Date | string) {
+
+	if (typeof date === "string")
+		date = new Date(date);
+
 	return new Date(
 		date.getFullYear(), date.getMonth(), date.getDate(),
 		source.getHours(), source.getMinutes(), source.getSeconds(), source.getMilliseconds()
 	);
+}
+
+export function setTime(source: Date, time: string | Date): Date {
+
+	if (typeof time === "string")
+		time = new Date(time);
+
+	return new Date(
+		source.getFullYear(), source.getMonth(), source.getDate(),
+		time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()
+	)
 }
 
 export function addDays(source: Date, days: number): Date {
@@ -42,26 +57,4 @@ export function getTimeValue(date: Date): number {
 export function parseDate(str: string): Date | undefined {
 	const value = Date.parse(str);
 	return (isNaN(value) ? undefined : new Date(value));
-}
-
-export function toYYYYMMDD(value?: Date): string | undefined {
-
-	if (!value)
-		return undefined;
-
-	var mm = value.getMonth() + 1; // getMonth() is zero-based
-	var dd = value.getDate();
-
-	return `${value.getFullYear()}-${(mm > 9 ? '' : '0') + mm}-${(dd > 9 ? '' : '0') + dd}`;
-}
-
-export function toHHMM(value?: Date): string | undefined {
-
-	if (!value)
-		return undefined;
-
-	var hh = value.getHours();
-	var mm = value.getMinutes();
-
-	return `${(hh > 9 ? '' : '0') + mm}:${(mm > 9 ? '' : '0') + mm}`;
 }
