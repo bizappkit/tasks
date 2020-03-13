@@ -26,8 +26,6 @@ export function TaskEdit(props: TaskEditProps) {
 
         let selectedReminder: Reminder
 
-        console.log("editReminder:", index, props.task?.reminders)
-
         if (index !== undefined && index >= 0 && props.task?.reminders) {
             selectedReminder = props.task.reminders[index]
         } else {
@@ -56,11 +54,10 @@ export function TaskEdit(props: TaskEditProps) {
     }
 
     const saveReminderChanges = () => {
-        if (props.task?.reminders && state.selectedReminder) {
 
-            console.log("saveReminderChanges", state)
+        if (state.selectedReminder) {
 
-            const reminders = props.task?.reminders?.slice(0);
+            const reminders = props.task?.reminders?.slice(0) || []
 
             if (state.selectedReminderIndex !== undefined)
                 reminders[state.selectedReminderIndex] = state.selectedReminder;
