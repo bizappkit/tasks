@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 
 
-export function task(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef): Task {
+export function task(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef, id?: string): Task {
     return {
-        id: uuid(),
+        id: id || uuid(),
         createdOn: new Date(),
         title,
         notes,
