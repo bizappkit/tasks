@@ -1,23 +1,10 @@
-import { Task } from './task';
+import { Task, task, reminder } from './task';
+import moment from 'moment';
 
 const testTasks: Task[] = [
-    {
-        id: "t:1",
-        title: 'Test Task 1',
-        notes: 'Some text for task notes'
-    },
-    {
-        id: "t:2",
-        title: 'Test Task 2',
-        notes: 'Some text for task notes',
-        reminders: [
-            {
-                id: "r:1",
-                notes: "Don't forgot about this task",
-                on: new Date()
-            }
-        ]
-    }
+    task("Bill Gates", "Customer", [reminder(moment().add({days: 3}).set({hours: 9, minutes: 0}).toDate(), "Confirm dinner")]),
+    task("Elon Musk", "Customer", [reminder(moment().add({days: 5}).set({hours: 14, minutes: 0}).toDate(), "Schedule Interview")]),
+    task("Buy new airpods")
 ]
 
 export default testTasks;

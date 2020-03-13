@@ -1,3 +1,29 @@
+import { v4 as uuid } from 'uuid';
+
+
+export function task(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef): Task {
+    return {
+        id: uuid(),
+        createdOn: new Date(),
+        title,
+        notes,
+        parent,
+        reminders,
+    }
+}
+
+export function reminder(on?: Date, notes?: string): Reminder {
+    return {
+        id: uuid(),
+        on: on || new Date(),
+        notes
+    }
+}
+
+type UUID = string
+
+type TaskRef = UUID
+
 export interface ScheduleItem {
     taskId: string
     title: string
@@ -9,8 +35,12 @@ export interface ScheduleItem {
 export interface Task {
     id: string
     title: string
+    createdOn: Date
     notes?: string
     reminders?: Reminder[]
+    parent?: TaskRef
+    prevSteps?: TaskRef[]
+    nextSteps?: TaskRef[]
 }
 
 export interface Reminder {
