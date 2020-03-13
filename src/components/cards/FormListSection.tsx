@@ -9,7 +9,6 @@ interface FormListSectionProps<T> {
     onAddItem?: () => void
 }
 
-
 export function FormListSection<T>(props: FormListSectionProps<T>) {
     return (
         <div className="form-group">
@@ -17,6 +16,7 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
             <ol className="list-group">
                 {props.items?.map((item, index) => (
                     <a
+                        key={index}
                         href="/"
                         className="list-group-item list-group-item-action justify-content-between align-items-center"
                         onClick={(e) => onItemClick(e, item, index, props.onItemClick)}
