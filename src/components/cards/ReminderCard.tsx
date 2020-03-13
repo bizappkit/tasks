@@ -7,14 +7,12 @@ import { Link } from "react-router-dom";
 
 interface ScheduleItemProps {
 	data: ScheduleItem
-
-	onClick: (reminder: ScheduleItem) => void
 }
 
 export function ScheduleItemCard(props: ScheduleItemProps) {
 
 	return (
-		<Card className="card-task" onClick={() => props.onClick(props.data)}>
+		<Card className="card-task">
 			<Card.Body>
 				<div className="card-title" >
 					<Link to={"/task/" + props.data.taskId}>
