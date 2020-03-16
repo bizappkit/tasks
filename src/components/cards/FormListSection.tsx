@@ -15,14 +15,12 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
             <label>{props.sectionTitle || ""}</label>
             <ol className="list-group">
                 {props.items?.map((item, index) => (
-                    <a
+                    <div
                         key={index}
-                        href="/"
                         className="list-group-item list-group-item-action justify-content-between align-items-center"
-                        onClick={(e) => onItemClick(e, item, index, props.onItemClick)}
                     >
                         {props.children(item, index)}
-                    </a>
+                    </div>
                 ))}
             </ol>
             {props.onAddItem && props.addItemText &&
@@ -32,12 +30,6 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
             }
         </div>
     )
-}
-
-function onItemClick<T>(event: React.MouseEvent<HTMLAnchorElement>, item: T, index: number, onItemClick?: (item: T, index: number) => void) {
-    event.preventDefault();
-    if (onItemClick)
-        onItemClick(item, index);
 }
 
 function onAddItem<T>(event: React.MouseEvent<HTMLAnchorElement>, onAddItem?: () => void) {
