@@ -9,21 +9,35 @@ import { FormListSection } from "./FormListSection";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
+import { Link } from "react-router-dom";
 
 interface TaskEditProps {
     taskId?: string
 }
 
 interface TaskEditState {
-    task?: Task
+    //task?: Task
+    //originTask?: Task
+    //steps?: Task[]
+    //prevSteps?: CompletionStatistics
+    //nextSteps?: CompletionStatistics
+
     selectedReminderIndex?: number
     selectedReminder?: Reminder
 }
 
+interface CompletionStatistics {
+    completedCount: number
+    allCount: number
+}
+
 export function TaskEdit(props: TaskEditProps) {
+
+    const [state, setState] = useState<TaskEditState>({})
 
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
+    const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
 
     const dispatch: Dispatch<TasksStoreAction> = useDispatch()
     const updateTask = (payload: Partial<Task>) => {
@@ -31,14 +45,14 @@ export function TaskEdit(props: TaskEditProps) {
             dispatch({ type: 'tasks-updated', taskId: props.taskId, payload })
     }
 
-    const [state, setState] = useState<TaskEditState>({ task })
+    const editReminder = (event: React.MouseEvent<HTMLAnchorElement>, index?: number) => {
 
-    const editReminder = (index?: number) => {
+        event.preventDefault()
 
         let selectedReminder: Reminder
 
-        if (index !== undefined && index >= 0 && state.task?.reminders) {
-            selectedReminder = state.task.reminders[index]
+        if (index !== undefined && index >= 0 && task?.reminders) {
+            selectedReminder = task.reminders[index]
         } else {
             const now = new Date()
             const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
@@ -52,7 +66,7 @@ export function TaskEdit(props: TaskEditProps) {
     const deleteReminder = () => {
         const reminder = state.selectedReminder;
         if (reminder) {
-            updateTask({ reminders: state.task?.reminders?.filter(r => r === reminder) })
+            updateTask({ reminders: task?.reminders?.filter(r => r === reminder) })
             setState({ selectedReminder: undefined })
         }
     }
@@ -66,7 +80,7 @@ export function TaskEdit(props: TaskEditProps) {
 
         if (state.selectedReminder) {
 
-            const reminders = state.task?.reminders?.slice(0) || []
+            const reminders = task?.reminders?.slice(0) || []
 
             if (state.selectedReminderIndex !== undefined)
                 reminders[state.selectedReminderIndex] = state.selectedReminder;
@@ -89,43 +103,47 @@ export function TaskEdit(props: TaskEditProps) {
         <form>
             <div className="form-group">
                 <TextareaAutosize
-                    disabled={state.task === undefined}
+                    disabled={task === undefined}
                     placeholder="Task Title"
                     className="form-control"
                     style={{ fontSize: "2rem" }}
-                    value={state.task?.title}
+                    value={task?.title}
                     onChange={(e) => updateTask({ title: e.currentTarget.value })}
                 />
             </div>
+            {originTask &&
+                <div className="form-group">
+                    <label>Origin:&nbsp;</label>
+                    <Link to={"/task/" + originTask?.id}>{originTask.title}</Link>
+                </div>
+            }
             <div className="form-group">
                 <label>Notes</label>
                 <TextareaAutosize
-                    disabled={state.task === undefined}
+                    disabled={task === undefined}
                     minRows={4}
                     className="form-control"
-                    value={state.task?.notes}
+                    value={task?.notes}
                     onChange={(e) => updateTask({ notes: e.currentTarget.value })}
                 />
             </div>
 
             <FormListSection
-                items={state.task?.reminders}
+                items={task?.reminders}
                 sectionTitle="Reminders"
                 addItemText="Add Reminder"
-                onItemClick={(_, index) => editReminder(index)}
-                onAddItem={() => editReminder()}
             >
                 {(reminder, index) => (
                     <a
                         href="/"
-                        onClick={(e) => editReminder(index)}
+                        onClick={(e) => editReminder(e, index)}
                     >
                         <div><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</div>
                     </a>
                 )}
             </FormListSection>
 
-            <FormListSection
+            {/* <FormListSection
                 items={["Origin", "Steps", "Previous", "Next"]}
                 sectionTitle="Relations"
                 onItemClick={(_, index) => editReminder(index)}
@@ -133,7 +151,7 @@ export function TaskEdit(props: TaskEditProps) {
                 {(item) => (
                     <div><span>{item}</span></div>
                 )}
-            </FormListSection>
+            </FormListSection> */}
 
             {state.selectedReminder &&
                 <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
