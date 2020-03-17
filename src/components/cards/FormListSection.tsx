@@ -12,7 +12,14 @@ interface FormListSectionProps<T> {
 export function FormListSection<T>(props: FormListSectionProps<T>) {
     return (
         <div className="form-group">
-            <label>{props.sectionTitle || ""}</label>
+            <div className="row content-list-head">
+                <div className="col-auto">
+                    <h3>{props.sectionTitle || ""}</h3>
+                    <button className="btn btn-round" data-toggle="tooltip" data-title="New item" data-original-title="" title="">
+                        <i className="material-icons">add</i>
+                    </button>
+                </div>
+            </div>
             <ol className="list-group">
                 {props.items?.map((item, index) => (
                     <div

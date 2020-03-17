@@ -106,16 +106,16 @@ export function TaskEdit(props: TaskEditProps) {
                     disabled={task === undefined}
                     placeholder="Task Title"
                     className="form-control"
-                    style={{ fontSize: "2rem" }}
+                    style={{ fontSize: "2.5rem" }}
                     value={task?.title}
                     onChange={(e) => updateTask({ title: e.currentTarget.value })}
                 />
             </div>
             {originTask &&
-                <div className="form-group">
-                    <label>Origin:&nbsp;</label>
+                <p className="lead">
+                    Origin Task:&nbsp;
                     <Link to={"/task/" + originTask?.id}>{originTask.title}</Link>
-                </div>
+                </p>
             }
             <div className="form-group">
                 <label>Notes</label>
@@ -143,15 +143,14 @@ export function TaskEdit(props: TaskEditProps) {
                 )}
             </FormListSection>
 
-            {/* <FormListSection
-                items={["Origin", "Steps", "Previous", "Next"]}
-                sectionTitle="Relations"
-                onItemClick={(_, index) => editReminder(index)}
+            <FormListSection
+                items={[]}
+                sectionTitle="Steps"
             >
                 {(item) => (
                     <div><span>{item}</span></div>
                 )}
-            </FormListSection> */}
+            </FormListSection>
 
             {state.selectedReminder &&
                 <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
