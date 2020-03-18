@@ -101,7 +101,7 @@ export function TaskEdit(props: TaskEditProps) {
 
     return (
         <form>
-            <div className="form-group">
+            <div className="content-list">
                 <TextareaAutosize
                     disabled={task === undefined}
                     placeholder="Task Title"
@@ -117,7 +117,7 @@ export function TaskEdit(props: TaskEditProps) {
                     <Link to={"/task/" + originTask?.id}>{originTask.title}</Link>
                 </p>
             }
-            <div className="form-group">
+            <div className="content-list">
                 <label>Notes</label>
                 <TextareaAutosize
                     disabled={task === undefined}

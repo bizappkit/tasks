@@ -11,11 +11,11 @@ interface FormListSectionProps<T> {
 
 export function FormListSection<T>(props: FormListSectionProps<T>) {
     return (
-        <div className="form-group">
+        <div className="content-list">
             <div className="row content-list-head">
                 <div className="col-auto">
                     <h3>{props.sectionTitle || ""}</h3>
-                    <button className="btn btn-round" data-toggle="tooltip" data-title="New item" data-original-title="" title="">
+                    <button className="btn btn-round" data-toggle="tooltip" data-title="New item" data-original-title="New item" title="New item">
                         <i className="material-icons">add</i>
                     </button>
                 </div>
