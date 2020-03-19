@@ -1,5 +1,5 @@
 import React, { useState, Dispatch } from "react";
-import { Task, Reminder } from "../../model/task";
+import { createTask, Task, Reminder } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
 import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
@@ -24,6 +24,7 @@ interface TaskEditState {
 
     selectedReminderIndex?: number
     selectedReminder?: Reminder
+    subtaskTitle?: string
 }
 
 interface CompletionStatistics {
@@ -38,6 +39,9 @@ export function TaskEdit(props: TaskEditProps) {
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
+    const subtasks = task?.subtasks?.map(id => tasks?.get(id)).filter(task => task !== undefined) as Task[] | undefined
+
+    console.log("Subtasks", subtasks)
 
     const dispatch: Dispatch<TasksStoreAction> = useDispatch()
     const updateTask = (payload: Partial<Task>) => {
@@ -45,9 +49,9 @@ export function TaskEdit(props: TaskEditProps) {
             dispatch({ type: 'tasks-updated', taskId: props.taskId, payload })
     }
 
-    const editReminder = (event: React.MouseEvent<HTMLAnchorElement>, index?: number) => {
+    const editReminder = (event?: React.MouseEvent, index?: number) => {
 
-        event.preventDefault()
+        event?.preventDefault()
 
         let selectedReminder: Reminder
 
@@ -96,7 +100,32 @@ export function TaskEdit(props: TaskEditProps) {
     }
 
     const cancelEditReminder = () => {
-        setState({ selectedReminder: undefined, selectedReminderIndex: undefined });
+        setState({ selectedReminder: undefined, selectedReminderIndex: undefined })
+    }
+
+    const onNewStepKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.charCode === 13) {
+            addSubtask(event)
+        }
+    }
+
+    const addSubtask = (event?: { preventDefault: () => void }) => {
+
+        event?.preventDefault()
+
+        if (!task || !state.subtaskTitle)
+            return;
+
+        const title = state.subtaskTitle.trim();
+
+        if (title.length === 0)
+            return;
+
+        const newTask = createTask(title, undefined, undefined, task.id)
+
+        dispatch({ type: "tasks-new-task", task: newTask })
+
+        setState({ ...state, subtaskTitle: "" })
     }
 
     return (
@@ -132,11 +161,12 @@ export function TaskEdit(props: TaskEditProps) {
                 items={task?.reminders}
                 sectionTitle="Reminders"
                 addItemText="Add Reminder"
+                onAddItem={(e) => editReminder(e)}
             >
                 {(reminder, index) => (
                     <a
                         href="/"
-                        onClick={(e) => editReminder(e, index)}
+                        onClick={editReminder}
                     >
                         <div><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</div>
                     </a>
@@ -144,13 +174,28 @@ export function TaskEdit(props: TaskEditProps) {
             </FormListSection>
 
             <FormListSection
-                items={[]}
+                items={subtasks}
                 sectionTitle="Steps"
             >
                 {(item) => (
-                    <div><span>{item}</span></div>
+                    <div><span>{item.title}</span></div>
                 )}
             </FormListSection>
+
+            <div className="content-list-head" style={{ paddingTop: 8 }}>
+                <input
+                    type="text"
+                    className="form-control"
+                    style={{ fontSize: "1rem" }}
+                    placeholder="Add New Step..."
+                    value={state.subtaskTitle || ""}
+                    onChange={(e) => setState({ ...state, subtaskTitle: e.currentTarget.value })}
+                    onKeyPress={(e) => onNewStepKeyPress(e)}
+                />
+                <button className="btn btn-round" title="Add" style={{ marginLeft: 16 }} onClick={(e) => addSubtask(e)}>
+                    <i className="material-icons">add</i>
+                </button>
+            </div>
 
             {state.selectedReminder &&
                 <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>

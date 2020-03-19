@@ -6,7 +6,7 @@ interface FormListSectionProps<T> {
     items?: T[]
     children: (item: T, index: number) => React.ReactNode
     onItemClick?: (item: T, index: number) => void
-    onAddItem?: () => void
+    onAddItem?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export function FormListSection<T>(props: FormListSectionProps<T>) {
@@ -15,9 +15,11 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
             <div className="row content-list-head">
                 <div className="col-auto">
                     <h3>{props.sectionTitle || ""}</h3>
-                    <button className="btn btn-round" data-toggle="tooltip" data-title="New item" data-original-title="New item" title="New item">
-                        <i className="material-icons">add</i>
-                    </button>
+                    {props.onAddItem &&
+                        <button className="btn btn-round" title={props.addItemText} onClick={props.onAddItem}>
+                            <i className="material-icons">add</i>
+                        </button>
+                    }
                 </div>
             </div>
             <ol className="list-group">
@@ -30,17 +32,6 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
                     </div>
                 ))}
             </ol>
-            {props.onAddItem && props.addItemText &&
-                <div>
-                    <a href="/" onClick={(e) => onAddItem(e, props.onAddItem)}>{props.addItemText}</a>
-                </div>
-            }
         </div>
     )
-}
-
-function onAddItem<T>(event: React.MouseEvent<HTMLAnchorElement>, onAddItem?: () => void) {
-    event.preventDefault();
-    if (onAddItem)
-        onAddItem();
 }
