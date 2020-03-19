@@ -23,7 +23,6 @@ function renderReminder(scheduleItem: ScheduleItem): JSX.Element {
 		<ScheduleItemCard
 			key={scheduleItem.taskId}
 			data={scheduleItem}
-			onClick={(r) => console.log("Reminder clicked: " + r.taskId)}
 		/>
 	)
 }
