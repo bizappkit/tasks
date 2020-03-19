@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 
-export function task(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef, id?: string): Task {
+export function createTask(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef, id?: string): Task {
     return {
         id: id || uuid(),
         createdOn: new Date(),
@@ -12,7 +12,7 @@ export function task(title: string, notes?: string, reminders?: Reminder[], pare
     }
 }
 
-export function reminder(on?: Date, notes?: string): Reminder {
+export function createReminder(on?: Date, notes?: string): Reminder {
     return {
         id: uuid(),
         on: on || new Date(),
@@ -39,6 +39,7 @@ export interface Task {
     notes?: string
     reminders?: Reminder[]
     parent?: TaskRef
+    subtasks?: TaskRef[]
     prevSteps?: TaskRef[]
     nextSteps?: TaskRef[]
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { CardList } from '../cards/CardList';
 import { ScheduleItem } from '../../model/task';
-import { ScheduleItemCard } from '../cards/ReminderCard';
+import { ScheduleItemCard } from '../cards/ScheduleItemCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 
