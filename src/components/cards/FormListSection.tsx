@@ -24,7 +24,7 @@ export function FormListSection<T>(props: FormListSectionProps<T>) {
                 <div className="col-auto">
                     <h3>{props.sectionTitle || ""}</h3>
                     {props.mainAction && typeof props.mainAction.handler === "string" &&
-                        <Link to={props.mainAction.handler} title={props.mainAction.text}>
+                        <Link className="btn btn-round" to={props.mainAction.handler} title={props.mainAction.text}>
                             <i className="material-icons">{props.mainAction.icon || "add"}</i>
                         </Link>
                     }
