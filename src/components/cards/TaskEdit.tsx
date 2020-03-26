@@ -10,10 +10,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
-import { getLink } from "../pages/TaskList";
 
 interface TaskEditProps {
     taskId?: string
+    getTaskLink: (id: TaskRef) => string
+    getStepsLink: (id: TaskRef) => string
+    getPrevStepsLink: (id: TaskRef) => string
+    getNextStepsLink: (id: TaskRef) => string
 }
 
 interface TaskEditState {
@@ -186,7 +189,7 @@ export function TaskEdit(props: TaskEditProps) {
                     mainAction={{
                         icon: "edit",
                         text: "Edit",
-                        handler: getLink({ filter: "stepsOf", taskId: task.id })
+                        handler: props.getStepsLink(task.id)
                     }}
                 >
                     {(item) => (
@@ -219,7 +222,7 @@ export function TaskEdit(props: TaskEditProps) {
                     mainAction={{
                         icon: "edit",
                         text: "Edit",
-                        handler: getLink({ filter: "prevStepsOf", taskId: task.id })
+                        handler: props.getPrevStepsLink(task.id)
                     }}
                 >
                     {(item) => (
@@ -235,7 +238,7 @@ export function TaskEdit(props: TaskEditProps) {
                     mainAction={{
                         icon: "edit",
                         text: "Edit",
-                        handler: getLink({ filter: "nextStepsOf", taskId: task.id })
+                        handler: props.getNextStepsLink(task.id)
                     }}
                 >
                     {(item) => (

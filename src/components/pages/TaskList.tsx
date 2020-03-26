@@ -6,6 +6,6 @@ export type TaskListFilter = {
     taskId: TaskRef
 }
 
-export function getLink(options: TaskListFilter): string {
+export function getTaskListLink(options: TaskListFilter): string {
     return "tasks/" + options.filter + "/" + options.taskId
 }
