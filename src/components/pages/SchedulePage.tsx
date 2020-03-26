@@ -5,6 +5,7 @@ import { ScheduleItem } from '../../model/task';
 import { ScheduleItemCard } from '../cards/ScheduleItemCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { getTaskLink } from './TaskPage';
 
 function getDate(dateTime?: Date) {
 
@@ -23,6 +24,7 @@ function renderReminder(scheduleItem: ScheduleItem): JSX.Element {
 		<ScheduleItemCard
 			key={scheduleItem.taskId}
 			data={scheduleItem}
+			link={getTaskLink(scheduleItem.taskId)}
 		/>
 	)
 }

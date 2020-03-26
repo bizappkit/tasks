@@ -151,7 +151,7 @@ export function TaskEdit(props: TaskEditProps) {
             {originTask &&
                 <p className="lead">
                     Origin Task:&nbsp;
-                    <Link to={"task/" + originTask?.id}>{originTask.title}</Link>
+                    <Link to={props.getTaskLink(originTask?.id)}>{originTask.title}</Link>
                 </p>
             }
             <div className="content-list">

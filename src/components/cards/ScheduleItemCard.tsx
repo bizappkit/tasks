@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 interface ScheduleItemProps {
 	data: ScheduleItem
+	link: string
 }
 
 export function ScheduleItemCard(props: ScheduleItemProps) {
@@ -15,7 +16,7 @@ export function ScheduleItemCard(props: ScheduleItemProps) {
 		<Card className="card-task">
 			<Card.Body>
 				<div className="card-title" >
-					<Link to={"/task/" + props.data.taskId + "/"}>
+					<Link to={props.link}>
 						<h6>
 							{
 								props.data.time && (
