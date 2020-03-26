@@ -194,7 +194,7 @@ export function TaskEdit(props: TaskEditProps) {
                     }}
                 >
                     {(item) => (
-                        <div><span>{item.title}</span></div>
+                        <Link to={props.getTaskLink(item.id)}>{item.title}</Link>
                     )}
                 </FormListSection>
             }
@@ -227,7 +227,7 @@ export function TaskEdit(props: TaskEditProps) {
                     }}
                 >
                     {(item) => (
-                        <div><span>{item.title}</span></div>
+                        <Link to={props.getTaskLink(item.id)}>{item.title}</Link>
                     )}
                 </FormListSection>
             }
@@ -243,7 +243,7 @@ export function TaskEdit(props: TaskEditProps) {
                     }}
                 >
                     {(item) => (
-                        <div><span>{item.title}</span></div>
+                        <Link to={props.getTaskLink(item.id)}>{item.title}</Link>
                     )}
                 </FormListSection>
             }
