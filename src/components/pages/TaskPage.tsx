@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
 
 export function getTaskLink(id: string): string {
-	return "task/" + id
+	return "task/" + id + "/"
 }
 
 const getStepsLink = (id: string) => getTaskListLink({ filter: "stepsOf", taskId: id })

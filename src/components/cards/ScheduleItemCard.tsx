@@ -15,7 +15,7 @@ export function ScheduleItemCard(props: ScheduleItemProps) {
 		<Card className="card-task">
 			<Card.Body>
 				<div className="card-title" >
-					<Link to={"/task/" + props.data.taskId}>
+					<Link to={"/task/" + props.data.taskId + "/"}>
 						<h6>
 							{
 								props.data.time && (
