@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import { TaskEdit } from '../cards/TaskEdit';
-import { useParams } from 'react-router-dom';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
 
 export function getTaskLink(id: string): string {
@@ -14,6 +14,8 @@ const getPrevStepsLink = (id: string) => getTaskListLink({ filter: "prevStepsOf"
 const getNextStepsLink = (id: string) => getTaskListLink({ filter: "nextStepsOf", taskId: id })
 
 function TaskPage() {
+
+	useRouteMatch({})
 
 	const { taskId } = useParams()
 
