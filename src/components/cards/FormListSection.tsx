@@ -1,23 +1,36 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface FormListSectionProps<T> {
     sectionTitle?: string
-    addItemText?: string
     items?: T[]
     children: (item: T, index: number) => React.ReactNode
     onItemClick?: (item: T, index: number) => void
-    onAddItem?: (event: React.MouseEvent<HTMLButtonElement>) => void
+
+    mainAction?: {
+        text: string
+        icon?: string
+        handler: string | ((event: React.MouseEvent<HTMLButtonElement>) => void)
+    }
 }
 
 export function FormListSection<T>(props: FormListSectionProps<T>) {
+
+
+
     return (
         <div className="content-list">
             <div className="row content-list-head">
                 <div className="col-auto">
                     <h3>{props.sectionTitle || ""}</h3>
-                    {props.onAddItem &&
-                        <button className="btn btn-round" title={props.addItemText} onClick={props.onAddItem}>
-                            <i className="material-icons">add</i>
+                    {props.mainAction && typeof props.mainAction.handler === "string" &&
+                        <Link to={props.mainAction.handler} title={props.mainAction.text}>
+                            <i className="material-icons">{props.mainAction.icon || "add"}</i>
+                        </Link>
+                    }
+                    {props.mainAction && typeof props.mainAction.handler === "function" &&
+                        <button className="btn btn-round" title={props.mainAction.text} onClick={props.mainAction.handler}>
+                            <i className="material-icons">{props.mainAction.icon || "add"}</i>
                         </button>
                     }
                 </div>

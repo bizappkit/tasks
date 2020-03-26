@@ -20,9 +20,9 @@ export function createReminder(on?: Date, notes?: string): Reminder {
     }
 }
 
-type UUID = string
+export type UUID = string
 
-type TaskRef = UUID
+export type TaskRef = UUID
 
 export interface ScheduleItem {
     taskId: string

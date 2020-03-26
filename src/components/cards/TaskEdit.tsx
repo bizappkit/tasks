@@ -1,5 +1,5 @@
 import React, { useState, Dispatch } from "react";
-import { createTask, Task, Reminder } from "../../model/task";
+import { createTask, Task, Reminder, TaskRef } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
 import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
+import { getLink } from "../pages/TaskList";
 
 interface TaskEditProps {
     taskId?: string
@@ -39,7 +40,10 @@ export function TaskEdit(props: TaskEditProps) {
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
-    const subtasks = task?.subtasks?.map(id => tasks?.get(id)).filter(task => task !== undefined) as Task[] | undefined
+    const subtasks = selectTasks(tasks?.get, task?.subtasks)
+
+    const nextSteps = selectTasks(tasks?.get, task?.nextSteps)
+    const prevSteps = selectTasks(tasks?.get, task?.prevSteps)
 
     console.log("Subtasks", subtasks)
 
@@ -143,7 +147,7 @@ export function TaskEdit(props: TaskEditProps) {
             {originTask &&
                 <p className="lead">
                     Origin Task:&nbsp;
-                    <Link to={"/task/" + originTask?.id}>{originTask.title}</Link>
+                    <Link to={"task/" + originTask?.id}>{originTask.title}</Link>
                 </p>
             }
             <div className="content-list">
@@ -160,8 +164,10 @@ export function TaskEdit(props: TaskEditProps) {
             <FormListSection
                 items={task?.reminders}
                 sectionTitle="Reminders"
-                addItemText="Add Reminder"
-                onAddItem={(e) => editReminder(e)}
+                mainAction={{
+                    text: "Add Reminder",
+                    handler: (e) => editReminder(e)
+                }}
             >
                 {(reminder, index) => (
                     <a
@@ -173,29 +179,70 @@ export function TaskEdit(props: TaskEditProps) {
                 )}
             </FormListSection>
 
-            <FormListSection
-                items={subtasks}
-                sectionTitle="Steps"
-            >
-                {(item) => (
-                    <div><span>{item.title}</span></div>
-                )}
-            </FormListSection>
+            {task &&
+                <FormListSection
+                    items={subtasks}
+                    sectionTitle="Steps"
+                    mainAction={{
+                        icon: "edit",
+                        text: "Edit",
+                        handler: getLink({ filter: "stepsOf", taskId: task.id })
+                    }}
+                >
+                    {(item) => (
+                        <div><span>{item.title}</span></div>
+                    )}
+                </FormListSection>
+            }
 
-            <div className="content-list-head" style={{ paddingTop: 8 }}>
-                <input
-                    type="text"
-                    className="form-control"
-                    style={{ fontSize: "1rem" }}
-                    placeholder="Add New Step..."
-                    value={state.subtaskTitle || ""}
-                    onChange={(e) => setState({ ...state, subtaskTitle: e.currentTarget.value })}
-                    onKeyPress={(e) => onNewStepKeyPress(e)}
-                />
-                <button className="btn btn-round" title="Add" style={{ marginLeft: 16 }} onClick={(e) => addSubtask(e)}>
-                    <i className="material-icons">add</i>
-                </button>
-            </div>
+            {task &&
+                <div className="content-list-head" style={{ paddingTop: 8 }}>
+                    <input
+                        type="text"
+                        className="form-control"
+                        style={{ fontSize: "1rem" }}
+                        placeholder="Add New Step..."
+                        value={state.subtaskTitle || ""}
+                        onChange={(e) => setState({ ...state, subtaskTitle: e.currentTarget.value })}
+                        onKeyPress={(e) => onNewStepKeyPress(e)}
+                    />
+                    <button className="btn btn-round" title="Add" style={{ marginLeft: 16 }} onClick={(e) => addSubtask(e)}>
+                        <i className="material-icons">add</i>
+                    </button>
+                </div>
+            }
+
+            {task &&
+                <FormListSection
+                    items={prevSteps}
+                    sectionTitle="Prev Steps"
+                    mainAction={{
+                        icon: "edit",
+                        text: "Edit",
+                        handler: getLink({ filter: "prevStepsOf", taskId: task.id })
+                    }}
+                >
+                    {(item) => (
+                        <div><span>{item.title}</span></div>
+                    )}
+                </FormListSection>
+            }
+
+            {task &&
+                <FormListSection
+                    items={nextSteps}
+                    sectionTitle="Next Steps"
+                    mainAction={{
+                        icon: "edit",
+                        text: "Edit",
+                        handler: getLink({ filter: "nextStepsOf", taskId: task.id })
+                    }}
+                >
+                    {(item) => (
+                        <div><span>{item.title}</span></div>
+                    )}
+                </FormListSection>
+            }
 
             {state.selectedReminder &&
                 <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
@@ -215,6 +262,16 @@ export function TaskEdit(props: TaskEditProps) {
                     </Modal.Footer>
                 </Modal>
             }
-        </form>
+        </form >
     )
+}
+
+function selectTasks(storage?: (id: TaskRef) => Task | undefined, ids?: TaskRef[]): Task[] | undefined {
+
+    if (storage === undefined || ids === undefined)
+        return [];
+
+    return ids
+        .map(id => storage(id))
+        .filter(task => task !== undefined) as Task[]
 }
