@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
+import { Map } from "immutable"
 
 interface TaskEditProps {
     taskId?: string
@@ -43,10 +44,10 @@ export function TaskEdit(props: TaskEditProps) {
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
-    const subtasks = selectTasks(tasks?.get, task?.subtasks)
 
-    const nextSteps = selectTasks(tasks?.get, task?.nextSteps)
-    const prevSteps = selectTasks(tasks?.get, task?.prevSteps)
+    const subtasks = selectTasks(tasks, task?.subtasks)
+    const nextSteps = selectTasks(tasks, task?.nextSteps)
+    const prevSteps = selectTasks(tasks, task?.prevSteps)
 
     console.log("Subtasks", subtasks)
 
@@ -269,12 +270,12 @@ export function TaskEdit(props: TaskEditProps) {
     )
 }
 
-function selectTasks(storage?: (id: TaskRef) => Task | undefined, ids?: TaskRef[]): Task[] | undefined {
+function selectTasks(storage?: Map<TaskRef, Task>, ids?: TaskRef[]): Task[] | undefined {
 
     if (storage === undefined || ids === undefined)
         return [];
 
     return ids
-        .map(id => storage(id))
+        .map(id => storage.get(id))
         .filter(task => task !== undefined) as Task[]
 }
