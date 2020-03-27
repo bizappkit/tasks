@@ -1,11 +1,13 @@
 import React from "react"
-import { useLocation, matchPath } from "react-router-dom"
+import { useLocation, matchPath, Link, Route } from "react-router-dom"
 import { TaskRef, Task } from "../model/task"
 import { TaskListFilterMode } from "./pages/TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import { Map } from "immutable"
 import { Breadcrumb, Container } from "react-bootstrap"
+import { SchedulePage } from "./pages/SchedulePage"
+import TaskPage from "./pages/TaskPage"
 
 export function ContentRouting() {
 
@@ -13,25 +15,39 @@ export function ContentRouting() {
     const location = useLocation()
 
     const segments = tasks ? getSegments(tasks, location.pathname) : undefined
+    const lastSegment = (segments && segments.length > 0 && segments[segments.length - 1]) || undefined;
 
     return (
         <Container>
-            <Breadcrumb>
-                <Breadcrumb.Item href="/">
-                    <div className="dropdown-toggle">Schedule</div>
-                </Breadcrumb.Item>
+            <Route path="/">
+                <Breadcrumb>
+                    <Breadcrumb.Item>
+                        <div className="dropdown-toggle"><Link to="/"></Link>Schedule</div>
+                    </Breadcrumb.Item>
 
-                {segments?.map(s => (
-                    <Breadcrumb.Item href={s.url}>{s.title}</Breadcrumb.Item>
-                ))}
-            </Breadcrumb>
+                    {segments?.map(s => (
+                        <Breadcrumb.Item href={s.url}><Link to={s.url}>{s.title}</Link></Breadcrumb.Item>
+                    ))}
+                </Breadcrumb>
+
+                {(lastSegment === undefined || lastSegment.params.taskId === undefined) &&
+                    <SchedulePage />
+                }
+
+                {/*Task List*/}
+
+                {lastSegment && lastSegment.params.taskId &&
+                    <TaskPage />
+                }
+            </Route>
         </Container>
     )
 }
 
 const ROUTS = [
+    "/schedule",
     "/tasks/:filterMode/:taskId",
-    "/task/:taskId"
+    "/details/:taskId"
 ]
 
 type Params = {
