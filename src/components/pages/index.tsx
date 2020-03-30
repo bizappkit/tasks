@@ -1,27 +1,27 @@
 import React from "react"
 import { BrowserRouter as Router, Link, Route, useRouteMatch, Switch, Redirect } from "react-router-dom"
 import { TaskRef, Task } from "../../model/task"
-import { TaskListFilterMode } from "./TaskList"
+import { TaskListFilterMode, RelatedTaskListPath, TaskList } from "./TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { Map } from "immutable"
 import { Container } from "react-bootstrap"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
-import { TaskPage, getTaskLink, TaskDetailsRoute as TaskDetailsPath } from "./TaskPage"
+import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
 
 
 export function ContentRouting() {
 
     return (
         <Router>
-            <ContentRoutingInContext/>
+            <ContentRoutingInContext />
         </Router>
     )
 }
 
 function ContentRoutingInContext() {
 
-    const match = useRouteMatch<Params>(Routs)
+    const match = useRouteMatch<Params>(Paths)
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const params = match?.params;
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined
@@ -44,11 +44,14 @@ function ContentRoutingInContext() {
                         <li className="breadcrumb-item active">
                             {getTaskListTitle(params, tasks)}
                         </li>
-                    }           
+                    }
                 </ol>
             </nav>
 
             <Switch>
+                <Route path={RelatedTaskListPath}>
+                    <TaskList />
+                </Route>
                 <Route path={TaskDetailsPath}>
                     <TaskPage />
                 </Route>
@@ -56,20 +59,20 @@ function ContentRoutingInContext() {
                     <SchedulePage />
                 </Route>
                 <Route path="/">
-                    <Redirect to={SchedulePath}/>
+                    <Redirect to={SchedulePath} />
                 </Route>
             </Switch>
-            
+
         </Container>
     )
 }
 
-const RelatedTaskListRoute = "/details/:taskId/:filterMode"
 
-const Routs = [
+
+const Paths = [
     SchedulePath,
+    RelatedTaskListPath,
     TaskDetailsPath,
-    RelatedTaskListRoute
 ]
 
 type Params = TaskDetailsParams | RelatedTaskParams
@@ -85,7 +88,7 @@ type TaskDetailsParams = {
 
 function getTaskListTitle(params?: Params, tasks?: Map<TaskRef, Task>): string | undefined {
 
-    if(!params || !tasks)
+    if (!params || !tasks)
         return undefined
 
     const task = tasks.get(params.taskId)

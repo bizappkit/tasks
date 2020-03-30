@@ -3,15 +3,15 @@ import { TaskEdit } from '../cards/TaskEdit';
 import { useParams } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
 
-export const TaskDetailsRoute = "/details/:taskId"
+export const TaskDetailsPath = "/details/:taskId"
 
 export function getTaskLink(taskId?: string): string {
-	return TaskDetailsRoute.replace(":taskId", taskId || "")
+	return TaskDetailsPath.replace(":taskId", taskId || "")
 }
 
-const getStepsLink = (id: string) => getTaskListLink({ filter: "subSteps", taskId: id })
-const getPrevStepsLink = (id: string) => getTaskListLink({ filter: "prevSteps", taskId: id })
-const getNextStepsLink = (id: string) => getTaskListLink({ filter: "nextSteps", taskId: id })
+const getStepsLink = (id: string) => getTaskListLink(id, "subSteps")
+const getPrevStepsLink = (id: string) => getTaskListLink(id, "prevSteps")
+const getNextStepsLink = (id: string) => getTaskListLink(id, "nextSteps")
 
 export function TaskPage() {
 
