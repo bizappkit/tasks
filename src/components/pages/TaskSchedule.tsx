@@ -7,6 +7,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { getTaskLink } from './TaskPage';
 
+export const SchedulePath = "/schedule"
+
+
 function getDate(dateTime?: Date) {
 
 	if (dateTime === undefined)

@@ -6,8 +6,8 @@ import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { Map } from "immutable"
 import { Container } from "react-bootstrap"
-import { SchedulePage } from "./TaskSchedule"
-import { TaskPage } from "./TaskPage"
+import { SchedulePage, SchedulePath } from "./TaskSchedule"
+import { TaskPage, getTaskLink, TaskDetailsRoute as TaskDetailsPath } from "./TaskPage"
 
 
 export function ContentRouting() {
@@ -31,7 +31,7 @@ function ContentRoutingInContext() {
             <nav>
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                        <Link to="/schedule">Schedule</Link>
+                        <Link to={SchedulePath}>Schedule</Link>
                     </li>
 
                     {currentTask &&
@@ -49,14 +49,14 @@ function ContentRoutingInContext() {
             </nav>
 
             <Switch>
-                <Route path={TaskDetailsRoute}>
+                <Route path={TaskDetailsPath}>
                     <TaskPage />
                 </Route>
-                <Route path={ScheduleRoute}>
+                <Route path={SchedulePath}>
                     <SchedulePage />
                 </Route>
                 <Route path="/">
-                    <Redirect to={ScheduleRoute}/>
+                    <Redirect to={SchedulePath}/>
                 </Route>
             </Switch>
             
@@ -64,20 +64,11 @@ function ContentRoutingInContext() {
     )
 }
 
-const ScheduleRoute = "/schedule"
-
-
-const TaskDetailsRoute = "/details/:taskId"
-
-export function getTaskLink(taskId?: string): string {
-	return TaskDetailsRoute.replace(":taskId", (taskId || ""))
-}
-
 const RelatedTaskListRoute = "/details/:taskId/:filterMode"
 
 const Routs = [
-    ScheduleRoute,
-    TaskDetailsRoute,
+    SchedulePath,
+    TaskDetailsPath,
     RelatedTaskListRoute
 ]
 
