@@ -1,6 +1,6 @@
 import { TaskRef } from "../../model/task";
 
-export type TaskListFilterMode = "stepsOf" | "nextStepsOf" | "prevStepsOf"
+export type TaskListFilterMode = "subSteps" | "nextSteps" | "prevSteps"
 
 export type TaskListFilter = {
     filter: TaskListFilterMode
