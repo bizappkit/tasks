@@ -5,7 +5,6 @@ import { TaskListFilterMode, RelatedTaskListPath, TaskList } from "./TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { Map } from "immutable"
-import { Container } from "react-bootstrap"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
 
@@ -27,7 +26,7 @@ function ContentRoutingInContext() {
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined
 
     return (
-        <Container>
+        <div className="container">
             <nav>
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item">
@@ -63,7 +62,7 @@ function ContentRoutingInContext() {
                 </Route>
             </Switch>
 
-        </Container>
+        </div>
     )
 }
 
