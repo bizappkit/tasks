@@ -1,6 +1,6 @@
 import React from 'react';
 import { CardList } from '../cards/CardList';
-import { ScheduleItem } from '../../model/task';
+import { ScheduleItem, getScheduleItems } from '../../model/task';
 import { ScheduleItemCard } from '../cards/ScheduleItemCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -8,6 +8,21 @@ import { getTaskLink } from './TaskPage';
 
 export const SchedulePath = "/schedule"
 
+export function SchedulePage() {
+
+	const tasks = useSelector((state: RootState) => state.tasks.idToTask)
+	const scheduleItems = getScheduleItems(new Date(), tasks?.values())
+
+	return (
+		<CardList
+			items={scheduleItems}
+			getItemKey={r => r.reminderId || r.taskId}
+			getGroupKey={r => getDate(r.time)}
+			getGroupTitle={getReminderGroupTitle}
+			renderItem={renderReminder}
+		/>
+	)
+}
 
 function getDate(dateTime?: Date) {
 
@@ -27,21 +42,6 @@ function renderReminder(scheduleItem: ScheduleItem): JSX.Element {
 			key={scheduleItem.taskId}
 			data={scheduleItem}
 			link={getTaskLink(scheduleItem.taskId)}
-		/>
-	)
-}
-
-export function SchedulePage() {
-
-	const scheduleItems = useSelector((state: RootState) => state.tasks.scheduleItems)
-
-	return (
-		<CardList
-			items={scheduleItems || []}
-			getItemKey={r => r.taskId}
-			getGroupKey={r => getDate(r.time)}
-			getGroupTitle={getReminderGroupTitle}
-			renderItem={renderReminder}
 		/>
 	)
 }

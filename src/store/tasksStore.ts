@@ -2,16 +2,6 @@ import { Task, ScheduleItem, getScheduleItems } from "../model/task";
 import { Action } from 'redux'
 import Immutable from "immutable";
 
-export interface TasksStoreState {
-	loading: boolean
-	idToTask?: Immutable.Map<string, Task>
-	scheduleItems?: ScheduleItem[]
-}
-
-const initialState: TasksStoreState = {
-	loading: true
-}
-
 export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'
 	tasks: Task[]
@@ -30,6 +20,16 @@ export interface TaskAddedAction extends Action {
 
 export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction;
 
+
+export interface TasksStoreState {
+	loading: boolean
+	idToTask?: Immutable.Map<string, Task>
+}
+
+const initialState: TasksStoreState = {
+	loading: true
+}
+
 export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
 		case 'tasks-loaded':
@@ -37,7 +37,6 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 				...state,
 				loading: false,
 				idToTask: Immutable.Map(action.tasks.map(t => [t.id, t])),
-				scheduleItems: getScheduleItems(new Date(), action.tasks.values())
 			}
 
 		case 'tasks-updated':
@@ -49,7 +48,6 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 					return {
 						...state,
 						idToTask: idToTasks,
-						scheduleItems: getScheduleItems(new Date(), idToTasks.values())
 					}
 				}
 			}
@@ -69,7 +67,6 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 				return {
 					...state,
 					idToTask: idToTasks,
-					scheduleItems: getScheduleItems(new Date(), idToTasks.values())
 				}
 			}
 			return state
