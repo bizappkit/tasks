@@ -13,12 +13,12 @@ export function ContentRouting() {
 
     return (
         <Router>
-            <ContentRoutingInContext />
+            <ContentRoutingInternal />
         </Router>
     )
 }
 
-function ContentRoutingInContext() {
+function ContentRoutingInternal() {
 
     const match = useRouteMatch<Params>(Paths)
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
@@ -26,46 +26,63 @@ function ContentRoutingInContext() {
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined
 
     return (
-        <div className="container">
-            <nav>
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to={SchedulePath}>Schedule</Link>
-                    </li>
+        <div className="main-container">
+            <div className="breadcrumb-bar navbar bg-white sticky-top">
+                <nav>
+                    <ol className="breadcrumb">
+                        <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
 
-                    {currentTask &&
-                        <li className="breadcrumb-item">
-                            <Link to={getTaskLink(params?.taskId)}>{currentTask.title}</Link>
-                        </li>
-                    }
+                        {currentTask &&
+                            <NavLink to={getTaskLink(params?.taskId)} active={params && ("filterMode" in params)}>{currentTask.title}</NavLink>
+                        }
 
-                    {params && ("filterMode" in params) &&
-                        <li className="breadcrumb-item active">
-                            {getTaskListTitle(params, tasks)}
-                        </li>
-                    }
-                </ol>
-            </nav>
+                        {params && ("filterMode" in params) &&
+                            <NavLink to={getTaskListTitle(params, tasks)}>{getTaskListTitle(params, tasks)}</NavLink>
+                        }
+                    </ol>
+                </nav>
+            </div>
 
-            <Switch>
-                <Route path={RelatedTaskListPath}>
-                    <TaskList />
-                </Route>
-                <Route path={TaskDetailsPath}>
-                    <TaskPage />
-                </Route>
-                <Route path={SchedulePath}>
-                    <SchedulePage />
-                </Route>
-                <Route path="/">
-                    <Redirect to={SchedulePath} />
-                </Route>
-            </Switch>
-
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-lg-11 col-xl-10">
+                        <Switch>
+                            <Route path={RelatedTaskListPath}>
+                                <TaskList />
+                            </Route>
+                            <Route path={TaskDetailsPath}>
+                                <TaskPage />
+                            </Route>
+                            <Route path={SchedulePath}>
+                                <SchedulePage />
+                            </Route>
+                            <Route path="/">
+                                <Redirect to={SchedulePath} />
+                            </Route>
+                        </Switch>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
 
+interface NavLinkProps {
+    children: React.ReactNode
+    to?: string
+    active?: boolean
+}
+
+function NavLink(props: NavLinkProps) {
+    return (
+        <li className="breadcrumb-item">
+            {(!props.active || !props.to) && props.children}
+            {props.active && props.to &&
+                <Link to={props.to}>{props.children}</Link>
+            }
+        </li>
+    )
+}
 
 
 const Paths = [
