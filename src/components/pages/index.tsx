@@ -43,7 +43,7 @@ function ContentRoutingInternal() {
                 </nav>
             </div>
 
-            <div className="container">
+            <div className="container" style={{ marginTop: "1rem" }}>
                 <div className="row justify-content-center">
                     <div className="col-lg-11 col-xl-10">
                         <Switch>
