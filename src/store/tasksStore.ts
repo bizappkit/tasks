@@ -1,4 +1,4 @@
-import { Task, ScheduleItem, getScheduleItems } from "../model/task";
+import { Task } from "../model/task";
 import { Action } from 'redux'
 import Immutable from "immutable";
 

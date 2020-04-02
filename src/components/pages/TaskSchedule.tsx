@@ -1,10 +1,11 @@
 import React from 'react';
 import { CardList } from '../cards/CardList';
 import { ScheduleItem, getScheduleItems } from '../../model/task';
-import { ScheduleItemCard } from '../cards/ScheduleItemCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { getTaskLink } from './TaskPage';
+import { TaskCard } from '../cards/TaskCard';
+import { toShortTimeStr } from "../../utils/dateTimeUtils";
 
 export const SchedulePath = "/schedule"
 
@@ -19,7 +20,24 @@ export function SchedulePage() {
 			getItemKey={r => r.reminderId || r.taskId}
 			getGroupKey={r => getDate(r.time)}
 			getGroupTitle={getReminderGroupTitle}
-			renderItem={renderReminder}
+			renderItem={r => (
+				<TaskCard
+					key={r.reminderId || r.taskId}
+					icon="check"
+					title={
+						<span>
+							{r.time &&
+								<span style={{ fontWeight: 'bold' }}>
+									{toShortTimeStr(r.time) + ": "}
+								</span>
+							}
+							{r.title}
+						</span>
+					}
+					titleLinkTo={getTaskLink(r.taskId)}
+					subtitle={r.subtitle}
+				/>
+			)}
 		/>
 	)
 }
@@ -34,14 +52,4 @@ function getDate(dateTime?: Date) {
 
 function getReminderGroupTitle(reminder: ScheduleItem): string {
 	return reminder.time?.toLocaleDateString() || "Unscheduled";
-}
-
-function renderReminder(scheduleItem: ScheduleItem): JSX.Element {
-	return (
-		<ScheduleItemCard
-			key={scheduleItem.taskId}
-			data={scheduleItem}
-			link={getTaskLink(scheduleItem.taskId)}
-		/>
-	)
 }
