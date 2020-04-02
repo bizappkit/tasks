@@ -23,21 +23,23 @@ function ContentRoutingInternal() {
     const match = useRouteMatch<Params>(Paths)
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const params = match?.params;
+
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined
+    const filterMode = params && ("filterMode" in params) && params.filterMode || undefined
 
     return (
         <div className="main-container">
             <div className="breadcrumb-bar navbar bg-white sticky-top">
                 <nav>
                     <ol className="breadcrumb">
-                        <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
+                        <NavLink to={SchedulePath} active={!currentTask}>Schedule</NavLink>
 
                         {currentTask &&
-                            <NavLink to={getTaskLink(params?.taskId)} active={params && ("filterMode" in params)}>{currentTask.title}</NavLink>
+                            <NavLink to={getTaskLink(params?.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
                         }
 
-                        {params && ("filterMode" in params) &&
-                            <NavLink to={getTaskListTitle(params, tasks)}>{getTaskListTitle(params, tasks)}</NavLink>
+                        {filterMode &&
+                            <NavLink>{getTaskListTitle(currentTask, filterMode)}</NavLink>
                         }
                     </ol>
                 </nav>
@@ -102,23 +104,17 @@ type TaskDetailsParams = {
     taskId: string
 }
 
-function getTaskListTitle(params?: Params, tasks?: Map<TaskRef, Task>): string | undefined {
+function getTaskListTitle(currentTask?: Task, filterMode?: TaskListFilterMode): string | undefined {
 
-    if (!params || !tasks)
+    if (!currentTask || !filterMode)
         return undefined
 
-    const task = tasks.get(params.taskId)
-
-    if ("filterMode" in params) {
-        switch (params.filterMode) {
-            case "subSteps":
-                return "Steps of " + task?.title
-            case "nextSteps":
-                return "Next Steps of " + task?.title
-            case "prevSteps":
-                return "Prev Steps of " + task?.title
-        }
+    switch (filterMode) {
+        case "subSteps":
+            return "Steps of " + currentTask.title
+        case "nextSteps":
+            return "Next Steps of " + currentTask.title
+        case "prevSteps":
+            return "Prev Steps of " + currentTask.title
     }
-
-    return undefined
 }
