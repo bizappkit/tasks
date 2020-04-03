@@ -1,10 +1,9 @@
 import React from "react"
 import { BrowserRouter as Router, Link, Route, useRouteMatch, Switch, Redirect } from "react-router-dom"
-import { TaskRef, Task, TaskListFilterMode } from "../../model/task"
+import { Task, TaskListFilterMode } from "../../model/task"
 import { RelatedTaskListPath, TaskList } from "./TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
-import { Map } from "immutable"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
 
@@ -25,14 +24,14 @@ function ContentRoutingInternal() {
     const params = match?.params;
 
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined
-    const filterMode = params && ("filterMode" in params) && params.filterMode || undefined
+    const filterMode = (params && ("filterMode" in params) && params.filterMode) || undefined
 
     return (
         <div className="main-container">
             <div className="breadcrumb-bar navbar bg-white sticky-top">
                 <nav>
                     <ol className="breadcrumb">
-                        <NavLink to={SchedulePath} active={!currentTask}>Schedule</NavLink>
+                        <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
 
                         {currentTask &&
                             <NavLink to={getTaskLink(params?.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
