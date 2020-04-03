@@ -18,7 +18,14 @@ export interface TaskAddedAction extends Action {
 	task: Task
 }
 
-export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction;
+export interface TaskChangeRelationAction extends Action {
+	type: "tasks-remove-relations" | "tasks-add-relations"
+	parent: Task
+	child: Task
+	relation: "subSteps" | "prevSteps" | "nextSteps"
+}
+
+export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction;
 
 
 export interface TasksStoreState {

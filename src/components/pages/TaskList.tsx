@@ -30,20 +30,9 @@ export function TaskList() {
     const allTasks = tasks ? [...tasks.selected, ...tasks.other] : []
 
     const onTaskClick = (task: Task) => {
-        if (!contextTask) return
-        const field = getTaskFieldByFilterMode(tasksFilter.filterMode)
-        if (!field) return
-
-        let ids: TaskRef[] | undefined
-        if (selectedTasksSet.has(task)) {
-            ids = contextTask[field]?.filter(id => id !== task.id)
-        } else {
-            ids = [...contextTask[field], task.id]
-        }
-
-        const payload = {} as Partial<Task>
-        payload[field] = ids
-        dispatch({ type: "tasks-updated", taskId: contextTask.id, payload })
+        if (!contextTask || !tasksFilter.filterMode ) return
+        const type = selectedTasksSet.has(task) ? "tasks-remove-relations" : "tasks-add-relations"
+        dispatch({ type, parent: contextTask, child: task, relation: tasksFilter.filterMode })
     }
 
     return (
