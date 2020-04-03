@@ -176,7 +176,7 @@ export function TaskEdit(props: TaskEditProps) {
                 {(reminder, index) => (
                     <a
                         href="/"
-                        onClick={editReminder}
+                        onClick={(e) => editReminder(e, index)}
                     >
                         <div><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</div>
                     </a>
