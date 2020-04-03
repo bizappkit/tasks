@@ -148,12 +148,6 @@ export function getTaskListFilterMode(str?: string): TaskListFilterMode | undefi
     return str && TaskListFilterModeValues.has(str) ? str as TaskListFilterMode : undefined
 }
 
-const fieldMapping: { [filter: string]: keyof Task } = {
-    "subSteps": "subtasks",
-    "nextSteps": "nextSteps",
-    "prevSteps": "prevSteps"
-}
-
 export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOptions): { selected: Task[], other: Task[] } | undefined {
 
     if (!tasks || !options)
