@@ -1,6 +1,6 @@
 import React from "react"
 import { BrowserRouter as Router, Link, Route, useRouteMatch, Switch, Redirect } from "react-router-dom"
-import { TaskListFilterMode } from "../../model/task"
+import { TaskRelation } from "../../model/task"
 import { RelatedTaskListPath, TaskList, getPageTitle } from "./TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
@@ -95,7 +95,7 @@ const Paths = [
 type Params = TaskDetailsParams | RelatedTaskParams
 
 type RelatedTaskParams = {
-    filterMode: TaskListFilterMode
+    filterMode: TaskRelation
     taskId: string
 }
 

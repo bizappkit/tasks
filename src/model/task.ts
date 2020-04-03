@@ -144,8 +144,8 @@ function getScheduleTime(now: Date, time?: Date): number {
     return time.valueOf();
 }
 
-export function getTaskListFilterMode(str?: string): TaskListFilterMode | undefined {
-    return str && TaskListFilterModeValues.has(str) ? str as TaskListFilterMode : undefined
+export function getTaskListFilterMode(str?: string): TaskRelation | undefined {
+    return str && TaskListFilterModeValues.has(str) ? str as TaskRelation : undefined
 }
 
 export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOptions): { selected: Task[], other: Task[] } | undefined {
@@ -169,17 +169,18 @@ export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOpt
     return { selected, other }
 }
 
-export type TaskListFilterMode = "subSteps" | "nextSteps" | "prevSteps"
-export const TaskListFilterModeValues: ReadonlySet<string> = new Set<TaskListFilterMode>(["subSteps", "nextSteps", "prevSteps"])
+export type TaskRelation = "subSteps" | "nextSteps" | "prevSteps"
+
+export const TaskListFilterModeValues: ReadonlySet<string> = new Set<TaskRelation>(["subSteps", "nextSteps", "prevSteps"])
 
 export interface FilterOptions {
     contextTaskId?: TaskRef
-    filterMode?: TaskListFilterMode
+    filterMode?: TaskRelation
 }
 
 type TaskFilter = (task: Task) => boolean
 
-function getOtherFilter(contextTask: Task, mode?: TaskListFilterMode): TaskFilter {
+function getOtherFilter(contextTask: Task, mode?: TaskRelation): TaskFilter {
     switch (mode) {
         case "subSteps":
             return (task) => task.parent === undefined && task !== contextTask
@@ -196,14 +197,14 @@ function getOtherFilter(contextTask: Task, mode?: TaskListFilterMode): TaskFilte
     return () => true
 }
 
-function getSelectedTaskIds(contextTask: Task, mode?: TaskListFilterMode): Set<TaskRef> {
+function getSelectedTaskIds(contextTask: Task, mode?: TaskRelation): Set<TaskRef> {
 
     const field = getTaskFieldByFilterMode(mode)
 
     return new Set((field ? contextTask[field] as TaskRef[] : []));
 }
 
-export function getTaskFieldByFilterMode(mode?: TaskListFilterMode): (keyof Task & ("subtasks" | "nextSteps" | "prevSteps")) | undefined {
+export function getTaskFieldByFilterMode(mode?: TaskRelation): (keyof Task & ("subtasks" | "nextSteps" | "prevSteps")) | undefined {
     switch (mode) {
         case "subSteps":
             return "subtasks"

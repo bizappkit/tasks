@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react"
-import { TaskRef, TaskListFilterMode, getSelectedTasks, getTaskListFilterMode, Task, getTaskFieldByFilterMode } from "../../model/task";
+import { TaskRef, TaskRelation, getSelectedTasks, getTaskListFilterMode, Task } from "../../model/task";
 import { TaskDetailsPath, getTaskLink } from "./TaskPage";
 import { useParams } from "react-router-dom";
 import { CardList } from "../cards/CardList";
@@ -11,7 +11,7 @@ import { TasksStoreAction } from "../../store/tasksStore";
 
 export const RelatedTaskListPath = TaskDetailsPath + "/:filterMode"
 
-export function getTaskListLink(taskId: TaskRef, filter: TaskListFilterMode): string {
+export function getTaskListLink(taskId: TaskRef, filter: TaskRelation): string {
     return getTaskLink(taskId) + "/" + filter
 }
 
@@ -55,7 +55,7 @@ export function TaskList() {
     )
 }
 
-export function getPageTitle(filterMode?: TaskListFilterMode): string | undefined {
+export function getPageTitle(filterMode?: TaskRelation): string | undefined {
     switch (filterMode) {
         case "subSteps":
             return "Steps"
