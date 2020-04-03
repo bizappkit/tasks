@@ -22,8 +22,8 @@ interface TaskCardProps {
 export function TaskCard(props: TaskCardProps) {
     return (
         <div className="card card-task">
-            <div className="card-body">
-                <div className="media align-items-center">
+            <div className="card-body d-flex flex-row">
+                <div className="media align-items-center flex-fill">
 
                     {props.icon &&
                         <div className={"avatar bg-primary"} style={{ cursor: "pointer", marginRight: "1rem", opacity: (props.iconHighlighted ? 1 : 0.2) }}>
@@ -31,7 +31,7 @@ export function TaskCard(props: TaskCardProps) {
                         </div>
                     }
 
-                    <div className="media-body d-flex justify-content-between align-items-center">
+                    <div className="media-body justify-content-between align-items-center">
                         <div>
                             {props.titleLinkTo &&
                                 <Link to={props.titleLinkTo}>
