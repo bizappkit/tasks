@@ -19,6 +19,7 @@ interface TaskCardProps {
     onActionClick?: (index: number) => void
 }
 
+
 export function TaskCard(props: TaskCardProps) {
     return (
         <div className="card card-task">
@@ -26,7 +27,11 @@ export function TaskCard(props: TaskCardProps) {
                 <div className="media align-items-center flex-fill">
 
                     {props.icon &&
-                        <div className={"avatar bg-primary"} style={{ cursor: "pointer", marginRight: "1rem", opacity: (props.iconHighlighted ? 1 : 0.2) }}>
+                        <div
+                            onClick={props?.onIconClick}
+                            className={"avatar bg-primary"}
+                            style={{ cursor: "pointer", marginRight: "1rem", opacity: (props.iconHighlighted ? 1 : 0.2) }}
+                        >
                             <i className="material-icons">{props.icon}</i>
                         </div>
                     }

@@ -197,16 +197,21 @@ function getOtherFilter(contextTask: Task, mode?: TaskListFilterMode): TaskFilte
 }
 
 function getSelectedTaskIds(contextTask: Task, mode?: TaskListFilterMode): Set<TaskRef> {
+
+    const field = getTaskFieldByFilterMode(mode)
+
+    return new Set((field ? contextTask[field] as TaskRef[] : []));
+}
+
+export function getTaskFieldByFilterMode(mode?: TaskListFilterMode): (keyof Task & ("subtasks" | "nextSteps" | "prevSteps")) | undefined {
     switch (mode) {
         case "subSteps":
-            return new Set(contextTask.subtasks)
+            return "subtasks"
 
         case "nextSteps":
-            return new Set(contextTask.nextSteps)
+            return "nextSteps"
 
         case "prevSteps":
-            return new Set(contextTask.prevSteps)
+            return "prevSteps"
     }
-
-    return new Set<TaskRef>()
 }

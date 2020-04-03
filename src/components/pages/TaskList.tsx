@@ -1,11 +1,12 @@
-import React from "react"
-import { TaskRef, TaskListFilterMode, getSelectedTasks, getTaskListFilterMode } from "../../model/task";
+import React, { Dispatch } from "react"
+import { TaskRef, TaskListFilterMode, getSelectedTasks, getTaskListFilterMode, Task, getTaskFieldByFilterMode } from "../../model/task";
 import { TaskDetailsPath, getTaskLink } from "./TaskPage";
 import { useParams } from "react-router-dom";
 import { CardList } from "../cards/CardList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TaskCard } from "../cards/TaskCard";
+import { TasksStoreAction } from "../../store/tasksStore";
 
 
 export const RelatedTaskListPath = TaskDetailsPath + "/:filterMode"
@@ -16,15 +17,34 @@ export function getTaskListLink(taskId: TaskRef, filter: TaskListFilterMode): st
 
 export function TaskList() {
 
+    const dispatch: Dispatch<TasksStoreAction> = useDispatch()
     const { taskId, filterMode } = useParams()
     const tasksState = useSelector((state: RootState) => state.tasks)
 
     const tasksFilter = { contextTaskId: taskId, filterMode: getTaskListFilterMode(filterMode) }
     const tasks = getSelectedTasks(tasksState.idToTask, tasksFilter)
+    const contextTask = (taskId && tasksState.idToTask?.get(taskId)) || undefined
 
     const selectedTasksSet = new Set(tasks?.selected)
 
     const allTasks = tasks ? [...tasks.selected, ...tasks.other] : []
+
+    const onTaskClick = (task: Task) => {
+        if (!contextTask) return
+        const field = getTaskFieldByFilterMode(tasksFilter.filterMode)
+        if (!field) return
+
+        let ids: TaskRef[] | undefined
+        if (selectedTasksSet.has(task)) {
+            ids = contextTask[field]?.filter(id => id !== task.id)
+        } else {
+            ids = [...contextTask[field], task.id]
+        }
+
+        const payload = {} as Partial<Task>
+        payload[field] = ids
+        dispatch({ type: "tasks-updated", taskId: contextTask.id, payload })
+    }
 
     return (
         <CardList
@@ -36,6 +56,7 @@ export function TaskList() {
                 <TaskCard
                     key={t.id}
                     icon={selectedTasksSet.has(t) ? "remove" : "add"}
+                    onIconClick={() => onTaskClick(t)}
                     title={t.title}
                     titleLinkTo={getTaskLink(t.id)}
                     subtitle={t.notes}
