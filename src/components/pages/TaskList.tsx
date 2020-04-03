@@ -31,12 +31,11 @@ export function TaskList() {
             items={allTasks}
             getItemKey={t => t.id}
             getGroupKey={t => selectedTasksSet.has(t) ? 1 : 2}
-            getGroupTitle={t => selectedTasksSet.has(t) ? "Selected" : "Other"}
+            getGroupTitle={t => selectedTasksSet.has(t) ? "Selected " + getPageTitle(tasksFilter.filterMode) : "Use Plus to add task as step"}
             renderItem={t =>
                 <TaskCard
                     key={t.id}
-                    icon={selectedTasksSet.has(t) ? "check" : "add"}
-                    iconHighlighted={selectedTasksSet.has(t)}
+                    icon={selectedTasksSet.has(t) ? "remove" : "add"}
                     title={t.title}
                     titleLinkTo={getTaskLink(t.id)}
                     subtitle={t.notes}
@@ -46,19 +45,13 @@ export function TaskList() {
     )
 }
 
-// function renderTask(task: Task) {
-//     return (
-//         <div className="card card-task">
-//             <div className="card-body">
-//                 <div className="card-title" >
-//                     <Link to={getTaskLink(task.id)}>
-//                         <h6 className="H6-filter-by-text">
-//                             {task.title}
-//                         </h6>
-//                     </Link>
-//                     <span className="text-small">{task.notes || ""}</span>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
+export function getPageTitle(filterMode?: TaskListFilterMode): string | undefined {
+    switch (filterMode) {
+        case "subSteps":
+            return "Steps"
+        case "nextSteps":
+            return "Next Steps"
+        case "prevSteps":
+            return "Prev Steps"
+    }
+}

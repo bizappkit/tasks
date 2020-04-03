@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter as Router, Link, Route, useRouteMatch, Switch, Redirect } from "react-router-dom"
-import { Task, TaskListFilterMode } from "../../model/task"
-import { RelatedTaskListPath, TaskList } from "./TaskList"
+import { TaskListFilterMode } from "../../model/task"
+import { RelatedTaskListPath, TaskList, getPageTitle } from "./TaskList"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
@@ -38,7 +38,7 @@ function ContentRoutingInternal() {
                     }
 
                     {filterMode &&
-                        <NavLink>{getTaskListTitle(currentTask, filterMode)}</NavLink>
+                        <NavLink>{getPageTitle(filterMode)}</NavLink>
                     }
                 </ol>
 
@@ -101,19 +101,4 @@ type RelatedTaskParams = {
 
 type TaskDetailsParams = {
     taskId: string
-}
-
-function getTaskListTitle(currentTask?: Task, filterMode?: TaskListFilterMode): string | undefined {
-
-    if (!currentTask || !filterMode)
-        return undefined
-
-    switch (filterMode) {
-        case "subSteps":
-            return "Steps of " + currentTask.title
-        case "nextSteps":
-            return "Next Steps of " + currentTask.title
-        case "prevSteps":
-            return "Prev Steps of " + currentTask.title
-    }
 }
