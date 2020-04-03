@@ -100,7 +100,7 @@ export function getScheduleItems(now: Date, tasks?: IterableIterator<Task>): Sch
 
     let scheduleItems: ScheduleItem[] = []
 
-    if(tasks) {
+    if (tasks) {
         for (let t of tasks) {
             if (t.reminders) {
                 t.reminders.forEach(r => scheduleItems.push({
@@ -148,6 +148,12 @@ export function getTaskListFilterMode(str?: string): TaskListFilterMode | undefi
     return str && TaskListFilterModeValues.has(str) ? str as TaskListFilterMode : undefined
 }
 
+const fieldMapping: { [filter: string]: keyof Task } = {
+    "subSteps": "subtasks",
+    "nextSteps": "nextSteps",
+    "prevSteps": "prevSteps"
+}
+
 export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOptions): { selected: Task[], other: Task[] } | undefined {
 
     if (!tasks || !options)
@@ -158,17 +164,15 @@ export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOpt
     if (!contextTask)
         return undefined
 
-    const taskFilter = getTaskFilter(contextTask, options?.filterMode)
-
     const allTasks = Array.from(tasks?.values())
 
-    const selected = allTasks.filter(taskFilter) as Task[]
-    selected.sort((t1, t2) => t1.title.localeCompare(t2.title))
+    const selectedTaskIds = getSelectedTaskIds(contextTask, options.filterMode)
+    const ignoreFilter = getOtherFilter(contextTask, options.filterMode)
 
-    const other = allTasks.filter(t => !taskFilter(t)) as Task[]
-    selected.sort((t1, t2) => t1.title.localeCompare(t2.title))
+    const selected = allTasks.filter(t => selectedTaskIds.has(t.id))
+    const other = allTasks.filter(ignoreFilter)
 
-    return {selected, other}
+    return { selected, other }
 }
 
 export type TaskListFilterMode = "subSteps" | "nextSteps" | "prevSteps"
@@ -181,26 +185,34 @@ export interface FilterOptions {
 
 type TaskFilter = (task: Task) => boolean
 
-function getTaskFilter(contextTask: Task, mode?: TaskListFilterMode): TaskFilter {
-
-    let taskIds: Set<TaskRef>
-
-    switch(mode) {
+function getOtherFilter(contextTask: Task, mode?: TaskListFilterMode): TaskFilter {
+    switch (mode) {
         case "subSteps":
-            taskIds = new Set(contextTask.subtasks)
-            break
-
-        case "nextSteps":
-            taskIds = new Set(contextTask.nextSteps)
-            break
+            return (task) => task.parent === undefined && task !== contextTask
 
         case "prevSteps":
-            taskIds = new Set(contextTask.prevSteps)
-            break
+            const nextTaskIds = new Set(contextTask.nextSteps)
+            return (task) => task !== contextTask && !nextTaskIds.has(task.id)
 
-        default:
-            taskIds = new Set()
+        case "nextSteps":
+            const prevTaskIds = new Set(contextTask.prevSteps)
+            return (task) => task !== contextTask && !prevTaskIds.has(task.id)
     }
 
-    return (task) => taskIds.has(task.id)
+    return () => true
+}
+
+function getSelectedTaskIds(contextTask: Task, mode?: TaskListFilterMode): Set<TaskRef> {
+    switch (mode) {
+        case "subSteps":
+            return new Set(contextTask.subtasks)
+
+        case "nextSteps":
+            return new Set(contextTask.nextSteps)
+
+        case "prevSteps":
+            return new Set(contextTask.prevSteps)
+    }
+
+    return new Set<TaskRef>()
 }
