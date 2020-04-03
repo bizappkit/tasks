@@ -35,7 +35,7 @@ export function TaskList() {
             renderItem={t =>
                 <TaskCard
                     key={t.id}
-                    icon="check"
+                    icon={selectedTasksSet.has(t) ? "check" : "add"}
                     iconHighlighted={selectedTasksSet.has(t)}
                     title={t.title}
                     titleLinkTo={getTaskLink(t.id)}

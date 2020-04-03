@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 interface TaskCardProps {
-    icon?: React.ReactNode
+    icon?: string
     iconHighlighted?: boolean
     onIconClick?: () => void
 
@@ -27,7 +27,7 @@ export function TaskCard(props: TaskCardProps) {
 
                     {props.icon &&
                         <div className={"avatar bg-primary"} style={{ cursor: "pointer", marginRight: "1rem", opacity: (props.iconHighlighted ? 1 : 0.2) }}>
-                            <i className="material-icons">check</i>
+                            <i className="material-icons">{props.icon}</i>
                         </div>
                     }
 
