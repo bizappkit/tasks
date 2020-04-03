@@ -200,7 +200,7 @@ export function TaskEdit(props: TaskEditProps) {
             }
 
             {task &&
-                <div className="content-list-head" style={{ paddingTop: 8 }}>
+                <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
                     <input
                         type="text"
                         className="form-control"
