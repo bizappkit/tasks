@@ -29,19 +29,19 @@ function ContentRoutingInternal() {
     return (
         <div className="main-container">
             <div className="breadcrumb-bar navbar bg-white sticky-top">
-                <nav>
-                    <ol className="breadcrumb">
-                        <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
 
-                        {currentTask &&
-                            <NavLink to={getTaskLink(params?.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
-                        }
+                <ol className="breadcrumb flex-nowrap" style={{ maxWidth: "100%" }}>
+                    <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
 
-                        {filterMode &&
-                            <NavLink>{getTaskListTitle(currentTask, filterMode)}</NavLink>
-                        }
-                    </ol>
-                </nav>
+                    {currentTask &&
+                        <NavLink to={getTaskLink(params?.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
+                    }
+
+                    {filterMode &&
+                        <NavLink>{getTaskListTitle(currentTask, filterMode)}</NavLink>
+                    }
+                </ol>
+
             </div>
 
             <div className="container" style={{ marginTop: "1rem" }}>
@@ -76,7 +76,7 @@ interface NavLinkProps {
 
 function NavLink(props: NavLinkProps) {
     return (
-        <li className="breadcrumb-item">
+        <li className="breadcrumb-item text-truncate">
             {(!props.active || !props.to) && props.children}
             {props.active && props.to &&
                 <Link to={props.to}>{props.children}</Link>
