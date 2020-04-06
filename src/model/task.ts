@@ -32,17 +32,25 @@ export interface ScheduleItem {
     time?: Date
 }
 
-export interface Task {
+interface TaskBaseData {
     id: string
     title: string
     createdOn: Date
     notes?: string
+    selectedFields?: TaskOptionalDataFields[]
+}
+
+interface TaskOptionalData {
     reminders?: Reminder[]
     parent?: TaskRef
     subtasks?: TaskRef[]
     prevSteps?: TaskRef[]
     nextSteps?: TaskRef[]
 }
+
+export type TaskOptionalDataFields = keyof TaskOptionalData
+
+export type Task = TaskBaseData & TaskOptionalData
 
 export interface Reminder {
     id: string
