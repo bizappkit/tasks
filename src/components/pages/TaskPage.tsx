@@ -1,29 +1,29 @@
-import React, { Dispatch } from 'react';
-import { Container } from 'react-bootstrap';
+import React from 'react';
+import { TaskEdit } from '../cards/TaskEdit';
 import { useParams } from 'react-router-dom';
-import { Task } from '../../model/task';
-import { RootState } from '../../store';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { TasksStoreAction } from '../../store/tasksStore';
-import { TaskEdit } from "../cards/TaskEdit";
+import { getTaskListLink } from "./TaskList";
 
-function TaskPage() {
+export const TaskDetailsPath = "/details/:taskId"
 
-	const { taskId } = useParams()
-	const tasks = useSelector((state: RootState) => state.tasks.idToTask)
-	const task = (taskId && tasks ? tasks.get(taskId) : undefined)
-
-	const dispatch: Dispatch<TasksStoreAction> = useDispatch()
-	const updateTask = (payload: Partial<Task>) => {
-		if (taskId)
-			dispatch({ type: 'tasks-updated', taskId: taskId, payload })
-	}
-
-	return (
-		<Container>
-			<TaskEdit task={task} updateTask={updateTask} />
-		</Container>
-	)
+export function getTaskLink(taskId?: string): string {
+	return TaskDetailsPath.replace(":taskId", taskId || "")
 }
 
-export default connect()(TaskPage)
+const getStepsLink = (id: string) => getTaskListLink(id, "subSteps")
+const getPrevStepsLink = (id: string) => getTaskListLink(id, "prevSteps")
+const getNextStepsLink = (id: string) => getTaskListLink(id, "nextSteps")
+
+export function TaskPage() {
+
+	const { taskId } = useParams()
+
+	return (
+		<TaskEdit
+			taskId={taskId}
+			getTaskLink={getTaskLink}
+			getStepsLink={getStepsLink}
+			getPrevStepsLink={getPrevStepsLink}
+			getNextStepsLink={getNextStepsLink}
+		/>
+	)
+}

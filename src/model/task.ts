@@ -1,3 +1,29 @@
+import { v4 as uuid } from 'uuid';
+import { Map } from "immutable";
+
+export function createTask(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef, id?: string): Task {
+    return {
+        id: id || uuid(),
+        createdOn: new Date(),
+        title,
+        notes,
+        parent,
+        reminders,
+    }
+}
+
+export function createReminder(on?: Date, notes?: string): Reminder {
+    return {
+        id: uuid(),
+        on: on || new Date(),
+        notes
+    }
+}
+
+export type UUID = string
+
+export type TaskRef = UUID
+
 export interface ScheduleItem {
     taskId: string
     title: string
@@ -6,12 +32,25 @@ export interface ScheduleItem {
     time?: Date
 }
 
-export interface Task {
+interface TaskBaseData {
     id: string
     title: string
+    createdOn: Date
     notes?: string
-    reminders?: Reminder[]
+    selectedFields?: TaskOptionalDataFields[]
 }
+
+interface TaskOptionalData {
+    reminders?: Reminder[]
+    parent?: TaskRef
+    subtasks?: TaskRef[]
+    prevSteps?: TaskRef[]
+    nextSteps?: TaskRef[]
+}
+
+export type TaskOptionalDataFields = keyof TaskOptionalData
+
+export type Task = TaskBaseData & TaskOptionalData
 
 export interface Reminder {
     id: string
@@ -65,29 +104,32 @@ export function orderTasksByName(tasks: Task[]): Task[] {
     return orderedTasks
 }
 
-export function getScheduleItems(now: Date, tasks: IterableIterator<Task>): ScheduleItem[] {
+export function getScheduleItems(now: Date, tasks?: IterableIterator<Task>): ScheduleItem[] {
 
     let scheduleItems: ScheduleItem[] = []
 
-    for (let t of tasks) {
-        if (t.reminders) {
-            t.reminders.forEach(r => scheduleItems.push({
-                taskId: t.id,
-                time: r.on,
-                title: r.notes || t.title,
-                subtitle: (r.notes ? t.title : t.notes),
-                reminderId: r.id
-            }))
-        } else {
-            scheduleItems.push({
-                taskId: t.id,
-                title: t.title,
-                subtitle: t.notes,
-            })
+    if (tasks) {
+        for (let t of tasks) {
+            if (t.reminders) {
+                t.reminders.forEach(r => scheduleItems.push({
+                    taskId: t.id,
+                    time: r.on,
+                    title: r.notes || t.title,
+                    subtitle: (r.notes ? t.title : t.notes),
+                    reminderId: r.id
+                }))
+            } else {
+                scheduleItems.push({
+                    reminderId: t.id,
+                    taskId: t.id,
+                    title: t.title,
+                    subtitle: t.notes,
+                })
+            }
         }
-    }
 
-    scheduleItems.sort((a, b) => compareScheduleItems(now, a, b))
+        scheduleItems.sort((a, b) => compareScheduleItems(now, a, b))
+    }
 
     return scheduleItems
 }
@@ -108,4 +150,77 @@ function getScheduleTime(now: Date, time?: Date): number {
     if (time < now)
         return -1;
     return time.valueOf();
+}
+
+export function getTaskListFilterMode(str?: string): TaskRelation | undefined {
+    return str && TaskListFilterModeValues.has(str) ? str as TaskRelation : undefined
+}
+
+export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOptions): { selected: Task[], other: Task[] } | undefined {
+
+    if (!tasks || !options)
+        return undefined
+
+    const contextTask = options.contextTaskId && tasks.get(options.contextTaskId)
+
+    if (!contextTask)
+        return undefined
+
+    const allTasks = Array.from(tasks?.values())
+
+    const selectedTaskIds = getSelectedTaskIds(contextTask, options.filterMode)
+    const ignoreFilter = getOtherFilter(contextTask, options.filterMode)
+
+    const selected = allTasks.filter(t => selectedTaskIds.has(t.id))
+    const other = allTasks.filter(ignoreFilter)
+
+    return { selected, other }
+}
+
+export type TaskRelation = "subSteps" | "nextSteps" | "prevSteps"
+
+export const TaskListFilterModeValues: ReadonlySet<string> = new Set<TaskRelation>(["subSteps", "nextSteps", "prevSteps"])
+
+export interface FilterOptions {
+    contextTaskId?: TaskRef
+    filterMode?: TaskRelation
+}
+
+type TaskFilter = (task: Task) => boolean
+
+function getOtherFilter(contextTask: Task, mode?: TaskRelation): TaskFilter {
+    switch (mode) {
+        case "subSteps":
+            return (task) => task.parent === undefined && task !== contextTask
+
+        case "prevSteps":
+            const nextTaskIds = new Set(contextTask.nextSteps)
+            return (task) => task !== contextTask && !nextTaskIds.has(task.id)
+
+        case "nextSteps":
+            const prevTaskIds = new Set(contextTask.prevSteps)
+            return (task) => task !== contextTask && !prevTaskIds.has(task.id)
+    }
+
+    return () => true
+}
+
+function getSelectedTaskIds(contextTask: Task, mode?: TaskRelation): Set<TaskRef> {
+
+    const field = getTaskFieldByFilterMode(mode)
+
+    return new Set((field ? contextTask[field] as TaskRef[] : []));
+}
+
+export function getTaskFieldByFilterMode(mode?: TaskRelation): (keyof Task & ("subtasks" | "nextSteps" | "prevSteps")) | undefined {
+    switch (mode) {
+        case "subSteps":
+            return "subtasks"
+
+        case "nextSteps":
+            return "nextSteps"
+
+        case "prevSteps":
+            return "prevSteps"
+    }
 }

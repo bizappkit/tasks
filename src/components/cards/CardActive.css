@@ -1,9 +1,0 @@
-.card-active :hover {
-    cursor: pointer;
-    background-color: #F2F2F2;
-}
-
-.card-active :active {
-    background-color: #E0E0E0;
-}
-

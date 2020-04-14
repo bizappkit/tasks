@@ -35,6 +35,18 @@ const months: { value: MonthNumber, text: string }[] = [
     { value: 12, text: 'December' },
 ]
 
+interface Time {
+    hours: number
+    minutes: number
+}
+
+const times: Time[] = Array(24 * 4).fill(0).map((value, index) => {
+    return {
+        hours: Math.floor(index / 4),
+        minutes: Math.floor(index * 15 % 60)
+    }
+})
+
 interface ReminderEditProps {
     reminder: Reminder
     onSave: (changes: Partial<Reminder>) => void
@@ -67,12 +79,16 @@ export function ReminderEdit(props: ReminderEditProps) {
                     </Col>
                     <Col>
                         <Form.Control
-                            type="time"
-                            step={15}
+                            style={{ width: "8rem" }}
+                            as="select"
                             placeholder="Time"
                             value={moment(props.reminder.on).format("HH:mm")}
                             onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, on: setTime(props.reminder.on, e.currentTarget.value) })}
-                        />
+                        >
+                            {times.map(t =>
+                                <option value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>
+                            )}
+                        </Form.Control>
                     </Col>
                 </Row>
             </div>

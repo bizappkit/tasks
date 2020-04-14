@@ -1,17 +1,6 @@
-import { Task, ScheduleItem, getScheduleItems, orderTasksByName } from "../model/task";
+import { Task } from "../model/task";
 import { Action } from 'redux'
 import Immutable from "immutable";
-
-export interface TasksStoreState {
-	loading: boolean
-	allTasks?: Task[]
-	idToTask?: Immutable.Map<string, Task>
-	scheduleItems?: ScheduleItem[]
-}
-
-const initialState: TasksStoreState = {
-	loading: true
-}
 
 export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'
@@ -24,7 +13,29 @@ export interface TaskUpdatedAction extends Action {
 	payload: Partial<Task>
 }
 
-export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction;
+export interface TaskAddedAction extends Action {
+	type: 'tasks-new-task'
+	task: Task
+}
+
+export interface TaskChangeRelationAction extends Action {
+	type: "tasks-remove-relations" | "tasks-add-relations"
+	parent: Task
+	child: Task
+	relation: "subSteps" | "prevSteps" | "nextSteps"
+}
+
+export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction;
+
+
+export interface TasksStoreState {
+	loading: boolean
+	idToTask?: Immutable.Map<string, Task>
+}
+
+const initialState: TasksStoreState = {
+	loading: true
+}
 
 export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
@@ -32,9 +43,7 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 			return {
 				...state,
 				loading: false,
-				allTasks: orderTasksByName(action.tasks),
 				idToTask: Immutable.Map(action.tasks.map(t => [t.id, t])),
-				scheduleItems: getScheduleItems(new Date(), action.tasks.values())
 			}
 
 		case 'tasks-updated':
@@ -46,8 +55,25 @@ export function tasksReducer(state = initialState, action: TasksStoreAction): Ta
 					return {
 						...state,
 						idToTask: idToTasks,
-						scheduleItems: getScheduleItems(new Date(), idToTasks.values())
 					}
+				}
+			}
+			return state
+
+		case 'tasks-new-task':
+			if (state.idToTask) {
+				let idToTasks = state.idToTask.set(action.task.id, action.task);
+				if (action.task.parent) {
+					let parentTask = state.idToTask.get(action.task.parent)
+					if (parentTask) {
+						parentTask = { ...parentTask, subtasks: [...parentTask.subtasks, action.task.id] }
+						idToTasks = idToTasks.set(parentTask.id, parentTask)
+					}
+				}
+				console.log(idToTasks)
+				return {
+					...state,
+					idToTask: idToTasks,
 				}
 			}
 			return state
