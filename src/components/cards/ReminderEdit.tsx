@@ -58,23 +58,14 @@ export function ReminderEdit(props: ReminderEditProps) {
     return (
         <form>
             <div className="form-group">
-                <label>Reminder Notes</label>
-                <input
-                    placeholder="Notes"
-                    className="form-control"
-                    value={props.reminder.notes}
-                    onChange={(e) => props.onSave({ ...props.reminder, notes: e.currentTarget.value })}
-                />
-            </div>
-            <div className="form-group">
                 <label>Remind me on</label>
                 <Row>
                     <Col>
                         <Form.Control
                             type="date"
                             placeholder="Date"
-                            value={moment(props.reminder.on).format("YYYY-MM-DD")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, on: setDate(props.reminder.on, e.currentTarget.value) })}
+                            value={moment(props.reminder.date).format("YYYY-MM-DD")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date, e.currentTarget.value) })}
                         />
                     </Col>
                     <Col>
@@ -82,8 +73,8 @@ export function ReminderEdit(props: ReminderEditProps) {
                             style={{ width: "8rem" }}
                             as="select"
                             placeholder="Time"
-                            value={moment(props.reminder.on).format("HH:mm")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, on: setTime(props.reminder.on, e.currentTarget.value) })}
+                            value={moment(props.reminder.date).format("HH:mm")}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date, e.currentTarget.value) })}
                         >
                             {times.map(t =>
                                 <option value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>

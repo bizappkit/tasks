@@ -4,7 +4,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
-import { v4 as uuid } from 'uuid';
 import { FormListSection } from "./FormListSection";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
@@ -27,7 +26,6 @@ interface TaskEditState {
     //prevSteps?: CompletionStatistics
     //nextSteps?: CompletionStatistics
 
-    selectedReminderIndex?: number
     selectedReminder?: Reminder
     subtaskTitle?: string
 }
@@ -57,28 +55,27 @@ export function TaskEdit(props: TaskEditProps) {
             dispatch({ type: 'tasks-updated', taskId: props.taskId, payload })
     }
 
-    const editReminder = (event?: React.MouseEvent, index?: number) => {
+    const editReminder = (event?: React.MouseEvent) => {
 
         event?.preventDefault()
 
         let selectedReminder: Reminder
 
-        if (index !== undefined && index >= 0 && task?.reminders) {
-            selectedReminder = task.reminders[index]
+        if (task?.reminder) {
+            selectedReminder = task.reminder
         } else {
             const now = new Date()
             const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
-            selectedReminder = { id: uuid(), on: tomorrowMorning };
-            index = undefined;
+            selectedReminder = { date: tomorrowMorning };
         }
 
-        setState({ ...state, selectedReminderIndex: index, selectedReminder })
+        setState({ ...state, selectedReminder })
     }
 
     const deleteReminder = () => {
         const reminder = state.selectedReminder;
         if (reminder) {
-            updateTask({ reminders: task?.reminders?.filter(r => r === reminder) })
+            updateTask({ reminder: undefined})
             setState({ selectedReminder: undefined })
         }
     }
@@ -92,23 +89,14 @@ export function TaskEdit(props: TaskEditProps) {
 
         if (state.selectedReminder) {
 
-            const reminders = task?.reminders?.slice(0) || []
-
-            if (state.selectedReminderIndex !== undefined)
-                reminders[state.selectedReminderIndex] = state.selectedReminder;
-            else
-                reminders.push(state.selectedReminder);
-
-            reminders.sort((a, b) => a.on.valueOf() - b.on.valueOf());
-
-            updateTask({ reminders: reminders })
+            updateTask({ reminder: state.selectedReminder })
 
             cancelEditReminder()
         }
     }
 
     const cancelEditReminder = () => {
-        setState({ selectedReminder: undefined, selectedReminderIndex: undefined })
+        setState({ selectedReminder: undefined })
     }
 
     const onNewStepKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -166,19 +154,19 @@ export function TaskEdit(props: TaskEditProps) {
             </div>
 
             <FormListSection
-                items={task?.reminders}
+                items={task?.reminder ? [task.reminder] : []}
                 sectionTitle="Reminders"
                 mainAction={{
                     text: "Add Reminder",
                     handler: (e) => editReminder(e)
                 }}
             >
-                {(reminder, index) => (
+                {(reminder) => (
                     <a
                         href="/"
-                        onClick={(e) => editReminder(e, index)}
+                        onClick={(e) => editReminder(e)}
                     >
-                        <div><strong>{toShortDateAndTime(reminder.on)}{reminder.notes ? ": " : " "}</strong>{reminder.notes || ""}</div>
+                        <div><strong>{toShortDateAndTime(reminder.date)}</strong></div>
                     </a>
                 )}
             </FormListSection>

@@ -8,8 +8,8 @@ const elonMuskId = '41D78497-97FC-40AE-8C6D-830FC1CE4F9D'
 const buyAirpodsId = '7CBD7AB2-C969-4DB3-A1A5-85C6CDC4FA2D'
 
 const customerTask = createTask("Customer", undefined, undefined, undefined, customerId)
-const billGatesTask = createTask("Bill Gates", "", [createReminder(moment().add({ days: 3 }).set({ hours: 9, minutes: 0 }).toDate(), "Confirm dinner")], customerId, billGatesId)
-const elonMuskTask = createTask("Elon Musk", "", [createReminder(moment().add({ days: 5 }).set({ hours: 14, minutes: 0 }).toDate(), "Schedule Interview")], customerId, elonMuskId)
+const billGatesTask = createTask("Bill Gates", "", createReminder(moment().add({ days: 3 }).set({ hours: 9, minutes: 0 }).toDate()), customerId, billGatesId)
+const elonMuskTask = createTask("Elon Musk", "", createReminder(moment().add({ days: 5 }).set({ hours: 14, minutes: 0 }).toDate()), customerId, elonMuskId)
 const buyAirpodsTask = createTask("Buy new airpods", undefined, undefined, undefined, buyAirpodsId)
 
 customerTask.subtasks = [billGatesId, elonMuskId]

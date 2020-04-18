@@ -1,22 +1,20 @@
 import { v4 as uuid } from 'uuid';
 import { Map } from "immutable";
 
-export function createTask(title: string, notes?: string, reminders?: Reminder[], parent?: TaskRef, id?: string): Task {
+export function createTask(title: string, notes?: string, reminder?: Reminder, parent?: TaskRef, id?: string): Task {
     return {
         id: id || uuid(),
         createdOn: new Date(),
         title,
         notes,
         parent,
-        reminders,
+        reminder: reminder,
     }
 }
 
-export function createReminder(on?: Date, notes?: string): Reminder {
+export function createReminder(date?: Date): Reminder {
     return {
-        id: uuid(),
-        on: on || new Date(),
-        notes
+        date: date || new Date(),
     }
 }
 
@@ -41,7 +39,7 @@ interface TaskBaseData {
 }
 
 interface TaskOptionalData {
-    reminders?: Reminder[]
+    reminder?: Reminder
     parent?: TaskRef
     subtasks?: TaskRef[]
     prevSteps?: TaskRef[]
@@ -53,9 +51,7 @@ export type TaskOptionalDataFields = keyof TaskOptionalData
 export type Task = TaskBaseData & TaskOptionalData
 
 export interface Reminder {
-    id: string
-    on: Date
-    notes?: string
+    date: Date
     repeat?: ReminderRepeatSettings
 }
 
@@ -110,14 +106,13 @@ export function getScheduleItems(now: Date, tasks?: IterableIterator<Task>): Sch
 
     if (tasks) {
         for (let t of tasks) {
-            if (t.reminders) {
-                t.reminders.forEach(r => scheduleItems.push({
+            if (t.reminder) {
+                scheduleItems.push({
                     taskId: t.id,
-                    time: r.on,
-                    title: r.notes || t.title,
-                    subtitle: (r.notes ? t.title : t.notes),
-                    reminderId: r.id
-                }))
+                    time: t.reminder.date,
+                    title: t.title,
+                    subtitle: t.notes
+                })
             } else {
                 scheduleItems.push({
                     reminderId: t.id,
