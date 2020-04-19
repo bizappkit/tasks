@@ -1,32 +1,9 @@
 import { Task } from "../model/task";
-import { Action } from 'redux'
 import Immutable from "immutable";
+import {TaskLoadedAction, TaskUpdatedAction, TaskAddedAction, TaskChangeRelationAction} from "./taskActions";
 
-export interface TaskLoadedAction extends Action {
-	type: 'tasks-loaded'
-	tasks: Task[]
-}
-
-export interface TaskUpdatedAction extends Action {
-	type: 'tasks-updated'
-	taskId: string
-	payload: Partial<Task>
-}
-
-export interface TaskAddedAction extends Action {
-	type: 'tasks-new-task'
-	task: Task
-}
-
-export interface TaskChangeRelationAction extends Action {
-	type: "tasks-remove-relations" | "tasks-add-relations"
-	parent: Task
-	child: Task
-	relation: "subSteps" | "prevSteps" | "nextSteps"
-}
 
 export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction;
-
 
 export interface TasksStoreState {
 	loading: boolean

@@ -39,6 +39,7 @@ export function TaskEdit(props: TaskEditProps) {
 
     const [state, setState] = useState<TaskEditState>({})
 
+    const currentUser = useSelector((state: RootState) => state.user.userId)
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
@@ -109,7 +110,7 @@ export function TaskEdit(props: TaskEditProps) {
 
         event?.preventDefault()
 
-        if (!task || !state.subtaskTitle)
+        if (!currentUser || !task || !state.subtaskTitle)
             return;
 
         const title = state.subtaskTitle.trim();
@@ -117,7 +118,7 @@ export function TaskEdit(props: TaskEditProps) {
         if (title.length === 0)
             return;
 
-        const newTask = createTask(title, undefined, undefined, task.id)
+        const newTask = createTask(currentUser, title, undefined, undefined, task.id)
 
         dispatch({ type: "tasks-new-task", task: newTask })
 

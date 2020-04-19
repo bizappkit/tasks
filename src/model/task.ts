@@ -1,9 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { Map } from "immutable";
 
-export function createTask(title: string, notes?: string, reminder?: Reminder, parent?: TaskRef, id?: string): Task {
+export function createTask(owner: UserRef, title: string, notes?: string, reminder?: Reminder, parent?: TaskRef, id?: string): Task {
     return {
         id: id || uuid(),
+        owner: owner,
         createdOn: new Date(),
         title,
         notes,
@@ -22,6 +23,8 @@ export type UUID = string
 
 export type TaskRef = UUID
 
+export type UserRef = UUID
+
 export interface ScheduleItem {
     taskId: string
     title: string
@@ -34,8 +37,10 @@ interface TaskBaseData {
     id: string
     title: string
     createdOn: Date
+    owner: UserRef
     notes?: string
     selectedFields?: TaskOptionalDataFields[]
+    
 }
 
 interface TaskOptionalData {
