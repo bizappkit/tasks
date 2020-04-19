@@ -28,7 +28,7 @@ export async function subscribeToTasks(email: string, password: string, next: (d
 	return firestore.collection(TasksCollection)
 		.where("owner", "==", auth.currentUser?.uid)
 		.onSnapshot(
-			snapshot => next(snapshot.docs.map(d => d.data() as Task)),
+			snapshot => next(snapshot.docs.map(d => { return {...(d.data() as Task), id: d.id}})),
 			error => console.error(error)
 		)
 }
