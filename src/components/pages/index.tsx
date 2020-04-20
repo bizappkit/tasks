@@ -33,8 +33,8 @@ function ContentRoutingInternal() {
                 <ol className="breadcrumb flex-nowrap" style={{ maxWidth: "100%" }}>
                     <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
 
-                    {currentTask &&
-                        <NavLink to={getTaskLink(params?.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
+                    {currentTask && params?.taskId &&
+                        <NavLink to={getTaskLink(params.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
                     }
 
                     {filterMode &&

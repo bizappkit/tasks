@@ -5,8 +5,8 @@ import { getTaskListLink } from "./TaskList";
 
 export const TaskDetailsPath = "/details/:taskId"
 
-export function getTaskLink(taskId?: string): string {
-	return TaskDetailsPath.replace(":taskId", taskId || "0")
+export function getTaskLink(taskId: string): string {
+	return TaskDetailsPath.replace(":taskId", taskId)
 }
 
 const getStepsLink = (id: string) => getTaskListLink(id, "subSteps")
