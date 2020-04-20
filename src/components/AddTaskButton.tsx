@@ -1,5 +1,6 @@
-import React, { Dispatch } from "react"
+import React from "react"
 import { createTask } from "../model/task"
+import { Dispatch } from "redux"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "../store"
 import { TasksStoreAction } from "../store/tasksStore"

@@ -1,4 +1,4 @@
-import { Dispatch} from "redux"
+import { Dispatch } from "redux"
 import { TasksStoreAction } from "./tasksStore"
 import { updateTask, insertTask } from "../sync";
 
