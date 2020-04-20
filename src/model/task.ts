@@ -2,15 +2,18 @@ import { v4 as uuid } from 'uuid';
 import { Map } from "immutable";
 
 export function createTask(owner: UserRef, title: string, notes?: string, reminder?: Reminder, parent?: TaskRef, id?: string): Task {
-    return {
+    let task: Task = {
         id: id || uuid(),
         owner: owner,
         createdOn: new Date(),
-        title,
-        notes,
-        parent,
-        reminder: reminder,
+        title
     }
+
+    if(notes) task.notes = notes
+    if(parent) task.parent = parent;
+    if(reminder) task.reminder = reminder;
+
+    return task;
 }
 
 export function createReminder(date?: Date): Reminder {

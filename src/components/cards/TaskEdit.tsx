@@ -48,8 +48,6 @@ export function TaskEdit(props: TaskEditProps) {
     const nextSteps = selectTasks(tasks, task?.nextSteps)
     const prevSteps = selectTasks(tasks, task?.prevSteps)
 
-    console.log("Subtasks", subtasks)
-
     const dispatch: Dispatch<TasksStoreAction> = useDispatch()
     const updateTask = (payload: Partial<Task>) => {
         if (props.taskId)

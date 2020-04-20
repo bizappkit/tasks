@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
-
+import { AddTaskButton } from "../AddTaskButton";
 
 export function ContentRouting() {
 
@@ -41,6 +41,10 @@ function ContentRoutingInternal() {
                         <NavLink>{getPageTitle(filterMode)}</NavLink>
                     }
                 </ol>
+
+                <div>
+                    <AddTaskButton/>
+                </div>
 
             </div>
 
