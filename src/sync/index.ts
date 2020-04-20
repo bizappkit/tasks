@@ -16,6 +16,7 @@ const app = Firebase.initializeApp(firebaseConfig)
 const auth = app.auth()
 //const analytics = Firebase.analytics(app);
 const firestore = Firebase.firestore(app)
+firestore.enablePersistence({synchronizeTabs: true})
 
 const TasksCollection = "tasks"
 
@@ -28,7 +29,22 @@ export async function subscribeToTasks(email: string, password: string, next: (d
 	return firestore.collection(TasksCollection)
 		.where("owner", "==", auth.currentUser?.uid)
 		.onSnapshot(
-			snapshot => next(snapshot.docs.map(d => { return {...(d.data() as Task), id: d.id}})),
+			snapshot => next(snapshot.docs.map(d => {
+				return {
+					...(d.data() as Task),
+					id: d.id
+				}
+			})),
 			error => console.error(error)
 		)
+}
+
+export async function insertTask(task: Task): Promise<void> {
+	const ref = firestore.collection(TasksCollection).doc()
+	task.id = ref.id
+	ref.set(task)
+}
+
+export function updateTask(taskId: string, changes: Partial<Task>): Promise<void> {
+	return firestore.collection(TasksCollection).doc(taskId).update(changes)
 }
