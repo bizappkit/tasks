@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
-import { AddTaskButton } from "../AddTaskButton";
+import { AddTaskButton } from "../task/AddTaskButton";
 
 export function ContentRouting() {
 

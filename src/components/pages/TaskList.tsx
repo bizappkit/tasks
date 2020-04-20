@@ -2,10 +2,10 @@ import React, { Dispatch } from "react"
 import { TaskRef, TaskRelation, getSelectedTasks, getTaskListFilterMode, Task } from "../../model/task";
 import { TaskDetailsPath, getTaskLink } from "./TaskPage";
 import { useParams } from "react-router-dom";
-import { CardList } from "../cards/CardList";
+import { CardList } from "../task/CardList";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import { TaskCard } from "../cards/TaskCard";
+import { TaskCard } from "../task/TaskCard";
 import { TasksStoreAction } from "../../store/tasksStore";
 
 

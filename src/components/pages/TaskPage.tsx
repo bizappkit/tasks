@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskEdit } from '../cards/TaskEdit';
+import { TaskEdit } from '../task/TaskEdit';
 import { useParams } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
 

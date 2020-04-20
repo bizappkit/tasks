@@ -1,10 +1,10 @@
 import React from 'react';
-import { CardList } from '../cards/CardList';
+import { CardList } from '../task/CardList';
 import { ScheduleItem, getScheduleItems } from '../../model/task';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { getTaskLink } from './TaskPage';
-import { TaskCard } from '../cards/TaskCard';
+import { TaskCard } from '../task/TaskCard';
 import { toShortTimeStr } from "../../utils/dateTimeUtils";
 
 export const SchedulePath = "/schedule"
