@@ -16,18 +16,25 @@ const app = Firebase.initializeApp(firebaseConfig)
 const auth = app.auth()
 //const analytics = Firebase.analytics(app);
 const firestore = Firebase.firestore(app)
-firestore.enablePersistence({synchronizeTabs: true})
+firestore.enablePersistence({ synchronizeTabs: true })
 
 const TasksCollection = "tasks"
 
-export async function subscribeToTasks(email: string, password: string, next: (docs: Task[]) => void) {
+export async function signInWithEmailAndPassword(email: string, password: string): Promise<string | undefined> {
 
-	if(!auth.currentUser) {
-		await auth.signInWithEmailAndPassword(email, password)
+	if (auth.currentUser) {
+		return auth.currentUser.uid
 	}
 
+	const result = await auth.signInWithEmailAndPassword(email, password)
+
+	return result.user?.uid
+}
+
+export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {
+
 	return firestore.collection(TasksCollection)
-		.where("owner", "==", auth.currentUser?.uid)
+		.where("owner", "==", userId)
 		.onSnapshot(
 			snapshot => next(snapshot.docs.map(d => {
 				return {

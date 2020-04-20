@@ -10,11 +10,11 @@ const initialState: UserStoreState = {
 
 export interface UserStoreAction {
 	type: "user-set"
-	userId: string
+	userId?: string
 }
 
 export function userReducer(state = initialState, action: UserStoreAction): UserStoreState {
-	switch(action.type) {
+	switch (action.type) {
 		case "user-set":
 			return {
 				...state,

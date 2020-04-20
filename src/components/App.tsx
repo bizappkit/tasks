@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContentRouting } from "./pages"
-import { subscribeToTasks } from "../sync"
+import { subscribeToTasks, signInWithEmailAndPassword } from "../sync"
 import { configureStore } from "../store"
 import { Provider } from 'react-redux';
 
@@ -10,13 +10,20 @@ const store = configureStore();
 
 class App extends React.Component {
 
-	componentDidMount() {
+	async componentDidMount() {
 
-		//store.dispatch({type: "user-set", userId: testUserId})
+		let userId = store.getState().user.userId
 
-		subscribeToTasks("inchakov@gmail.com", "!Parol2020", (tasks) => {
-			store.dispatch({ type: "tasks-loaded", tasks })
-		})
+		if (!userId) {
+			userId = await signInWithEmailAndPassword("inchakov@gmail.com", "!Parol2020")
+			store.dispatch({ type: "user-set", userId })
+		}
+
+		if (userId) {
+			subscribeToTasks(userId, (tasks) => {
+				store.dispatch({ type: "tasks-loaded", tasks })
+			})
+		}
 	}
 
 	render() {
