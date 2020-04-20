@@ -21,15 +21,14 @@ export function AddTaskButton() {
 			dispatch({type: "tasks-new-task", task})
 			history.push(getTaskLink(task.id))
 		}
-    }
-
-	if(currentUserId) {
-		return (
-				<a href="#new-task" onClick={(e) => onAddTaskClick(e)}>
-					Add Task
-				</a>
-		)
-	} else {
-		return null
 	}
+	
+	if(!currentUserId)
+		return null
+
+	return (
+		<a href="#new-task" onClick={(e) => onAddTaskClick(e)}>
+			Add Task
+		</a>
+	)
 }
