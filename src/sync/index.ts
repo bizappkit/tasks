@@ -14,11 +14,13 @@ const firebaseConfig = {
 
 const app = Firebase.initializeApp(firebaseConfig)
 const auth = app.auth()
-//const analytics = Firebase.analytics(app);
+
 const firestore = Firebase.firestore(app)
 firestore.enablePersistence({ synchronizeTabs: true })
 
-const TasksCollection = "tasks"
+//const analytics = Firebase.analytics(app);
+
+const tasksCollection = firestore.collection("tasks")
 
 export async function signInWithEmailAndPassword(email: string, password: string): Promise<string | undefined> {
 
@@ -33,12 +35,12 @@ export async function signInWithEmailAndPassword(email: string, password: string
 
 export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {
 
-	return firestore.collection(TasksCollection)
+	return tasksCollection
 		.where("owner", "==", userId)
 		.onSnapshot(
 			snapshot => next(snapshot.docs.map(d => {
 				return {
-					...(d.data() as Task),
+					...getTaskFromDoc(d.data()),
 					id: d.id
 				}
 			})),
@@ -47,11 +49,19 @@ export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {
 }
 
 export async function insertTask(task: Task): Promise<void> {
-	const ref = firestore.collection(TasksCollection).doc()
+	const ref = tasksCollection.doc()
 	task.id = ref.id
 	ref.set(task)
 }
 
 export function updateTask(taskId: string, changes: Partial<Task>): Promise<void> {
-	return firestore.collection(TasksCollection).doc(taskId).update(changes)
+	return tasksCollection.doc(taskId).update(changes)
+}
+
+function getTaskFromDoc(data: any): Task {
+	let task = {...data} 
+	if(task.reminder?.date instanceof Firebase.firestore.Timestamp) {
+		task.reminder.date = task.reminder.date.toDate()
+	}
+	return task as Task
 }
