@@ -10,6 +10,7 @@ import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
 import { Map } from "immutable"
+import ".//TaskEdit.css";
 
 interface TaskEditProps {
     taskId?: string
@@ -129,8 +130,7 @@ export function TaskEdit(props: TaskEditProps) {
                 <TextareaAutosize
                     disabled={task === undefined}
                     placeholder="Task Title"
-                    className="form-control"
-                    style={{ fontSize: "2.5rem" }}
+                    className="task-title"
                     value={task?.title}
                     onChange={(e) => updateTask({ title: e.currentTarget.value })}
                 />

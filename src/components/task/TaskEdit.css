@@ -1,0 +1,30 @@
+
+.task-title {
+	outline: none;
+	font-size: 2.5rem;
+    border: none;
+	background-color: transparent;
+	width: 100%;
+}
+
+.task-title:hover {
+	background-color: white;
+	border: 1px solid #dee2e6;
+	border-radius: 0.5rem;
+	padding-left: 6px;
+	margin-top: -1px;
+	margin-left: -5px;
+	margin-bottom: 1px;
+	margin-right: 1px;
+}
+
+.task-title:focus {
+	background-color: white;
+	border: 1px solid #dee2e6;
+	border-radius: 0.5rem;
+	padding-left: 6px;
+	margin-top: -1px;
+	margin-left: -5px;
+	margin-bottom: 1px;
+	margin-right: 1px;
+}
