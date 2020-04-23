@@ -7,6 +7,7 @@ import { RootState } from "../../store"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
 import { AddTaskButton } from "../task/AddTaskButton";
+import { useTranslation } from "react-i18next";
 
 export function ContentRouting() {
 
@@ -19,6 +20,7 @@ export function ContentRouting() {
 
 function ContentRoutingInternal() {
 
+    const { t } = useTranslation()
     const match = useRouteMatch<Params>(Paths)
     const tasks = useSelector((state: RootState) => state.tasks.idToTask)
     const params = match?.params;
@@ -31,10 +33,10 @@ function ContentRoutingInternal() {
             <div className="breadcrumb-bar navbar bg-white sticky-top">
 
                 <ol className="breadcrumb flex-nowrap" style={{ maxWidth: "100%" }}>
-                    <NavLink to={SchedulePath} active={currentTask !== undefined}>Schedule</NavLink>
+                    <NavLink to={SchedulePath} active={currentTask !== undefined}>{t("Schedule")}</NavLink>
 
                     {currentTask && params?.taskId &&
-                        <NavLink to={getTaskLink(params.taskId)} active={filterMode !== undefined}>{currentTask.title}</NavLink>
+                        <NavLink to={getTaskLink(params.taskId)} active={filterMode !== undefined}>{t("Task Details")}</NavLink>
                     }
 
                     {filterMode &&
@@ -43,7 +45,7 @@ function ContentRoutingInternal() {
                 </ol>
 
                 <div>
-                    <AddTaskButton/>
+                    <AddTaskButton />
                 </div>
 
             </div>
