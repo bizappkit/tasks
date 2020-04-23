@@ -10,6 +10,7 @@ import { RootState } from "../../store";
 import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
 import { Map } from "immutable"
+import { ActionButton } from "../common/ActionButton";
 import "./TaskEdit.css"
 
 interface TaskEditProps {
@@ -240,10 +241,19 @@ export function TaskEdit(props: TaskEditProps) {
                 </div>
 
                 <div className="col-sm-4">
-                    <ActionButton icon="favorite_border">Save as Template</ActionButton>
-                    <ActionButton icon="done">Complete</ActionButton>
-                    <br/>
-                    <ActionButton icon="delete" appearance="danger">Delete</ActionButton>
+                    <div className="d-flex">
+                        <a className="flex-grow-1 d-flex" href="#">
+                            <i className="material-icons">arrow_drop_down</i>
+                            <h5>Actions</h5>
+                        </a>
+                        <i className="material-icons">edit</i>
+                    </div>
+                    <div>
+                        <ActionButton icon="favorite_border">Save as Template</ActionButton>
+                        <ActionButton icon="done">Complete</ActionButton>
+                        <br/>
+                        <ActionButton icon="delete" appearance="danger">Delete</ActionButton>
+                    </div>
                 </div>
             </div>
 
@@ -266,27 +276,6 @@ export function TaskEdit(props: TaskEditProps) {
                 </Modal>
             }
         </form >
-    )
-}
-
-interface ActionButtonProps {
-    icon: string
-    children:  React.ReactNode
-    appearance?: ("primary" | "secondary" | "danger")
-    onClick?: () => void
-}
-
-function ActionButton(props: ActionButtonProps) {
-    return (
-        <button
-            type="button"
-            className={"action-btn btn btn-block btn-" + (props.appearance || "secondary")}
-            onClick={props.onClick}
-        >
-            <i className="material-icons">{props.icon}</i>
-            &nbsp;
-            {props.children}
-        </button>
     )
 }
 
