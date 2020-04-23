@@ -75,7 +75,7 @@ export function TaskEdit(props: TaskEditProps) {
     const deleteReminder = () => {
         const reminder = state.selectedReminder;
         if (reminder) {
-            updateTask({ reminder: undefined})
+            updateTask({ reminder: undefined })
             setState({ selectedReminder: undefined })
         }
     }
@@ -242,7 +242,7 @@ export function TaskEdit(props: TaskEditProps) {
                 <div className="col-sm-4">
                     <ActionButton icon="favorite_border">Save as Template</ActionButton>
                     <ActionButton icon="done">Complete</ActionButton>
-                    <br/>
+                    <br />
                     <ActionButton icon="delete" appearance="danger">Delete</ActionButton>
                 </div>
             </div>
@@ -270,8 +270,8 @@ export function TaskEdit(props: TaskEditProps) {
 }
 
 interface ActionButtonProps {
-    icon: string
-    children:  React.ReactNode
+    icon?: string
+    children: React.ReactNode
     appearance?: ("primary" | "secondary" | "danger")
     onClick?: () => void
 }
@@ -283,7 +283,7 @@ function ActionButton(props: ActionButtonProps) {
             className={"action-btn btn btn-block btn-" + (props.appearance || "secondary")}
             onClick={props.onClick}
         >
-            <i className="material-icons">{props.icon}</i>
+            <i className="material-icons">{props.icon || "chevron_right"}</i>
             &nbsp;
             {props.children}
         </button>
