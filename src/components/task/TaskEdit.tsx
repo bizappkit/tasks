@@ -76,7 +76,7 @@ export function TaskEdit(props: TaskEditProps) {
     const deleteReminder = () => {
         const reminder = state.selectedReminder;
         if (reminder) {
-            updateTask({ reminder: undefined})
+            updateTask({ reminder: undefined })
             setState({ selectedReminder: undefined })
         }
     }
@@ -279,6 +279,30 @@ export function TaskEdit(props: TaskEditProps) {
     )
 }
 
+<<<<<<< HEAD
+=======
+interface ActionButtonProps {
+    icon?: string
+    children: React.ReactNode
+    appearance?: ("primary" | "secondary" | "danger")
+    onClick?: () => void
+}
+
+function ActionButton(props: ActionButtonProps) {
+    return (
+        <button
+            type="button"
+            className={"action-btn btn btn-block btn-" + (props.appearance || "secondary")}
+            onClick={props.onClick}
+        >
+            <i className="material-icons">{props.icon || "chevron_right"}</i>
+            &nbsp;
+            {props.children}
+        </button>
+    )
+}
+
+>>>>>>> d2ac65d8f9329a3f556203fe20f350ab4cfdfeb2
 function selectTasks(storage?: Map<TaskRef, Task>, ids?: TaskRef[]): Task[] | undefined {
 
     if (storage === undefined || ids === undefined)
