@@ -2,7 +2,7 @@ import React from "react";
 
 interface ActionButtonProps {
     icon: string
-    children:  React.ReactNode
+    children: React.ReactNode
     appearance?: ("primary" | "secondary" | "danger")
     onClick?: () => void
 }

@@ -11,8 +11,11 @@ import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
 import { Map } from "immutable"
 import { ActionButton } from "../common/ActionButton";
-import "./TaskEdit.css"
 import { useTranslation } from "react-i18next";
+import { Section } from "../common/Section";
+
+import "./TaskEdit.css"
+
 
 interface TaskEditProps {
     taskId?: string
@@ -243,19 +246,16 @@ export function TaskEdit(props: TaskEditProps) {
                 </div>
 
                 <div className="col-sm-4">
-                    <div className="d-flex">
-                        <a className="flex-grow-1 d-flex" href="#">
-                            <i className="material-icons">arrow_drop_down</i>
-                            <h5>Actions</h5>
-                        </a>
-                        <i className="material-icons">edit</i>
-                    </div>
-                    <div>
+                    <Section title={t("Add to Task")}>
+                        <ActionButton icon="alarm">{t("Reminder")}</ActionButton>
+                        <ActionButton icon="playlist_add_check">{t("Steps")}</ActionButton>
+                    </Section>
+                    <Section title={t("Actions")}>
                         <ActionButton icon="favorite_border">{t("Save as Template")}</ActionButton>
                         <ActionButton icon="done">{t("Complete")}</ActionButton>
                         <br />
                         <ActionButton icon="delete" appearance="danger">{t("Delete")}</ActionButton>
-                    </div>
+                    </Section>
                 </div>
             </div>
 
