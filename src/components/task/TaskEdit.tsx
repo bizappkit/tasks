@@ -11,6 +11,7 @@ import { TasksStoreAction } from "../../store/tasksStore";
 import { Link } from "react-router-dom";
 import { Map } from "immutable"
 import "./TaskEdit.css"
+import { useTranslation } from "react-i18next";
 
 interface TaskEditProps {
     taskId?: string
@@ -38,6 +39,7 @@ interface CompletionStatistics {
 
 export function TaskEdit(props: TaskEditProps) {
 
+    const { t } = useTranslation()
     const [state, setState] = useState<TaskEditState>({})
 
     const currentUser = useSelector((state: RootState) => state.user.userId)
@@ -240,10 +242,10 @@ export function TaskEdit(props: TaskEditProps) {
                 </div>
 
                 <div className="col-sm-4">
-                    <ActionButton icon="favorite_border">Save as Template</ActionButton>
-                    <ActionButton icon="done">Complete</ActionButton>
+                    <ActionButton icon="favorite_border">{t("Save as Template")}</ActionButton>
+                    <ActionButton icon="done">{t("Complete")}</ActionButton>
                     <br />
-                    <ActionButton icon="delete" appearance="danger">Delete</ActionButton>
+                    <ActionButton icon="delete" appearance="danger">{t("Delete")}</ActionButton>
                 </div>
             </div>
 
