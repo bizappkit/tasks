@@ -13,9 +13,9 @@ export function AddTaskButton() {
 	const dispatch: Dispatch<TasksStoreAction> = useDispatch()
 	const history = useHistory()
 
-	const onAddTaskClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+	const onAddTaskClick = () => {
 		
-		event.preventDefault()
+		//event.preventDefault()
 		
 		if (currentUserId) {
 			const task = createTask(currentUserId, "")
@@ -28,8 +28,8 @@ export function AddTaskButton() {
 		return null
 
 	return (
-		<a href="#new-task" onClick={(e) => onAddTaskClick(e)}>
+		<button className="btn btn-primary" onClick={() => onAddTaskClick()}>
 			Add Task
-		</a>
+		</button>
 	)
 }
