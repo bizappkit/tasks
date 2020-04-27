@@ -58,9 +58,13 @@ export function updateTask(taskId: string, changes: Partial<Task>): Promise<void
 	return tasksCollection.doc(taskId).update(changes)
 }
 
+export function deleteTask(taskId: string): Promise<void> {
+	return tasksCollection.doc(taskId).delete()
+}
+
 function getTaskFromDoc(data: any): Task {
-	let task = {...data} 
-	if(task.reminder?.date instanceof Firebase.firestore.Timestamp) {
+	let task = { ...data }
+	if (task.reminder?.date instanceof Firebase.firestore.Timestamp) {
 		task.reminder.date = task.reminder.date.toDate()
 	}
 	return task as Task

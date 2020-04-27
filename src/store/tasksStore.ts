@@ -1,9 +1,7 @@
 import { Task } from "../model/task";
 import Immutable from "immutable";
-import {TaskLoadedAction, TaskUpdatedAction, TaskAddedAction, TaskChangeRelationAction} from "./taskActions";
+import { TasksStoreAction } from "./taskActions";
 
-
-export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction;
 
 export interface TasksStoreState {
 	loading: boolean

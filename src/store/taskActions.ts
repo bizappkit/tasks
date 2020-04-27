@@ -1,5 +1,6 @@
-import { Action } from 'redux'
-import { Task } from "../model/task";
+import { Action, Dispatch } from 'redux'
+import { Task, TaskRef } from "../model/task";
+import { deleteTask } from '../sync';
 
 export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'
@@ -23,3 +24,15 @@ export interface TaskChangeRelationAction extends Action {
 	child: Task
 	relation: "subSteps" | "prevSteps" | "nextSteps"
 }
+
+export interface TaskDeleteAction extends Action {
+	type: 'tasks-delete'
+	task: Task
+}
+
+export interface TaskRestoreAction extends Action {
+	type: 'tasks-restore'
+	task: Task
+}
+
+export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction | TaskDeleteAction | TaskRestoreAction

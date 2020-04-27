@@ -7,8 +7,8 @@ import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import { TasksStoreAction } from "../../store/tasksStore";
-import { Link } from "react-router-dom";
+import { TasksStoreAction } from "../../store/taskActions";
+import { Link, useHistory } from "react-router-dom";
 import { Map } from "immutable"
 import { ActionButton } from "../common/ActionButton";
 import { useTranslation } from "react-i18next";
@@ -43,6 +43,7 @@ interface CompletionStatistics {
 
 export function TaskEdit(props: TaskEditProps) {
 
+    const history = useHistory()
     const { t } = useTranslation()
     const [state, setState] = useState<TaskEditState>({})
 
@@ -128,6 +129,12 @@ export function TaskEdit(props: TaskEditProps) {
         dispatch({ type: "tasks-new-task", task: newTask })
 
         setState({ ...state, subtaskTitle: "" })
+    }
+
+    const deleteTask = () => {
+        if (task)
+            dispatch({ type: "tasks-delete", task })
+        history.push("/")
     }
 
     return (
@@ -254,7 +261,7 @@ export function TaskEdit(props: TaskEditProps) {
                         <ActionButton icon="favorite_border">{t("Save as Template")}</ActionButton>
                         <ActionButton icon="done">{t("Complete")}</ActionButton>
                         <br />
-                        <ActionButton icon="delete" appearance="danger">{t("Delete")}</ActionButton>
+                        <ActionButton icon="delete" appearance="danger" onClick={deleteTask}>{t("Delete")}</ActionButton>
                     </Section>
                 </div>
             </div>

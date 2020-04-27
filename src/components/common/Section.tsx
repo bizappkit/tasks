@@ -22,7 +22,7 @@ export function Section(props: SectionProps) {
     return (
         <div style={{ marginBottom: "2rem" }}>
             <div className="d-flex">
-                <div className="flex-grow-1 d-flex" style={{ cursor: "pointer" }} onClick={() => toggleOpen()}>
+                <div className="flex-grow-1 d-flex" style={{ cursor: "pointer" }} onClick={toggleOpen}>
                     <i className="material-icons">{open ? "arrow_drop_down" : "arrow_right"}</i>
                     <h5>{props.title}</h5>
                 </div>

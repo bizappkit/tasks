@@ -6,7 +6,7 @@ import { CardList } from "../task/CardList";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TaskCard } from "../task/TaskCard";
-import { TasksStoreAction } from "../../store/tasksStore";
+import { TasksStoreAction } from "../../store/taskActions";
 
 
 export const RelatedTaskListPath = TaskDetailsPath + "/:filterMode"
@@ -30,7 +30,7 @@ export function TaskList() {
     const allTasks = tasks ? [...tasks.selected, ...tasks.other] : []
 
     const onTaskClick = (task: Task) => {
-        if (!contextTask || !tasksFilter.filterMode ) return
+        if (!contextTask || !tasksFilter.filterMode) return
         const type = selectedTasksSet.has(task) ? "tasks-remove-relations" : "tasks-add-relations"
         dispatch({ type, parent: contextTask, child: task, relation: tasksFilter.filterMode })
     }
