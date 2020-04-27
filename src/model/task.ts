@@ -9,9 +9,9 @@ export function createTask(owner: UserRef, title: string, notes?: string, remind
         title
     }
 
-    if(notes) task.notes = notes
-    if(parent) task.parent = parent;
-    if(reminder) task.reminder = reminder;
+    if (notes) task.notes = notes
+    if (parent) task.parent = parent;
+    if (reminder) task.reminder = reminder;
 
     return task;
 }
@@ -43,7 +43,7 @@ interface TaskBaseData {
     owner: UserRef
     notes?: string
     selectedFields?: TaskOptionalDataFields[]
-    
+    completedOn?: Date
 }
 
 interface TaskOptionalData {

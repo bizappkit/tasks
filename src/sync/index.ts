@@ -63,9 +63,16 @@ export function deleteTask(taskId: string): Promise<void> {
 }
 
 function getTaskFromDoc(data: any): Task {
+
 	let task = { ...data }
+
 	if (task.reminder?.date instanceof Firebase.firestore.Timestamp) {
 		task.reminder.date = task.reminder.date.toDate()
 	}
+
+	if (task.completedOn instanceof Firebase.firestore.Timestamp) {
+		task.completedOn = task.completedOn.toDate()
+	}
+
 	return task as Task
 }

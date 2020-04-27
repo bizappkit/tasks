@@ -131,6 +131,11 @@ export function TaskEdit(props: TaskEditProps) {
         setState({ ...state, subtaskTitle: "" })
     }
 
+    const completeTask = () => {
+        if (task)
+            dispatch({ type: "tasks-updated", taskId: task.id, payload: { completedOn: new Date() } })
+    }
+
     const deleteTask = () => {
         if (task)
             dispatch({ type: "tasks-delete", task })
@@ -259,7 +264,7 @@ export function TaskEdit(props: TaskEditProps) {
                     </Section>
                     <Section title={t("Actions")}>
                         <ActionButton icon="favorite_border">{t("Save as Template")}</ActionButton>
-                        <ActionButton icon="done">{t("Complete")}</ActionButton>
+                        <ActionButton icon="done" onClick={completeTask}>{t("Complete")}</ActionButton>
                         <br />
                         <ActionButton icon="delete" appearance="danger" onClick={deleteTask}>{t("Delete")}</ActionButton>
                     </Section>
