@@ -37,6 +37,7 @@ export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {
 
 	return tasksCollection
 		.where("owner", "==", userId)
+		.where("completedOn", "==", null)
 		.onSnapshot(
 			snapshot => next(snapshot.docs.map(d => {
 				return {

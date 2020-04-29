@@ -6,6 +6,7 @@ export function createTask(owner: UserRef, title: string, notes?: string, remind
         id: id || uuid(),
         owner: owner,
         createdOn: new Date(),
+        completedOn: null,
         title
     }
 
@@ -43,7 +44,7 @@ interface TaskBaseData {
     owner: UserRef
     notes?: string
     selectedFields?: TaskOptionalDataFields[]
-    completedOn?: Date
+    completedOn: Date | null
 }
 
 interface TaskOptionalData {
