@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContentRouting } from "./pages"
-import { subscribeToTasks, signInWithEmailAndPassword } from "../sync"
+import { signInWithEmailAndPassword } from "../sync"
 import { configureStore } from "../store"
 import { Provider } from 'react-redux';
 
@@ -20,9 +20,7 @@ class App extends React.Component {
 		}
 
 		if (userId) {
-			subscribeToTasks(userId, (tasks) => {
-				store.dispatch({ type: "tasks-loaded", tasks })
-			})
+			store.dispatch({type: "tasks-start-loading"})
 		}
 	}
 

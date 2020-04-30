@@ -1,15 +1,8 @@
-import { combineReducers, createStore, applyMiddleware } from "redux"
-import { taskListReducer } from "./tasksStore"
-import { userReducer } from "./userStore"
+import { createStore, applyMiddleware } from "redux"
 import { firestoreMiddleware } from "./firestoreMiddleware";
+import { rootReducer, RootReducerType } from "./rootReducer";
 
-
-const rootReducer = combineReducers({
-	taskList: taskListReducer,
-	user: userReducer
-})
-
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = RootReducerType
 
 export function configureStore() {
 	return createStore(

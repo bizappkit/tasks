@@ -1,6 +1,15 @@
 import { Action } from 'redux'
 import { Task } from "../model/task";
 
+export interface TaskStartLoadingAction extends Action {
+	type: 'tasks-start-loading'
+}
+
+export interface TaskLoadErrorAction extends Action {
+	type: 'tasks-loading-error'
+	error: string
+}
+
 export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'
 	tasks: Task[]
@@ -34,4 +43,6 @@ export interface TaskRestoreAction extends Action {
 	task: Task
 }
 
-export type TasksStoreAction = TaskLoadedAction | TaskUpdatedAction | TaskAddedAction | TaskChangeRelationAction | TaskDeleteAction | TaskRestoreAction
+export type TasksStoreAction = 
+	TaskStartLoadingAction | TaskLoadErrorAction | TaskLoadedAction | TaskUpdatedAction | TaskAddedAction |
+	TaskChangeRelationAction | TaskDeleteAction | TaskRestoreAction
