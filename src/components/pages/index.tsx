@@ -22,7 +22,7 @@ function ContentRoutingInternal() {
 
     const { t } = useTranslation()
     const match = useRouteMatch<Params>(Paths)
-    const tasks = useSelector((state: RootState) => state.tasks.idToTask)
+    const tasks = useSelector((state: RootState) => state.taskList.idToTask)
     const params = match?.params;
 
     const currentTask = (params?.taskId && tasks?.get(params.taskId)) || undefined

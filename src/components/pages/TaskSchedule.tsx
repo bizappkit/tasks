@@ -11,7 +11,7 @@ export const SchedulePath = "/schedule"
 
 export function SchedulePage() {
 
-	const tasks = useSelector((state: RootState) => state.tasks.idToTask)
+	const tasks = useSelector((state: RootState) => state.taskList.idToTask)
 	const scheduleItems = getScheduleItems(new Date(), tasks?.values())
 
 	return (

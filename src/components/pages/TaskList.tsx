@@ -19,7 +19,7 @@ export function TaskList() {
 
     const dispatch: Dispatch<TasksStoreAction> = useDispatch()
     const { taskId, filterMode } = useParams()
-    const tasksState = useSelector((state: RootState) => state.tasks)
+    const tasksState = useSelector((state: RootState) => state.taskList)
 
     const tasksFilter = { contextTaskId: taskId, filterMode: getTaskListFilterMode(filterMode) }
     const tasks = getSelectedTasks(tasksState.idToTask, tasksFilter)

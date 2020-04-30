@@ -48,7 +48,7 @@ export function TaskEdit(props: TaskEditProps) {
     const [state, setState] = useState<TaskEditState>({})
 
     const currentUser = useSelector((state: RootState) => state.user.userId)
-    const tasks = useSelector((state: RootState) => state.tasks.idToTask)
+    const tasks = useSelector((state: RootState) => state.taskList.idToTask)
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
 

@@ -1,6 +1,5 @@
-import { Action, Dispatch } from 'redux'
-import { Task, TaskRef } from "../model/task";
-import { deleteTask } from '../sync';
+import { Action } from 'redux'
+import { Task } from "../model/task";
 
 export interface TaskLoadedAction extends Action {
 	type: 'tasks-loaded'

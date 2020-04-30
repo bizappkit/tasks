@@ -12,7 +12,7 @@ const initialState: TasksStoreState = {
 	loading: true
 }
 
-export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
+export function taskListReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
 		case 'tasks-loaded':
 			return {
