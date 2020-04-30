@@ -1,5 +1,5 @@
 import Firebase from "firebase";
-import { Task } from "../model/task";
+import { Task, TaskRef } from "../model/task";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyANjSC-PcKqSQSTCq-j039vgoT16yltHb4",
@@ -31,6 +31,13 @@ export async function signInWithEmailAndPassword(email: string, password: string
 	const result = await auth.signInWithEmailAndPassword(email, password)
 
 	return result.user?.uid
+}
+
+export type TasksFilter = {
+	currentTask: TaskRef
+} | {
+	completion: "incompleted" | "completed" | "all"
+	orderBy: "reminder.date" | "createdOn" | "title"
 }
 
 export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {

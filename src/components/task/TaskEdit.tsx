@@ -174,7 +174,7 @@ export function TaskEdit(props: TaskEditProps) {
                     </div>
 
                     <FormListSection
-                        items={task?.reminder ? [task.reminder] : []}
+                        items={task?.reminder?.date ? [task.reminder] : []}
                         sectionTitle="Reminders"
                         mainAction={{
                             text: "Add Reminder",

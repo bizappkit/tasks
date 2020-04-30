@@ -5,11 +5,19 @@ const OneMinuteValue = 60 * OneSecondValue;
 const OneHourValue = 60 * OneMinuteValue;
 const OneDayValue = 24 * OneHourValue;
 
-export function toShortTimeStr(time: Date): string {
+export function toShortTimeStr(time: Date | undefined | null): string | undefined | null {
+	
+	if(!time)
+		return time;
+
 	return time.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric' });
 }
 
-export function toShortDateAndTime(time: Date): string {
+export function toShortDateAndTime(time: Date | undefined | null): string | undefined | null  {
+	
+	if(!time)
+		return time;
+
 	return time.toLocaleDateString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
 }
 

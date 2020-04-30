@@ -7,7 +7,10 @@ export function createTask(owner: UserRef, title: string, notes?: string, remind
         owner: owner,
         createdOn: new Date(),
         completedOn: null,
-        title
+        title,
+        reminder: {
+            date: null
+        }
     }
 
     if (notes) task.notes = notes
@@ -60,7 +63,7 @@ export type TaskOptionalDataFields = keyof TaskOptionalData
 export type Task = TaskBaseData & TaskOptionalData
 
 export interface Reminder {
-    date: Date
+    date: Date | null
     repeat?: ReminderRepeatSettings
 }
 
@@ -115,7 +118,7 @@ export function getScheduleItems(now: Date, tasks?: IterableIterator<Task>): Sch
 
     if (tasks) {
         for (let t of tasks) {
-            if (t.reminder) {
+            if (t.reminder?.date) {
                 scheduleItems.push({
                     taskId: t.id,
                     time: t.reminder.date,
