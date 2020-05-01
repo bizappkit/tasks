@@ -34,9 +34,10 @@ export async function signInWithEmailAndPassword(email: string, password: string
 }
 
 export type TasksFilter = {
-	currentTask: TaskRef
+	tasks: TaskRef[]
 } | {
-	completion: "incompleted" | "completed" | "all"
+	status: "all" | "active" | "pending" | "archived"
+	completion: "all" | "incompleted" | "completed"
 	orderBy: "reminder.date" | "createdOn" | "title"
 }
 
