@@ -7,7 +7,7 @@ import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import { TasksStoreAction } from "../../store/taskActions";
+import { TasksStoreAction } from "../../store/tasksActions";
 import { Link, useHistory } from "react-router-dom";
 import { Map } from "immutable"
 import { ActionButton } from "../common/ActionButton";

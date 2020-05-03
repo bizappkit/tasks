@@ -3,7 +3,7 @@ import { createTask } from "../../model/task"
 import { Dispatch } from "redux"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "../../store"
-import { TasksStoreAction } from "../../store/taskActions"
+import { TasksStoreAction } from "../../store/tasksActions"
 import { getTaskLink } from "../pages/TaskPage"
 import { useHistory } from "react-router-dom"
 import { useTranslation } from "react-i18next";

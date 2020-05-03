@@ -1,6 +1,6 @@
 import { Task } from "../model/task";
 import Immutable from "immutable";
-import { TasksStoreAction } from "./taskActions";
+import { TasksStoreAction } from "./tasksActions";
 
 
 export interface TasksStoreState {
@@ -12,7 +12,7 @@ const initialState: TasksStoreState = {
 	loading: true
 }
 
-export function taskListReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
+export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
 		case 'tasks-loaded':
 			return {

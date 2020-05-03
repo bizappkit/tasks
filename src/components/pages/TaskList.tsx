@@ -6,7 +6,7 @@ import { CardList } from "../task/CardList";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { TaskCard } from "../task/TaskCard";
-import { TasksStoreAction } from "../../store/taskActions";
+import { TasksStoreAction } from "../../store/tasksActions";
 
 
 export const RelatedTaskListPath = TaskDetailsPath + "/:filterMode"

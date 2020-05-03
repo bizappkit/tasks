@@ -1,5 +1,5 @@
 import { Dispatch, MiddlewareAPI } from "redux"
-import { TasksStoreAction } from "./taskActions"
+import { TasksStoreAction } from "./tasksActions"
 import { subscribeToTasks, updateTask, insertTask, deleteTask } from "../sync";
 import { RootReducerType } from "./rootReducer";
 import i18n from "../model/localization";
