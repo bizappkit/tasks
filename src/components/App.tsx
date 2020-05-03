@@ -1,12 +1,11 @@
 import React from 'react';
 import { ContentRouting } from "./pages"
 import { signInWithEmailAndPassword } from "../sync"
-import { configureStore } from "../store"
 import { Provider } from 'react-redux';
+import { store } from '../store';
 
 import '../assets/css/theme.css'
 
-const store = configureStore();
 
 class App extends React.Component {
 

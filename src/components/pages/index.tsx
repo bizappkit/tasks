@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
-import { AddTaskButton } from "../task/AddTaskButton";
+import { MainButton } from "../task/MainButton";
 import { useTranslation } from "react-i18next";
 
 export function ContentRouting() {
@@ -45,7 +45,7 @@ function ContentRoutingInternal() {
                 </ol>
 
                 <div>
-                    <AddTaskButton />
+                    <MainButton />
                 </div>
 
             </div>

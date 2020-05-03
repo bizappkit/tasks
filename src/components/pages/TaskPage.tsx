@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TaskEdit } from '../task/TaskEdit';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
+import { useRootDispatch } from '../../store';
+import { useTranslation } from 'react-i18next';
 
 export const TaskDetailsPath = "/details/:taskId"
 
@@ -16,6 +18,17 @@ const getNextStepsLink = (id: string) => getTaskListLink(id, "nextSteps")
 export function TaskPage() {
 
 	const { taskId } = useParams()
+	const { t } = useTranslation()
+	const dispatch = useRootDispatch()
+	const history = useHistory()
+
+	const doneClick = () => {
+		history.goBack()
+	}
+
+	useEffect(() => {
+		dispatch({type: "mainButton-show", text: t("Done"), handler: doneClick})
+	})
 
 	return (
 		<TaskEdit

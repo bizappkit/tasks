@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CardList } from '../task/CardList';
-import { ScheduleItem, getScheduleItems } from '../../model/task';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { ScheduleItem, getScheduleItems, createTask } from '../../model/task';
+import { useRootDispatch, useRootSelector } from '../../store';
 import { getTaskLink } from './TaskPage';
 import { TaskCard } from '../task/TaskCard';
 import { toShortTimeStr } from "../../utils/dateTimeUtils";
+import { useTranslation } from "react-i18next";
+import { useHistory } from 'react-router-dom';
 
 export const SchedulePath = "/schedule"
 
 export function SchedulePage() {
 
-	const tasks = useSelector((state: RootState) => state.taskList.idToTask)
+	const { t } = useTranslation()
+	const tasks = useRootSelector((state) => state.taskList.idToTask)
+	const user = useRootSelector((state) => state.user)
+
 	const scheduleItems = getScheduleItems(new Date(), tasks?.values())
+
+	const dispatch = useRootDispatch()
+	const history = useHistory()
+
+	const addTaskClick = () => {
+		if(user.userId) {
+			const task = createTask(user.userId, "")
+			dispatch({type: "tasks-new-task", task})
+			history.push(getTaskLink(task.id))
+		}
+	}
+
+	useEffect(() => {
+		dispatch({type: "mainButton-show", text: t("Add Task"), handler: addTaskClick})
+	})
 
 	return (
 		<CardList
