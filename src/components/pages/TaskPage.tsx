@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { TaskEdit } from '../task/TaskEdit';
 import { useParams, useHistory } from 'react-router-dom';
 import { getTaskListLink } from "./TaskList";
-import { useRootDispatch } from '../../store';
+import { useRootDispatch, useRootSelector } from '../../store';
 import { useTranslation } from 'react-i18next';
 
 export const TaskDetailsPath = "/details/:taskId"
@@ -18,17 +18,27 @@ const getNextStepsLink = (id: string) => getTaskListLink(id, "nextSteps")
 export function TaskPage() {
 
 	const { taskId } = useParams()
+	const { userId } = useRootSelector(state => state.user)
 	const { t } = useTranslation()
 	const dispatch = useRootDispatch()
 	const history = useHistory()
 
-	const doneClick = () => {
-		history.goBack()
-	}
+	useEffect(() => {
+
+		const doneClick = () => {
+			history.goBack()
+		}
+
+		dispatch({ type: "mainButton-show", text: t("Done"), handler: doneClick })
+
+	}, [userId, dispatch, history, t])
+
 
 	useEffect(() => {
-		dispatch({type: "mainButton-show", text: t("Done"), handler: doneClick})
-	})
+		if (taskId)
+			dispatch({ type: "tasks-start-loading", filter: { tasks: [taskId] } })
+
+	}, [userId, taskId, dispatch])
 
 	return (
 		<TaskEdit

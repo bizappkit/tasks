@@ -5,10 +5,10 @@ import { RootReducerType } from "./rootReducer";
 import i18n from "../model/localization";
 
 
-export function firestoreMiddleware(api: MiddlewareAPI<Dispatch<TasksStoreAction>, RootReducerType>) {
+export function firestoreMiddleware(api: MiddlewareAPI<any, RootReducerType>) {
 
 	let unsubscribeToTaskList: () => void | undefined
-	
+
 	return function (next: Dispatch<TasksStoreAction>) {
 		return function (action: TasksStoreAction | {}) {
 
@@ -16,16 +16,19 @@ export function firestoreMiddleware(api: MiddlewareAPI<Dispatch<TasksStoreAction
 				switch (action.type) {
 					case "tasks-start-loading":
 
-						if(unsubscribeToTaskList)
+						if (unsubscribeToTaskList) {
+							console.log("Unsubscribe data changes")
 							unsubscribeToTaskList()
+						}
 
 						const state = api.getState()
 
-						if(state.user.userId) {
-							unsubscribeToTaskList = subscribeToTasks(state.user.userId,
-								docs => next({type: "tasks-loaded", tasks: docs}))
+						if (state.user.userId) {
+							console.log("Subscribe to filter:", state.taskList.filter)
+							unsubscribeToTaskList = subscribeToTasks(action.filter,
+								docs => next({ type: "tasks-loaded", tasks: docs }))
 						} else {
-							next({type: "tasks-loading-error", error: i18n.t("User is not authenticated")})
+							next({ type: "tasks-loading-error", error: i18n.t("User is not authenticated") })
 						}
 
 						break

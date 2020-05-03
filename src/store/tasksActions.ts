@@ -1,8 +1,10 @@
 import { Action } from 'redux'
 import { Task } from "../model/task";
+import { TaskFilter } from '../sync';
 
 export interface TaskStartLoadingAction extends Action {
 	type: 'tasks-start-loading'
+	filter: TaskFilter
 }
 
 export interface TaskLoadErrorAction extends Action {
@@ -43,6 +45,6 @@ export interface TaskRestoreAction extends Action {
 	task: Task
 }
 
-export type TasksStoreAction = 
+export type TasksStoreAction =
 	TaskStartLoadingAction | TaskLoadErrorAction | TaskLoadedAction | TaskUpdatedAction | TaskAddedAction |
 	TaskChangeRelationAction | TaskDeleteAction | TaskRestoreAction

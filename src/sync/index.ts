@@ -33,28 +33,49 @@ export async function signInWithEmailAndPassword(email: string, password: string
 	return result.user?.uid
 }
 
-export type TasksFilter = {
+export type TaskFilter = ({
 	tasks: TaskRef[]
 } | {
-	status: "all" | "active" | "pending" | "archived"
-	completion: "all" | "incompleted" | "completed"
-	orderBy: "reminder.date" | "createdOn" | "title"
+	//status: "all" | "active" | "pending"
+	completion: "all" | "incompleted"
+}) & {
+	orderBy?: "reminder.date" | "createdOn" | "title"
 }
 
-export function subscribeToTasks(userId: string, next: (docs: Task[]) => void) {
+export const scheduleFilter: TaskFilter = {
+	completion: "incompleted"
+}
 
-	return tasksCollection
-		.where("owner", "==", userId)
-		.where("completedOn", "==", null)
-		.onSnapshot(
-			snapshot => next(snapshot.docs.map(d => {
-				return {
-					...getTaskFromDoc(d.data()),
-					id: d.id
-				}
-			})),
-			error => console.error(error)
-		)
+export function subscribeToTasks(filter = scheduleFilter, next: (docs: Task[]) => void) {
+
+	if (!auth.currentUser)
+		throw new Error("auth.currentUser is undefined.")
+
+	let query = tasksCollection.where("owner", "==", auth.currentUser.uid);
+
+	if ("tasks" in filter) {
+		query = query.where("id", "in", filter.tasks)
+	} else {
+		if (filter.completion === "incompleted")
+			query = query.where("completedOn", "==", null)
+
+		if (filter.orderBy === "createdOn")
+			query = query.orderBy("createdOn", "desc")
+		else if (filter.orderBy === "title")
+			query = query.orderBy("title", "asc")
+		// else
+		// 	query = query.orderBy("reminder.date", "asc")
+	}
+
+	return query.onSnapshot(
+		snapshot => next(snapshot.docs.map(d => {
+			return {
+				...getTaskFromDoc(d.data()),
+				id: d.id
+			}
+		})),
+		error => console.error(error)
+	)
 }
 
 export async function insertTask(task: Task): Promise<void> {

@@ -18,9 +18,9 @@ class App extends React.Component {
 			store.dispatch({ type: "user-set", userId })
 		}
 
-		if (userId) {
-			store.dispatch({type: "tasks-start-loading"})
-		}
+		// if (userId) {
+		// 	store.dispatch({ type: "tasks-start-loading", filter: { completion: "incompleted" } })
+		// }
 	}
 
 	render() {

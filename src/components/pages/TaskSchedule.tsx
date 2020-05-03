@@ -21,17 +21,19 @@ export function SchedulePage() {
 	const dispatch = useRootDispatch()
 	const history = useHistory()
 
-	const addTaskClick = () => {
-		if(user.userId) {
-			const task = createTask(user.userId, "")
-			dispatch({type: "tasks-new-task", task})
-			history.push(getTaskLink(task.id))
-		}
-	}
-
 	useEffect(() => {
-		dispatch({type: "mainButton-show", text: t("Add Task"), handler: addTaskClick})
-	})
+
+		const addTaskClick = () => {
+			if (user.userId) {
+				const task = createTask(user.userId, "")
+				dispatch({ type: "tasks-new-task", task })
+				history.push(getTaskLink(task.id))
+			}
+		}
+
+		dispatch({ type: "mainButton-show", text: t("Add Task"), handler: addTaskClick })
+		dispatch({ type: "tasks-start-loading", filter: { completion: "incompleted" } })
+	}, [user.userId, dispatch, t, history])
 
 	return (
 		<CardList

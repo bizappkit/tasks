@@ -1,19 +1,28 @@
 import { Task } from "../model/task";
 import Immutable from "immutable";
 import { TasksStoreAction } from "./tasksActions";
+import { TaskFilter } from "../sync";
 
 
 export interface TasksStoreState {
 	loading: boolean
+	filter?: TaskFilter
 	idToTask?: Immutable.Map<string, Task>
 }
 
 const initialState: TasksStoreState = {
-	loading: true
+	loading: false
 }
 
 export function tasksReducer(state = initialState, action: TasksStoreAction): TasksStoreState {
 	switch (action.type) {
+		case 'tasks-start-loading':
+			return {
+				...state,
+				loading: true,
+				filter: action.filter
+			}
+
 		case 'tasks-loaded':
 			return {
 				...state,
