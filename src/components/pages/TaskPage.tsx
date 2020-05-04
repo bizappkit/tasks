@@ -25,17 +25,19 @@ export function TaskPage() {
 
 	useEffect(() => {
 
-		const doneClick = () => {
-			history.goBack()
-		}
+		if (userId) {
+			const doneClick = () => {
+				history.goBack()
+			}
 
-		dispatch({ type: "mainButton-show", text: t("Done"), handler: doneClick })
+			dispatch({ type: "mainButton-show", text: t("Done"), handler: doneClick })
+		}
 
 	}, [userId, dispatch, history, t])
 
 
 	useEffect(() => {
-		if (taskId)
+		if (taskId && userId)
 			dispatch({ type: "tasks-start-loading", filter: { tasks: [taskId] } })
 
 	}, [userId, taskId, dispatch])
