@@ -33,6 +33,8 @@ export function SchedulePage() {
 			}
 
 			dispatch({ type: "mainButton-show", text: t("Add Task"), handler: addTaskClick })
+		} else {
+			dispatch({ type: "mainButton-hide" })
 		}
 
 	}, [user.userId, dispatch, t, history])
