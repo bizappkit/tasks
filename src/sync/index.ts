@@ -1,4 +1,8 @@
-import Firebase from "firebase";
+import * as Firebase from 'firebase/app';
+import "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+
 import { Task, TaskRef } from "../model/task";
 
 const firebaseConfig = {

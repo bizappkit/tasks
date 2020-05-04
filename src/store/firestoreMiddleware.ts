@@ -14,17 +14,15 @@ export function firestoreMiddleware(api: MiddlewareAPI<any, RootReducerType>) {
 
 			if ("type" in action) {
 				switch (action.type) {
+
 					case "tasks-start-loading":
 
-						if (unsubscribeToTaskList) {
-							console.log("Unsubscribe data changes")
-							unsubscribeToTaskList()
-						}
+						if (unsubscribeToTaskList !== undefined) unsubscribeToTaskList()
 
 						const state = api.getState()
 
 						if (state.user.userId) {
-							console.log("Subscribe to filter:", state.taskList.filter)
+							console.log("Subscribe to Tasks with filter:", state.taskList.filter)
 							unsubscribeToTaskList = subscribeToTasks(action.filter,
 								docs => next({ type: "tasks-loaded", tasks: docs }))
 						} else {
