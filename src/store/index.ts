@@ -1,12 +1,14 @@
 import { createStore, applyMiddleware } from "redux"
 import { firestoreMiddleware } from "./firestoreMiddleware";
+import { logMiddleware } from "./logMiddleware";
 import { rootReducer, RootReducerType } from "./rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 function configureStore() {
 	return createStore(
-		rootReducer, 
+		rootReducer,
 		applyMiddleware(
+			logMiddleware,
 			firestoreMiddleware
 		)
 	)
