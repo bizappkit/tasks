@@ -54,7 +54,7 @@ export function subscribeToTasks(filter = scheduleFilter, next: (docs: Task[]) =
 	let query = tasksCollection.where("owner", "==", auth.currentUser.uid);
 
 	if ("tasks" in filter) {
-		query = query.where("id", "in", filter.tasks)
+		tasksCollection.where(Firebase.firestore.FieldPath.documentId(), "in", filter.tasks)
 	} else {
 		if (filter.completion === "incompleted")
 			query = query.where("completedOn", "==", null)
