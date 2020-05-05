@@ -147,13 +147,17 @@ export function TaskEdit(props: TaskEditProps) {
         history.push("/")
     }
 
+    if (!task) {
+        return <div>Loading...</div>
+    }
+
     return (
         <form>
             <div className="row">
                 <div className="col-sm-8">
                     <div className="content-list">
                         <TextareaAutosize
-                            disabled={task === undefined}
+                            autoFocus
                             placeholder="Task Title"
                             className="form-control"
                             style={{ fontSize: "2.5rem" }}
@@ -161,42 +165,44 @@ export function TaskEdit(props: TaskEditProps) {
                             onChange={(e) => updateTask({ title: e.currentTarget.value })}
                         />
                     </div>
+
                     {originTask &&
                         <p className="lead">
                             Origin Task:&nbsp;
                             <Link to={props.getTaskLink(originTask?.id)}>{originTask.title}</Link>
                         </p>
                     }
-                    <div className="content-list">
-                        <label>Notes</label>
+
+                    <Section title={t("Notes")} style={{ marginTop: "2rem" }}>
                         <TextareaAutosize
-                            disabled={task === undefined}
                             minRows={4}
                             className="form-control"
                             value={task?.notes}
                             onChange={(e) => updateTask({ notes: e.currentTarget.value })}
                         />
-                    </div>
+                    </Section>
 
-                    <FormListSection
-                        items={task?.reminder?.date ? [task.reminder] : []}
-                        sectionTitle="Reminders"
-                        mainAction={{
-                            text: "Add Reminder",
-                            handler: (e) => editReminder(e)
-                        }}
-                    >
-                        {(reminder) => (
-                            <a
-                                href="/"
-                                onClick={(e) => editReminder(e)}
-                            >
-                                <div><strong>{toShortDateAndTime(reminder.date)}</strong></div>
-                            </a>
-                        )}
-                    </FormListSection>
+                    {task.reminder &&
+                        <FormListSection
+                            items={task?.reminder?.date ? [task.reminder] : []}
+                            sectionTitle="Reminders"
+                            mainAction={{
+                                text: "Add Reminder",
+                                handler: (e) => editReminder(e)
+                            }}
+                        >
+                            {(reminder) => (
+                                <a
+                                    href="/"
+                                    onClick={(e) => editReminder(e)}
+                                >
+                                    <div><strong>{toShortDateAndTime(reminder.date)}</strong></div>
+                                </a>
+                            )}
+                        </FormListSection>
+                    }
 
-                    {task &&
+                    {task.subtasks &&
                         <FormListSection
                             items={subtasks}
                             sectionTitle="Steps"
@@ -212,7 +218,7 @@ export function TaskEdit(props: TaskEditProps) {
                         </FormListSection>
                     }
 
-                    {task &&
+                    {task.subtasks &&
                         <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
                             <input
                                 type="text"
@@ -229,7 +235,7 @@ export function TaskEdit(props: TaskEditProps) {
                         </div>
                     }
 
-                    {task &&
+                    {task.prevSteps &&
                         <FormListSection
                             items={prevSteps}
                             sectionTitle="Prev Steps"
@@ -245,7 +251,7 @@ export function TaskEdit(props: TaskEditProps) {
                         </FormListSection>
                     }
 
-                    {task &&
+                    {task.nextSteps &&
                         <FormListSection
                             items={nextSteps}
                             sectionTitle="Next Steps"

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, CSSProperties } from "react"
 import { Collapse } from "react-bootstrap"
 
 interface SectionProps {
@@ -6,6 +6,7 @@ interface SectionProps {
     children: React.ReactNode
     open?: boolean
     onOpenChanged?: (open: boolean) => void
+    style?: CSSProperties
 }
 
 export function Section(props: SectionProps) {
@@ -20,15 +21,15 @@ export function Section(props: SectionProps) {
     }
 
     return (
-        <div style={{ marginBottom: (open ? "2rem" : "0.5rem") }}>
+        <div style={{ ...props.style, marginBottom: (open ? "2rem" : "0.5rem") }}>
             <div className="d-flex">
                 <div className="flex-grow-1 d-flex" style={{ cursor: "pointer" }} onClick={toggleOpen}>
                     <i className="material-icons">{open ? "arrow_drop_down" : "arrow_right"}</i>
                     <h5>{props.title}</h5>
                 </div>
-                {open &&
+                {/* {open &&
                     <i className="material-icons">edit</i>
-                }
+                } */}
             </div>
             <Collapse in={open}>
                 <div>
