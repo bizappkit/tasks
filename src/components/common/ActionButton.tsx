@@ -3,11 +3,16 @@ import React from "react";
 interface ActionButtonProps {
     icon: string
     children: React.ReactNode
+    visible?: boolean
     appearance?: ("primary" | "secondary" | "danger")
     onClick?: () => void
 }
 
 export function ActionButton(props: ActionButtonProps) {
+    
+    if(props.visible === false)
+        return null
+
     return (
         <button
             type="button"
