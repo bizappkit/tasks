@@ -1,7 +1,6 @@
 import React, { useState, Dispatch } from "react";
 import { createTask, Task, Reminder, TaskRef } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
-import { toShortDateAndTime } from '../../utils/dateTimeUtils';
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
@@ -15,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { Section } from "../common/Section";
 
 import "./TaskEdit.css"
+import { toShortDateAndTime } from "../../utils/dateTimeUtils";
 
 
 interface TaskEditProps {
@@ -62,29 +62,19 @@ export function TaskEdit(props: TaskEditProps) {
             dispatch({ type: 'tasks-updated', taskId: props.taskId, payload })
     }
 
-    const editReminder = (event?: React.MouseEvent) => {
+    const addReminder = (event?: React.MouseEvent) => {
 
         event?.preventDefault()
 
-        let selectedReminder: Reminder
+        const now = new Date()
+        const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
+        const reminder = { date: tomorrowMorning };
 
-        if (task?.reminder) {
-            selectedReminder = task.reminder
-        } else {
-            const now = new Date()
-            const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
-            selectedReminder = { date: tomorrowMorning };
-        }
-
-        setState({ ...state, selectedReminder })
+        updateTask({reminder})
     }
 
     const deleteReminder = () => {
-        const reminder = state.selectedReminder;
-        if (reminder) {
-            updateTask({ reminder: undefined })
-            setState({ selectedReminder: undefined })
-        }
+        updateTask({ reminder: null })
     }
 
     const updateSelectedReminder = (payload: Partial<Reminder>) => {
@@ -183,23 +173,14 @@ export function TaskEdit(props: TaskEditProps) {
                     </Section>
 
                     {task.reminder &&
-                        <FormListSection
-                            items={task?.reminder?.date ? [task.reminder] : []}
-                            sectionTitle="Reminders"
-                            mainAction={{
-                                text: "Add Reminder",
-                                handler: (e) => editReminder(e)
-                            }}
+                        <Section
+                            title={t("Reminder")}
+                            value={toShortDateAndTime(task.reminder.date) || undefined}
+                            mainActionIcon="delete"
+                            onMainActionClick={deleteReminder}
                         >
-                            {(reminder) => (
-                                <a
-                                    href="/"
-                                    onClick={(e) => editReminder(e)}
-                                >
-                                    <div><strong>{toShortDateAndTime(reminder.date)}</strong></div>
-                                </a>
-                            )}
-                        </FormListSection>
+                            <ReminderEdit reminder={task.reminder} onSave={(r) => updateTask({reminder: r})} />
+                        </Section>
                     }
 
                     {task.subtasks &&
@@ -270,7 +251,7 @@ export function TaskEdit(props: TaskEditProps) {
 
                 <div className="col-sm-4">
                     <Section title={t("Add to Task")}>
-                        <ActionButton icon="alarm">{t("Reminder")}</ActionButton>
+                        <ActionButton icon="alarm" visible={!task.reminder} onClick={addReminder}>{t("Reminder")}</ActionButton>
                         <ActionButton icon="playlist_add_check">{t("Steps")}</ActionButton>
                     </Section>
                     <Section title={t("Actions")}>

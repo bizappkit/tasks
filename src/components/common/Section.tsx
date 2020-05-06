@@ -3,10 +3,13 @@ import { Collapse } from "react-bootstrap"
 
 interface SectionProps {
     title: string
+    value?: string 
     children: React.ReactNode
     open?: boolean
     onOpenChanged?: (open: boolean) => void
     style?: CSSProperties
+    mainActionIcon?: string
+    onMainActionClick?: () => void
 }
 
 export function Section(props: SectionProps) {
@@ -27,9 +30,12 @@ export function Section(props: SectionProps) {
                     <i className="material-icons">{open ? "arrow_drop_down" : "arrow_right"}</i>
                     <h5>{props.title}</h5>
                 </div>
-                {/* {open &&
-                    <i className="material-icons">edit</i>
-                } */}
+                {props.mainActionIcon && open &&
+                    <i className="material-icons" style={{ cursor: "pointer" }} onClick={props.onMainActionClick}>{props.mainActionIcon}</i>
+                }
+                {!open && props.value !== undefined &&
+                    <span>{props.value}</span>
+                }
             </div>
             <Collapse in={open}>
                 <div>

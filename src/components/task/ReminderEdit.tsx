@@ -49,14 +49,14 @@ const times: Time[] = Array(24 * 4).fill(0).map((value, index) => {
 
 interface ReminderEditProps {
     reminder: Reminder
-    onSave: (changes: Partial<Reminder>) => void
+    onSave: (changes: Reminder) => void
     onDelete?: () => void
 }
 
 export function ReminderEdit(props: ReminderEditProps) {
 
     return (
-        <form>
+        <div>
             <div className="form-group">
                 <label>Remind me on</label>
                 <Row>
@@ -77,7 +77,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date || new Date(), e.currentTarget.value) })}
                         >
                             {times.map(t =>
-                                <option value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>
+                                <option key={t.hours + ":" + t.minutes} value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>
                             )}
                         </Form.Control>
                     </Col>
@@ -170,7 +170,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                     </Row>
                 </div>
             )}
-        </form>
+        </div>
     )
 }
 

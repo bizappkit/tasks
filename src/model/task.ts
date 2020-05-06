@@ -51,7 +51,7 @@ interface TaskBaseData {
 }
 
 interface TaskOptionalData {
-    reminder?: Reminder
+    reminder?: Reminder | null
     parent?: TaskRef
     subtasks?: TaskRef[]
     prevSteps?: TaskRef[]
