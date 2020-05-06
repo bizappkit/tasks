@@ -44,15 +44,17 @@ export function SchedulePage() {
 			dispatch({ type: "tasks-start-loading", filter: { completion: "incompleted" } })
 	}, [user.userId, dispatch])
 
+	const now = new Date()
+
 	return (
 		<CardList
 			items={scheduleItems}
-			getItemKey={r => r.reminderId || r.taskId}
-			getGroupKey={r => getDate(r.time)}
-			getGroupTitle={getReminderGroupTitle}
+			getItemKey={r => r.taskId}
+			getGroupKey={r => getGroupKey(now, r.time)}
+			getGroupTitle={r => getGroupTitle(now, r)}
 			renderItem={r => (
 				<TaskCard
-					key={r.reminderId || r.taskId}
+					key={r.taskId}
 					icon="check"
 					title={
 						<span>
@@ -72,14 +74,24 @@ export function SchedulePage() {
 	)
 }
 
-function getDate(dateTime?: Date) {
+function getGroupKey(currentTime: Date, dateTime?: Date) {
 
 	if (dateTime === undefined)
-		return -1;
+		return -1
+
+	if (dateTime < currentTime)
+		return -2
 
 	return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate()).valueOf();
 }
 
-function getReminderGroupTitle(reminder: ScheduleItem): string {
-	return reminder.time?.toLocaleDateString() || "Unscheduled";
+function getGroupTitle(currentTime: Date, reminder: ScheduleItem): string {
+
+	if (reminder.time === undefined)
+		return "Unscheduled"
+
+	if (reminder.time < currentTime)
+		return "Overdue"
+
+	return reminder.time.toLocaleDateString()
 }

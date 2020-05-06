@@ -118,21 +118,12 @@ export function getScheduleItems(now: Date, tasks?: IterableIterator<Task>): Sch
 
     if (tasks) {
         for (let t of tasks) {
-            if (t.reminder?.date) {
-                scheduleItems.push({
-                    taskId: t.id,
-                    time: t.reminder.date,
-                    title: t.title,
-                    subtitle: t.notes
-                })
-            } else {
-                scheduleItems.push({
-                    reminderId: t.id,
-                    taskId: t.id,
-                    title: t.title,
-                    subtitle: t.notes,
-                })
-            }
+            scheduleItems.push({
+                taskId: t.id,
+                time: t.reminder?.date || undefined,
+                title: t.title,
+                subtitle: t.notes
+            })
         }
 
         scheduleItems.sort((a, b) => compareScheduleItems(now, a, b))
