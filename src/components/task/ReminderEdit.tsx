@@ -63,6 +63,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                     <Col>
                         <Form.Control
                             type="date"
+                            as="input"
                             placeholder="Date"
                             value={moment(props.reminder.date || new Date()).format("YYYY-MM-DD")}
                             onChange={(e) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date || new Date(), e.currentTarget.value) })}
