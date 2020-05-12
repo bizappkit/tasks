@@ -65,7 +65,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             type="date"
                             placeholder="Date"
                             value={moment(props.reminder.date || new Date()).format("YYYY-MM-DD")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date || new Date(), e.currentTarget.value) })}
+                            onChange={(e) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date || new Date(), e.currentTarget.value) })}
                         />
                     </Col>
                     <Col>
@@ -74,7 +74,7 @@ export function ReminderEdit(props: ReminderEditProps) {
                             as="select"
                             placeholder="Time"
                             value={moment(props.reminder.date || new Date()).format("HH:mm")}
-                            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date || new Date(), e.currentTarget.value) })}
+                            onChange={(e) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date || new Date(), e.currentTarget.value) })}
                         >
                             {times.map(t =>
                                 <option key={t.hours + ":" + t.minutes} value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>
