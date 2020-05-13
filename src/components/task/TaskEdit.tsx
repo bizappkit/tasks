@@ -4,8 +4,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
-import { useSelector } from "react-redux";
-import { RootState, useRootDispatch } from "../../store";
+import { useRootDispatch, useRootSelector } from "../../store";
 import { Link, useHistory } from "react-router-dom";
 import { Map } from "immutable"
 import { ActionButton } from "../common/ActionButton";
@@ -13,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Section } from "../common/Section";
 import { toShortDateAndTime } from "../../utils/dateTimeUtils";
 import { TaskCard } from "./TaskCard";
+import { arrayEquals } from "../../utils/arrayUtils";
 
 import "./TaskEdit.css"
 
@@ -47,8 +47,10 @@ export function TaskEdit(props: TaskEditProps) {
     const [state, setState] = useState<TaskEditState>({})
     const dispatch = useRootDispatch()
 
-    const currentUser = useSelector((state: RootState) => state.user.userId)
-    const tasks = useSelector((state: RootState) => state.taskList.idToTask)
+    const currentUser = useRootSelector(state => state.user.userId)
+    const tasksFilter = useRootSelector(state => state.taskList.filter)
+    const tasks = useRootSelector(state => state.taskList.idToTask)
+
     const task = ((props.taskId && tasks && tasks.get(props.taskId)) || undefined)
     const originTask = ((task?.parent && tasks && tasks.get(task.parent)) || undefined)
 
@@ -60,12 +62,14 @@ export function TaskEdit(props: TaskEditProps) {
         const allTaskIds: string[] = []
         if (props.taskId) allTaskIds.push(props.taskId)
         if (task?.subtasks) allTaskIds.push(...task?.subtasks)
-        if (task?.nextSteps) allTaskIds.push(...task?.subtasks)
-        if (task?.prevSteps) allTaskIds.push(...task?.subtasks)
+        if (task?.nextSteps) allTaskIds.push(...task?.nextSteps)
+        if (task?.prevSteps) allTaskIds.push(...task?.prevSteps)
 
-        dispatch({ type: "tasks-start-loading", filter: { tasks: allTaskIds } })
+        if(!tasksFilter || !("tasks" in tasksFilter) || !arrayEquals(allTaskIds, tasksFilter.tasks)) {
+            dispatch({ type: "tasks-start-loading", filter: { tasks: allTaskIds } })
+        }
 
-    }, [dispatch, props.taskId, task])
+    }, [dispatch, props.taskId, task, tasksFilter])
 
     const updateTask = (payload: Partial<Task>) => {
         if (props.taskId)
@@ -214,7 +218,7 @@ export function TaskEdit(props: TaskEditProps) {
                             }
                             
                             {subtasks && subtasks?.length > 0 && subtasks.map(task =>
-                                <TaskCard title={task.title} subtitle={toShortDateAndTime(task.reminder?.date)}/>
+                                <TaskCard key={task.id} title={task.title} subtitle={toShortDateAndTime(task.reminder?.date)}/>
                             )}
 
                             <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
