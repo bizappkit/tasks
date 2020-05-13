@@ -1,21 +1,19 @@
-import React, { useState, Dispatch } from "react";
+import React, { useState, useEffect } from "react";
 import { createTask, Task, Reminder, TaskRef } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
 import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { TasksStoreAction } from "../../store/tasksActions";
+import { useSelector } from "react-redux";
+import { RootState, useRootDispatch } from "../../store";
 import { Link, useHistory } from "react-router-dom";
 import { Map } from "immutable"
 import { ActionButton } from "../common/ActionButton";
 import { useTranslation } from "react-i18next";
 import { Section } from "../common/Section";
-
-import "./TaskEdit.css"
 import { toShortDateAndTime } from "../../utils/dateTimeUtils";
 
+import "./TaskEdit.css"
 
 interface TaskEditProps {
     taskId?: string
@@ -46,6 +44,7 @@ export function TaskEdit(props: TaskEditProps) {
     const history = useHistory()
     const { t } = useTranslation()
     const [state, setState] = useState<TaskEditState>({})
+    const dispatch = useRootDispatch()
 
     const currentUser = useSelector((state: RootState) => state.user.userId)
     const tasks = useSelector((state: RootState) => state.taskList.idToTask)
@@ -56,7 +55,17 @@ export function TaskEdit(props: TaskEditProps) {
     const nextSteps = selectTasks(tasks, task?.nextSteps)
     const prevSteps = selectTasks(tasks, task?.prevSteps)
 
-    const dispatch: Dispatch<TasksStoreAction> = useDispatch()
+    useEffect(() => {
+        const allTaskIds: string[] = []
+        if (props.taskId) allTaskIds.push(props.taskId)
+        if (task?.subtasks) allTaskIds.push(...task?.subtasks)
+        if (task?.nextSteps) allTaskIds.push(...task?.subtasks)
+        if (task?.prevSteps) allTaskIds.push(...task?.subtasks)
+
+        dispatch({ type: "tasks-start-loading", filter: { tasks: allTaskIds } })
+
+    }, [dispatch, props.taskId, task])
+
     const updateTask = (payload: Partial<Task>) => {
         if (props.taskId)
             dispatch({ type: 'tasks-updated', taskId: props.taskId, payload })
@@ -70,7 +79,7 @@ export function TaskEdit(props: TaskEditProps) {
         const tomorrowMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9)
         const reminder = { date: tomorrowMorning };
 
-        updateTask({reminder})
+        updateTask({ reminder })
     }
 
     const deleteReminder = () => {
@@ -179,7 +188,7 @@ export function TaskEdit(props: TaskEditProps) {
                             mainActionIcon="delete"
                             onMainActionClick={deleteReminder}
                         >
-                            <ReminderEdit reminder={task.reminder} onSave={(r) => updateTask({reminder: r})} />
+                            <ReminderEdit reminder={task.reminder} onSave={(r) => updateTask({ reminder: r })} />
                         </Section>
                     }
 
