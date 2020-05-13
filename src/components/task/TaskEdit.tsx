@@ -15,6 +15,7 @@ import { Section } from "../common/Section";
 
 import "./TaskEdit.css"
 import { toShortDateAndTime } from "../../utils/dateTimeUtils";
+import { TaskCard } from "./TaskCard";
 
 
 interface TaskEditProps {
@@ -75,6 +76,15 @@ export function TaskEdit(props: TaskEditProps) {
 
     const deleteReminder = () => {
         updateTask({ reminder: null })
+    }
+
+    const addSubtasks = () => {
+        updateTask({ subtasks: [] })
+    }
+
+    const openSubtasks = () => {
+        if (props.taskId)
+            history.push(props.getStepsLink(props.taskId))
     }
 
     const updateSelectedReminder = (payload: Partial<Reminder>) => {
@@ -184,36 +194,33 @@ export function TaskEdit(props: TaskEditProps) {
                     }
 
                     {task.subtasks &&
-                        <FormListSection
-                            items={subtasks}
-                            sectionTitle="Steps"
-                            mainAction={{
-                                icon: "edit",
-                                text: "Edit",
-                                handler: props.getStepsLink(task.id)
-                            }}
+                        <Section
+                            title={t("Steps")}
+                            value="0/3"
+                            mainActionIcon="playlist_add"
+                            onMainActionClick={openSubtasks}
                         >
-                            {(item) => (
-                                <Link to={props.getTaskLink(item.id)}>{item.title}</Link>
+                            {subtasks?.length === 0 &&
+                                <span>No Steps</span>
+                            }
+                            
+                            {subtasks && subtasks?.length > 0 && subtasks.map(task =>
+                                <TaskCard title={task.title} subtitle={toShortDateAndTime(task.reminder?.date)}/>
                             )}
-                        </FormListSection>
-                    }
 
-                    {task.subtasks &&
-                        <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
-                            <input
-                                type="text"
-                                className="form-control"
-                                style={{ fontSize: "1rem" }}
-                                placeholder="Add New Step..."
-                                value={state.subtaskTitle || ""}
-                                onChange={(e) => setState({ ...state, subtaskTitle: e.currentTarget.value })}
-                                onKeyPress={(e) => onNewStepKeyPress(e)}
-                            />
-                            <button className="btn btn-round" title="Add" style={{ marginLeft: 16 }} onClick={(e) => addSubtask(e)}>
-                                <i className="material-icons">add</i>
-                            </button>
-                        </div>
+                            <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    style={{ fontSize: "1rem" }}
+                                    placeholder="Add New Step..."
+                                    value={state.subtaskTitle || ""}
+                                    onChange={(e) => setState({ ...state, subtaskTitle: e.currentTarget.value })}
+                                    onKeyPress={(e) => onNewStepKeyPress(e)}
+                                />
+                                <i className="material-icons" style={{ marginLeft: 16, cursor: "pointer" }} onClick={() => addSubtask()}>add_circle_outline</i>
+                            </div>
+                        </Section>
                     }
 
                     {task.prevSteps &&
@@ -252,7 +259,7 @@ export function TaskEdit(props: TaskEditProps) {
                 <div className="col-sm-4">
                     <Section title={t("Add to Task")}>
                         <ActionButton icon="alarm" visible={!task.reminder} onClick={addReminder}>{t("Reminder")}</ActionButton>
-                        <ActionButton icon="playlist_add_check">{t("Steps")}</ActionButton>
+                        <ActionButton icon="playlist_add_check" visible={!task.subtasks} onClick={addSubtasks}>{t("Steps")}</ActionButton>
                     </Section>
                     <Section title={t("Actions")}>
                         <ActionButton icon="favorite_border">{t("Save as Template")}</ActionButton>

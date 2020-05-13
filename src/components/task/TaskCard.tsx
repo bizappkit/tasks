@@ -15,7 +15,7 @@ interface TaskCardProps {
         divider?: boolean
         danger?: boolean
         title?: React.ReactNode
-    }
+    }[]
     onActionClick?: (index: number) => void
 }
 
@@ -23,7 +23,7 @@ interface TaskCardProps {
 export function TaskCard(props: TaskCardProps) {
     return (
         <div className="card card-task">
-            <div className="card-body d-flex flex-row">
+            <div className="card-body d-flex flex-row" style={{padding: "0.5rem"}}>
                 <div className="media align-items-center flex-fill">
 
                     {props.icon &&
