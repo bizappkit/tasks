@@ -175,9 +175,9 @@ export function getSelectedTasks(tasks?: Map<TaskRef, Task>, options?: FilterOpt
     return { selected, other }
 }
 
-export type TaskRelation = "subSteps" | "nextSteps" | "prevSteps"
+export type TaskRelation = (keyof Task) & "subtasks" | "nextSteps" | "prevSteps"
 
-export const TaskListFilterModeValues: ReadonlySet<string> = new Set<TaskRelation>(["subSteps", "nextSteps", "prevSteps"])
+export const TaskListFilterModeValues: ReadonlySet<string> = new Set<TaskRelation>(["subtasks", "nextSteps", "prevSteps"])
 
 export interface FilterOptions {
     contextTaskId?: TaskRef
@@ -188,7 +188,7 @@ type TaskFilter = (task: Task) => boolean
 
 function getOtherFilter(contextTask: Task, mode?: TaskRelation): TaskFilter {
     switch (mode) {
-        case "subSteps":
+        case "subtasks":
             return (task) => task.parent === undefined && task !== contextTask
 
         case "prevSteps":
@@ -212,7 +212,7 @@ function getSelectedTaskIds(contextTask: Task, mode?: TaskRelation): Set<TaskRef
 
 export function getTaskFieldByFilterMode(mode?: TaskRelation): (keyof Task & ("subtasks" | "nextSteps" | "prevSteps")) | undefined {
     switch (mode) {
-        case "subSteps":
+        case "subtasks":
             return "subtasks"
 
         case "nextSteps":

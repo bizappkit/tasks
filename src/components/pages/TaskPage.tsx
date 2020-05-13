@@ -11,7 +11,7 @@ export function getTaskLink(taskId: string): string {
 	return TaskDetailsPath.replace(":taskId", taskId)
 }
 
-const getStepsLink = (id: string) => getTaskListLink(id, "subSteps")
+const getStepsLink = (id: string) => getTaskListLink(id, "subtasks")
 const getPrevStepsLink = (id: string) => getTaskListLink(id, "prevSteps")
 const getNextStepsLink = (id: string) => getTaskListLink(id, "nextSteps")
 

@@ -1,6 +1,6 @@
 import { Dispatch, MiddlewareAPI } from "redux"
 import { TasksStoreAction } from "./tasksActions"
-import { subscribeToTasks, updateTask, insertTask, deleteTask } from "../sync";
+import { subscribeToTasks, updateTask, insertTask, deleteTask, unionArrayValues, removeArrayValues } from "../sync";
 import { RootReducerType } from "./rootReducer";
 import i18n from "../model/localization";
 
@@ -42,6 +42,15 @@ export function firestoreMiddleware(api: MiddlewareAPI<any, RootReducerType>) {
 					case "tasks-delete":
 						deleteTask(action.task.id)
 						break
+
+					case "tasks-add-relations":
+						unionArrayValues(action.parent.id, action.relation, [action.child.id])
+						break
+
+					case "tasks-remove-relations":
+						removeArrayValues(action.parent.id, action.relation, [action.child.id])
+						break
+
 
 					//todo: Move to DeleteConfirmationMiddleware
 					// const timeout = setTimeout(() => {

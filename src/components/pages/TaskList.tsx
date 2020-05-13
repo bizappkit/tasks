@@ -57,7 +57,7 @@ export function TaskList() {
 
 export function getPageTitle(filterMode?: TaskRelation): string | undefined {
     switch (filterMode) {
-        case "subSteps":
+        case "subtasks":
             return "Steps"
         case "nextSteps":
             return "Next Steps"

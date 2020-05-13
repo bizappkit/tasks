@@ -32,7 +32,7 @@ export interface TaskChangeRelationAction extends Action {
 	type: "tasks-remove-relations" | "tasks-add-relations"
 	parent: Task
 	child: Task
-	relation: "subSteps" | "prevSteps" | "nextSteps"
+	relation: "subtasks" | "prevSteps" | "nextSteps"
 }
 
 export interface TaskDeleteAction extends Action {

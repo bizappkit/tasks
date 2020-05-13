@@ -96,6 +96,18 @@ export function deleteTask(taskId: string): Promise<void> {
 	return tasksCollection.doc(taskId).delete()
 }
 
+export function unionArrayValues(taskId: string, path: ("subtasks" | "prevSteps" | "nextSteps"), elements: any[]): Promise<void> {
+	const changes = {} as Firebase.firestore.UpdateData
+	changes[path] = Firebase.firestore.FieldValue.arrayUnion(...elements)
+	return tasksCollection.doc(taskId).update(changes)
+}
+
+export function removeArrayValues(taskId: string, path: ("subtasks" | "prevSteps" | "nextSteps"), elements: any[]): Promise<void> {
+	const changes = {} as Firebase.firestore.UpdateData
+	changes[path] = Firebase.firestore.FieldValue.arrayRemove(...elements)
+	return tasksCollection.doc(taskId).update(changes)
+}
+
 function getTaskFromDoc(data: any): Task {
 
 	let task = { ...data }

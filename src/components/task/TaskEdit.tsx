@@ -15,6 +15,7 @@ import { TaskCard } from "./TaskCard";
 import { arrayEquals } from "../../utils/arrayUtils";
 
 import "./TaskEdit.css"
+import { getTaskLink } from "../pages/TaskPage";
 
 interface TaskEditProps {
     taskId?: string
@@ -35,11 +36,6 @@ interface TaskEditState {
     subtaskTitle?: string
 }
 
-interface CompletionStatistics {
-    completedCount: number
-    allCount: number
-}
-
 export function TaskEdit(props: TaskEditProps) {
 
     const history = useHistory()
@@ -48,6 +44,7 @@ export function TaskEdit(props: TaskEditProps) {
     const dispatch = useRootDispatch()
 
     const currentUser = useRootSelector(state => state.user.userId)
+    const isLoading = useRootSelector(state => state.taskList.loading)
     const tasksFilter = useRootSelector(state => state.taskList.filter)
     const tasks = useRootSelector(state => state.taskList.idToTask)
 
@@ -61,11 +58,14 @@ export function TaskEdit(props: TaskEditProps) {
     useEffect(() => {
         const allTaskIds: string[] = []
         if (props.taskId) allTaskIds.push(props.taskId)
-        if (task?.subtasks) allTaskIds.push(...task?.subtasks)
-        if (task?.nextSteps) allTaskIds.push(...task?.nextSteps)
-        if (task?.prevSteps) allTaskIds.push(...task?.prevSteps)
+        if (task) {
+            if (task.parent) allTaskIds.push(task.parent)
+            if (task.subtasks) allTaskIds.push(...task.subtasks)
+            if (task.nextSteps) allTaskIds.push(...task.nextSteps)
+            if (task.prevSteps) allTaskIds.push(...task.prevSteps)
+        }
 
-        if(!tasksFilter || !("tasks" in tasksFilter) || !arrayEquals(allTaskIds, tasksFilter.tasks)) {
+        if (!tasksFilter || !("tasks" in tasksFilter) || !arrayEquals(allTaskIds, tasksFilter.tasks)) {
             dispatch({ type: "tasks-start-loading", filter: { tasks: allTaskIds } })
         }
 
@@ -140,6 +140,7 @@ export function TaskEdit(props: TaskEditProps) {
         const newTask = createTask(currentUser, title, undefined, undefined, task.id)
 
         dispatch({ type: "tasks-new-task", task: newTask })
+        dispatch({ type: "tasks-add-relations", relation: "subtasks", parent: task, child: newTask })
 
         setState({ ...state, subtaskTitle: "" })
     }
@@ -160,8 +161,12 @@ export function TaskEdit(props: TaskEditProps) {
         history.push("/")
     }
 
-    if (!task) {
+    if (!task && isLoading) {
         return <div>Loading...</div>
+    }
+
+    if (!task) {
+        return <div>Task not found</div>
     }
 
     return (
@@ -216,9 +221,13 @@ export function TaskEdit(props: TaskEditProps) {
                             {subtasks?.length === 0 &&
                                 <span>No Steps</span>
                             }
-                            
+
                             {subtasks && subtasks?.length > 0 && subtasks.map(task =>
-                                <TaskCard key={task.id} title={task.title} subtitle={toShortDateAndTime(task.reminder?.date)}/>
+                                <div>
+                                    <Link key={task.id} to={getTaskLink(task.id)}>
+                                        {task.title + (task.reminder?.date ? " - " + toShortDateAndTime(task.reminder?.date) : "")}
+                                    </Link>
+                                </div>
                             )}
 
                             <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
