@@ -11,7 +11,6 @@ import { ActionButton } from "../common/ActionButton";
 import { useTranslation } from "react-i18next";
 import { Section } from "../common/Section";
 import { toShortDateAndTime } from "../../utils/dateTimeUtils";
-import { TaskCard } from "./TaskCard";
 import { arrayEquals } from "../../utils/arrayUtils";
 
 import "./TaskEdit.css"
