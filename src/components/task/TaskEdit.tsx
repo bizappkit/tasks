@@ -217,17 +217,32 @@ export function TaskEdit(props: TaskEditProps) {
                             mainActionIcon="playlist_add"
                             onMainActionClick={openSubtasks}
                         >
-                            {subtasks?.length === 0 &&
-                                <span>No Steps</span>
-                            }
 
-                            {subtasks && subtasks?.length > 0 && subtasks.map(task =>
-                                <div>
-                                    <Link key={task.id} to={getTaskLink(task.id)}>
-                                        {task.title + (task.reminder?.date ? " - " + toShortDateAndTime(task.reminder?.date) : "")}
-                                    </Link>
-                                </div>
-                            )}
+                            <ul className="list-group">
+
+                                {subtasks?.length === 0 &&
+                                    <div>No Steps</div>
+                                }
+
+                                {subtasks && subtasks?.length > 0 && subtasks.map(task =>
+                                    <li key={task.id} className="list-group-item" style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+                                        <div className="media align-items-center">
+                                            <div className="avatar bg-primary" style={{ marginRight: "0.75rem", opacity: 0.25 }}>
+                                                <i className="material-icons">check</i>
+                                            </div>
+                                            <div className="media-body d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <Link key={task.id} to={getTaskLink(task.id)}>{task.title}</Link>
+                                                    {task.reminder?.date &&
+                                                        <div className="text-small">{t("Scheduled on") + ": " + toShortDateAndTime(task.reminder?.date)}</div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                )}
+
+                            </ul>
 
                             <div className="content-list-head d-flex flex-row" style={{ paddingTop: 8 }}>
                                 <input

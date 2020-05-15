@@ -7,10 +7,7 @@ export function createTask(owner: UserRef, title: string, notes?: string, remind
         owner: owner,
         createdOn: new Date(),
         completedOn: null,
-        title,
-        reminder: {
-            date: null
-        }
+        title
     }
 
     if (notes) task.notes = notes
