@@ -24,9 +24,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<div className="layout layout-nav-top">
-					<ContentRouting />
-				</div>
+				<ContentRouting />
 			</Provider>
 		)
 	}

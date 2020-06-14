@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter as Router, Link, Route, useRouteMatch, Switch, Redirect } from "react-router-dom"
+import { BrowserRouter as Router, Route, useRouteMatch, Switch, Redirect, Link } from "react-router-dom"
 import { TaskRelation } from "../../model/task"
 import { RelatedTaskListPath, TaskList, getPageTitle } from "./TaskList"
 import { useSelector } from "react-redux"
@@ -8,6 +8,12 @@ import { SchedulePage, SchedulePath } from "./TaskSchedule"
 import { TaskPage, getTaskLink, TaskDetailsPath } from "./TaskPage"
 import { MainButton } from "../task/MainButton";
 import { useTranslation } from "react-i18next";
+import Container from "@material-ui/core/Container"
+import Breadcrumbs from "@material-ui/core/Breadcrumbs"
+import MaterialLink from "@material-ui/core/Link"
+import Typography from "@material-ui/core/Typography"
+import { AppBar, Toolbar } from "@material-ui/core"
+
 
 export function ContentRouting() {
 
@@ -29,48 +35,49 @@ function ContentRoutingInternal() {
     const filterMode = (params && ("filterMode" in params) && params.filterMode) || undefined
 
     return (
-        <div className="main-container">
-            <div className="breadcrumb-bar navbar bg-white sticky-top">
+        <React.Fragment>
+            <AppBar color="inherit" position="static">
+                <Toolbar>
+                    <Breadcrumbs style={{flexGrow: 1}}>
 
-                <ol className="breadcrumb flex-nowrap" style={{ maxWidth: "100%" }}>
-                    <NavLink to={SchedulePath} active={currentTask !== undefined}>{t("Schedule")}</NavLink>
+                        <NavLink to={SchedulePath} active={currentTask !== undefined}>{t("Schedule")}</NavLink>
 
-                    {currentTask && params?.taskId &&
-                        <NavLink to={getTaskLink(params.taskId)} active={filterMode !== undefined}>{t("Task Details")}</NavLink>
-                    }
+                        {currentTask && params?.taskId &&
+                            <NavLink to={getTaskLink(params.taskId)} active={filterMode !== undefined}>{t("Task Details")}</NavLink>
+                        }
 
-                    {filterMode &&
-                        <NavLink>{getPageTitle(filterMode)}</NavLink>
-                    }
-                </ol>
+                        {filterMode &&
+                            <NavLink>{getPageTitle(filterMode)}</NavLink>
+                        }
 
-                <div>
+                    </Breadcrumbs>
                     <MainButton />
-                </div>
+                </Toolbar>
+            </AppBar>
 
-            </div>
-
-            <div className="container" style={{ marginTop: "1rem" }}>
-                <div className="row justify-content-center">
-                    <div className="col-lg-11 col-xl-10">
-                        <Switch>
-                            <Route path={RelatedTaskListPath}>
-                                <TaskList />
-                            </Route>
-                            <Route path={TaskDetailsPath}>
-                                <TaskPage />
-                            </Route>
-                            <Route path={SchedulePath}>
-                                <SchedulePage />
-                            </Route>
-                            <Route path="/">
-                                <Redirect to={SchedulePath} />
-                            </Route>
-                        </Switch>
+            <Container fixed>
+                <div className="container" style={{ marginTop: "1rem" }}>
+                    <div className="row justify-content-center">
+                        <div className="col-lg-11 col-xl-10">
+                            <Switch>
+                                <Route path={RelatedTaskListPath}>
+                                    <TaskList />
+                                </Route>
+                                <Route path={TaskDetailsPath}>
+                                    <TaskPage />
+                                </Route>
+                                <Route path={SchedulePath}>
+                                    <SchedulePage />
+                                </Route>
+                                <Route path="/">
+                                    <Redirect to={SchedulePath} />
+                                </Route>
+                            </Switch>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </Container>
+        </React.Fragment>
     )
 }
 
@@ -81,13 +88,19 @@ interface NavLinkProps {
 }
 
 function NavLink(props: NavLinkProps) {
+
+    const { active, to } = props;
+
+    if(!active || !to) {
+        return (
+            <Typography color="textPrimary">{props.children}</Typography>
+        )
+    }
+
+    const RoutingLink = (props: unknown) => <Link to={to} {...props}/>
+
     return (
-        <li className="breadcrumb-item text-truncate">
-            {(!props.active || !props.to) && props.children}
-            {props.active && props.to &&
-                <Link to={props.to}>{props.children}</Link>
-            }
-        </li>
+        <MaterialLink component={RoutingLink} href={props.to}>{props.children}</MaterialLink>
     )
 }
 
