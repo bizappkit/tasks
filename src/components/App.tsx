@@ -4,8 +4,6 @@ import { signInWithEmailAndPassword } from "../sync"
 import { Provider } from 'react-redux';
 import { store } from '../store';
 
-import '../assets/css/theme.css'
-
 
 class App extends React.Component {
 

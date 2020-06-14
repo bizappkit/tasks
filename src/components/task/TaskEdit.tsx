@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createTask, Task, Reminder, TaskRef } from "../../model/task";
 import TextareaAutosize from "react-textarea-autosize";
-import { Modal, Button } from "react-bootstrap";
 import { ReminderEdit } from "./ReminderEdit";
 import { FormListSection } from "./FormListSection";
 import { useRootDispatch, useRootSelector } from "../../store";
@@ -12,6 +11,11 @@ import { useTranslation } from "react-i18next";
 import { Section } from "../common/Section";
 import { toShortDateAndTime } from "../../utils/dateTimeUtils";
 import { arrayEquals } from "../../utils/arrayUtils";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 import "./TaskEdit.css"
 import { getTaskLink } from "../pages/TaskPage";
@@ -308,22 +312,20 @@ export function TaskEdit(props: TaskEditProps) {
             </div>
 
             {state.selectedReminder &&
-                <Modal show={state.selectedReminder !== undefined} size="lg" onHide={cancelEditReminder}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Reminder</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+                <Dialog open={state.selectedReminder !== undefined} onClose={cancelEditReminder}>
+                    <DialogTitle>>Reminder</DialogTitle>
+                    <DialogContent>
                         <ReminderEdit
                             reminder={state.selectedReminder}
                             onSave={(r) => updateSelectedReminder(r)}
                             onDelete={deleteReminder}
                         />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={cancelEditReminder}>Cancel</Button>
-                        <Button variant="primary" onClick={saveReminderChanges}>Save</Button>
-                    </Modal.Footer>
-                </Modal>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="secondary" onClick={cancelEditReminder}>Cancel</Button>
+                        <Button color="primary" onClick={saveReminderChanges}>Save</Button>
+                    </DialogActions>
+                </Dialog>
             }
         </form >
     )

@@ -1,5 +1,7 @@
 import React, { useState, CSSProperties } from "react"
-import { Collapse } from "react-bootstrap"
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 interface SectionProps {
     title: string
@@ -24,8 +26,8 @@ export function Section(props: SectionProps) {
     }
 
     return (
-        <div style={{ ...props.style, marginBottom: (open ? "2rem" : "0.5rem") }}>
-            <div className="d-flex">
+        <ExpansionPanel expanded={open} onChange={toggleOpen}>
+            <ExpansionPanelSummary>
                 <div className="flex-grow-1 d-flex" style={{ cursor: "pointer" }} onClick={toggleOpen}>
                     <i className="material-icons">{open ? "arrow_drop_down" : "arrow_right"}</i>
                     <h5>{props.title}</h5>
@@ -36,12 +38,12 @@ export function Section(props: SectionProps) {
                 {!open && props.value !== undefined &&
                     <span>{props.value}</span>
                 }
-            </div>
-            <Collapse in={open}>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
                 <div>
                     {props.children}
                 </div>
-            </Collapse>
-        </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
     )
 }

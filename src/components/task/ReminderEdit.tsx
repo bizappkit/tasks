@@ -1,8 +1,15 @@
 import React from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import Grid from '@material-ui/core/Grid';
 import { Reminder, ReminderRepeatSettings, DallyReminderRepeatSettings, WeekDay, MonthlyReminderRepeatSettings, DateNumber, MonthNumber, YearlyReminderRepeatSettings } from "../../model/task";
 import { setTime, setDate } from "../../utils/dateTimeUtils";
 import moment from "moment";
+import {
+    KeyboardDatePicker,
+  } from '@material-ui/pickers';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 
 const RepeatNoneValue = 'none';
 const RepeatDallyValue: ReminderRepeatSettings['type'] = 'dally'
@@ -59,30 +66,32 @@ export function ReminderEdit(props: ReminderEditProps) {
         <div>
             <div className="form-group">
                 <label>Remind me on</label>
-                <Row>
-                    <Col>
-                        <Form.Control
-                            type="date"
-                            as="input"
-                            placeholder="Date"
-                            value={moment(props.reminder.date || new Date()).format("YYYY-MM-DD")}
-                            onChange={(e) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date || new Date(), e.currentTarget.value) })}
-                        />
-                    </Col>
-                    <Col>
-                        <Form.Control
+                <Grid container>
+                    <Grid item xs={6}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        placeholder="Date"
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        label="Date"
+                        value={props.reminder.date}
+                        onChange={(date) => props.onSave({ ...props.reminder, date: setDate(props.reminder.date || new Date(), date) })}
+                    />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Select
                             style={{ width: "8rem" }}
-                            as="select"
                             placeholder="Time"
                             value={moment(props.reminder.date || new Date()).format("HH:mm")}
-                            onChange={(e) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date || new Date(), e.currentTarget.value) })}
+                            onChange={(e) => props.onSave({ ...props.reminder, date: setTime(props.reminder.date || new Date(), e.target.value as string) })}
                         >
                             {times.map(t =>
                                 <option key={t.hours + ":" + t.minutes} value={moment().hours(t.hours).minutes(t.minutes).format("HH:mm")}>{moment().hours(t.hours).minutes(t.minutes).format("LT")}</option>
                             )}
-                        </Form.Control>
-                    </Col>
-                </Row>
+                        </Select>
+                    </Grid>
+                </Grid>
             </div>
             <div className="form-group">
                 <label>Repeat</label>
@@ -102,73 +111,87 @@ export function ReminderEdit(props: ReminderEditProps) {
             {props.reminder.repeat?.type === 'dally' && (
                 <div className="form-group">
                     <label>Weekdays</label>
-                    <Row>
+                    <Grid container>
                         {weekDays.map(currentDay => (
-                            <Col key={currentDay.value} xs={4}>
-                                <Form.Check
-                                    id={"weekday:" + currentDay.value}
+                            <Grid item key={currentDay.value} xs={4}>
+                                <FormControlLabel
                                     label={currentDay.text}
-                                    value={currentDay.value}
-                                    checked={props.reminder.repeat?.type === 'dally' && props.reminder.repeat.days.includes(currentDay.value)}
-                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateWeekDays(props.reminder.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
-                            </Col>
+                                    control={
+                                        <Checkbox
+                                            value={currentDay.value}
+                                            checked={props.reminder.repeat?.type === 'dally' && props.reminder.repeat.days.includes(currentDay.value)}
+                                            onChange={() => props.onSave({ ...props.reminder, repeat: updateWeekDays(props.reminder.repeat as DallyReminderRepeatSettings, currentDay.value) })} />
+                                    }
+                                />
+                            </Grid>
                         ))}
-                    </Row>
+                    </Grid>
                 </div>
             )}
 
             {props.reminder.repeat?.type === 'monthly' && (
                 <div className="form-group">
                     <label>Days</label>
-                    <Row>
+                    <Grid container>
                         {dates.map(currentDate => (
-                            <Col key={currentDate} xs={2}>
-                                <Form.Check
-                                    id={"day:" + currentDate}
+                            <Grid item key={currentDate} xs={2}>
+                                <FormControlLabel
                                     label={currentDate}
-                                    value={currentDate}
-                                    checked={props.reminder.repeat?.type === 'monthly' && props.reminder.repeat.days.includes(currentDate)}
-                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateMonthlyDates(props.reminder.repeat as MonthlyReminderRepeatSettings, currentDate) })} />
-                            </Col>
+                                    control={
+                                        <Checkbox
+                                            value={currentDate}
+                                            checked={props.reminder.repeat?.type === 'monthly' && props.reminder.repeat.days.includes(currentDate)}
+                                            onChange={() => props.onSave({ ...props.reminder, repeat: updateMonthlyDates(props.reminder.repeat as MonthlyReminderRepeatSettings, currentDate) })}
+                                        />
+                                    }
+                                />
+                            </Grid>
                         ))}
-                    </Row>
+                    </Grid>
                 </div>
             )}
 
             {props.reminder.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Months</label>
-                    <Row>
+                    <Grid container>
                         {months.map(currentMonth => (
-                            <Col key={currentMonth.value} xs={4}>
-                                <Form.Check
-                                    id={"month:" + currentMonth.value}
-                                    type="checkbox"
+                            <Grid item key={currentMonth.value} xs={4}>
+                                <FormControlLabel
                                     label={currentMonth.text}
-                                    value={currentMonth.value}
-                                    checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.months.includes(currentMonth.value)}
-                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyMonths(props.reminder.repeat as YearlyReminderRepeatSettings, currentMonth.value) })} />
-                            </Col>
+                                    control={
+                                        <Checkbox
+                                            value={currentMonth.value}
+                                            checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.months.includes(currentMonth.value)}
+                                            onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyMonths(props.reminder.repeat as YearlyReminderRepeatSettings, currentMonth.value) })}
+                                        />
+                                    }
+                                />
+                            </Grid>
                         ))}
-                    </Row>
+                    </Grid>
                 </div>
             )}
 
             {props.reminder.repeat?.type === 'yearly' && (
                 <div className="form-group">
                     <label>Days</label>
-                    <Row>
+                    <Grid container>
                         {dates.map(currentDate => (
-                            <Col key={currentDate} xs={2}>
-                                <Form.Check
-                                    id={"day:" + currentDate}
+                            <Grid item key={currentDate} xs={2}>
+                                <FormControlLabel
                                     label={currentDate}
-                                    value={currentDate}
-                                    checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.days.includes(currentDate)}
-                                    onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyDays(props.reminder.repeat as YearlyReminderRepeatSettings, currentDate) })} />
-                            </Col>
+                                    control={
+                                        <Checkbox
+                                            value={currentDate}
+                                            checked={props.reminder.repeat?.type === 'yearly' && props.reminder.repeat.dates.days.includes(currentDate)}
+                                            onChange={() => props.onSave({ ...props.reminder, repeat: updateYearlyDays(props.reminder.repeat as YearlyReminderRepeatSettings, currentDate) })}
+                                        />
+                                    }
+                                />
+                            </Grid>
                         ))}
-                    </Row>
+                    </Grid>
                 </div>
             )}
         </div>
